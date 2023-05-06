@@ -3,11 +3,12 @@ package physics.vectors;
 public class Vector {
 
     private double[]state;
-
+    private int dimension;
     public Vector(double[] initialState){
 
         if (initialState.length > 0) {
             this.state = initialState;
+            this.dimension = initialState.length;
         }
         else {
             System.out.println("An Empty Vector cannot be created! It must have at least 1 Dimension");
@@ -20,6 +21,10 @@ public class Vector {
      */
     public double get(int index){
         return state[index];
+    }
+
+    public int getDimension() {
+        return state.length;
     }
 
     /**

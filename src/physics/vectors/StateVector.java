@@ -3,29 +3,52 @@ package physics.vectors;
 /**
  * Stores the State Vector of the Differential Equation  of Interest
  *
- * In case it is an ODE in just One Dimension, it simply creates a 1D Vector
- *
- * For the Solar System, it will be a 6D Vector (Velocity and Position), each with the 3 Spatial Dimensions
+ * For the Solar Syste, the State Vector will hold 2 3D Vectors (Position and Velocity)
  */
 public class StateVector {
 
-    /**
-     * Stores the Vector itself as an Array, for O(1) indexing
-     */
-    private double[] vector;
+    private Vector[] stateVector;
+    private int numberOfVectors;
+    private int numberOfDimensions;
 
     /**
-     * Constructor for the State Vector
-     * @param array that represents the Vector. Cannot be Empty!
+     * Constructor
+     * @param vectors array containing the vectors that will be contained in the State Vector
      */
-    public StateVector(double[] array) {
-        if (array.length > 0) {
-            vector = array;
+    public StateVector(Vector[] vectors) {
+        if (vectors.length > 0) {
+            numberOfVectors = vectors.length;
+            numberOfDimensions = vectors[0].getDimension();
+
         }
         else {
-            System.out.println("Your Vector is Empty! Vector must have at least 1 Dimension");
+            System.out.println("You have not provided any Vectors to make your State Vector");
         }
     }
 
+    /**
+     * Getter for the State Vector
+     * @return the state vector in the format of an Array of Vectors
+     */
+    public Vector[] getStateVector() {
+        return stateVector;
+    }
+
+    /**
+     * Getter for the Number of Vectors in the State Vector
+     * @return int containg the number of Vectors in the State Vector
+     */
+    public int getNumberOfVectors() {
+        return numberOfVectors;
+    }
+
+    /**
+     * Getter for the number of Dimensions that our State Vector Represents
+     * It is simply the size of the vectors contained within the State Vector
+     * @return
+     */
+    public int getNumberOfDimensions() {
+        return numberOfDimensions;
+    }
 
 }

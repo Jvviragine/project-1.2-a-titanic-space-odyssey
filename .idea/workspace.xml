@@ -5,7 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="46aba545-3ba3-4d63-aaab-9f68a95c3572" name="Changes" comment="Adds Data Of Solar System Package and Creates the State Vector Class">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/physics/vectors/Vector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/physics/vectors/Vector.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -80,6 +80,7 @@
       <option name="presentableId" value="Default" />
       <updated>1683360288281</updated>
       <workItem from="1683360289689" duration="436000" />
+      <workItem from="1683408578205" duration="97000" />
     </task>
     <servers />
   </component>

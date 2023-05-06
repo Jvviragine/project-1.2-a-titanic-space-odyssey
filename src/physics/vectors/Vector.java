@@ -5,12 +5,11 @@ public class Vector {
     private double[]state;
 
     public Vector(double[] initialState){
-
         if (initialState.length > 0) {
             this.state = initialState;
         }
         else {
-            System.out.println("An Empty Vector cannot be created! It must have at least 1 Dimension");
+            throw new IllegalArgumentException("An Empty Vector cannot be created! Vectors must have at least 1 Dimension.");
         }
     }
 

@@ -1,8 +1,11 @@
 package physics.solvers;
 
-public class EulerSolver implements Solver{
+import physics.vectors.Vector;
 
-    public double solve() {
-        return 0;
+public class EulerSolver implements Solver{
+    Vector v;
+
+    public Vector solve() {
+        return v;
     }
 }

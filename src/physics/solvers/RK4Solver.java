@@ -1,8 +1,10 @@
 package physics.solvers;
-
+import physics.vectors.Vector;
 public class RK4Solver implements Solver{
 
-    public double solve() {
-        return 0;
+    Vector v;
+
+    public Vector solve() {
+        return v;
     }
 }

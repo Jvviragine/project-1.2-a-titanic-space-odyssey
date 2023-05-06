@@ -10,7 +10,7 @@ public class EulerSolver implements Solver{
     /**
      * Constructor for an Euler solver
      * @param y0 the initial state vector on which to perform Euler's method
-     * @param fty the derivate f(t,y) of the current state vector
+     * @param fty the derivative f(t,y) of the current state vector
      * @param h the step size
      */
     public EulerSolver(Vector y0, Vector fty, double h){

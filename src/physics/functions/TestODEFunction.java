@@ -13,5 +13,6 @@ public class TestODEFunction implements Function{
     public StateVector applyFunction(StateVector stateVector, StateVector currentVector, double t) {
 
         // Goes through all Vectors in the StateVector
+        return null;
     }
 }

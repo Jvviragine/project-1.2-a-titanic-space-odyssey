@@ -38,6 +38,14 @@ public class EulerSolver implements Solver{
         Vector[] fty = this.fty.getStateVector();
         Vector[] newState = new Vector[2];
 
+        //Going to change all of this to suit function and new statevector operations
+
+        //Solve Euler for the time period tf-t0
+        for(double t=t0; t<tf; t+=stepSize){
+//            StateVector derivative = function.applyFunction()
+        }
+
+
         //f.apply(time, state);
 
         //Solve Euler for each vector in the state vector

@@ -22,6 +22,10 @@ public class Vector {
         return state[index];
     }
 
+    /**
+     * Gets the dimension of the vector
+     * @return dimension of vector (n x 1)
+     */
     public int getDimension() {
         return state.length;
     }

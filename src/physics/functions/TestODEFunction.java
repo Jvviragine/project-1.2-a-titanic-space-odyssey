@@ -1,8 +1,11 @@
 package physics.functions;
 
 import physics.vectors.StateVector;
+import physics.vectors.Vector;
 
 public class TestODEFunction implements Function{
+
+
     /**
      * @param stateVector
      * @param currentVector
@@ -11,7 +14,6 @@ public class TestODEFunction implements Function{
      */
     @Override
     public StateVector applyFunction(StateVector stateVector, StateVector currentVector, double t) {
-
-        // Goes through all Vectors in the StateVector
+        return null;
     }
 }

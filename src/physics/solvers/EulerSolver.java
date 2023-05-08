@@ -17,6 +17,8 @@ public class EulerSolver implements Solver{
      * @param h the step size
      * @param t0 the initial time
      */
+
+    //y0, function f, h, t0
     public EulerSolver(StateVector y0, StateVector fty, double h, double t0){
         this.y0 = y0;
         this.fty = fty;
@@ -52,6 +54,9 @@ public class EulerSolver implements Solver{
 
         //Update time
         t+=h;
+
+        //
+        //f.apply(time, state);
 
         return ynplus1;
     }

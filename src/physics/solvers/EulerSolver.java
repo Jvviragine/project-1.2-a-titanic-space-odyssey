@@ -37,6 +37,8 @@ public class EulerSolver implements Solver{
         Vector[] fty = this.fty.getStateVector();
         Vector[] newState = new Vector[2];
 
+        //f.apply(time, state);
+
         //Solve Euler for each vector in the state vector
         for(int i=0;i<numberOfVectors;i++){
             //h * f(t,y)
@@ -54,9 +56,6 @@ public class EulerSolver implements Solver{
 
         //Update time
         t+=h;
-
-        //
-        //f.apply(time, state);
 
         return ynplus1;
     }

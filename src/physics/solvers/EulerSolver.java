@@ -6,7 +6,7 @@ import physics.vectors.StateVector;
 
 public class EulerSolver implements Solver{
     static double t;
-    
+
     public EulerSolver(){
 
     }

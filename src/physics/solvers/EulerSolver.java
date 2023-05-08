@@ -1,5 +1,6 @@
 package physics.solvers;
 
+import physics.functions.Function;
 import physics.vectors.Vector;
 import physics.vectors.StateVector;
 
@@ -31,7 +32,7 @@ public class EulerSolver implements Solver{
      *      yn+1 = yn + hf(t,y)
      * @return the next state vector at state yn+1
      */
-    public StateVector solve() {
+    public StateVector solve(Function function, StateVector initialCondition, double t0, double tf, double stepSize) {
         int numberOfVectors = y0.getNumberOfVectors();
         Vector[] yn = y0.getStateVector();
         Vector[] fty = this.fty.getStateVector();

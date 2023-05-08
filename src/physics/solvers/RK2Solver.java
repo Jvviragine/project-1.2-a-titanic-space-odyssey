@@ -19,14 +19,27 @@ public class RK2Solver implements Solver {
      * @return the state vector at the end of the time period tf - t0
      */
     public StateVector solve(Function function, StateVector initialCondition, double t0, double tf, double stepSize) {
-        //ki1 = h * f(ti,wi)
+
+        StateVector currentState = initialCondition;
+
+        for(double t=t0; t<tf; t+=stepSize){
+            //Get derivative, f(t,y) of the function
+            StateVector fty = function.applyFunction(currentState,t);
+
+            //ki1 = h * f(ti,wi)
+            StateVector ki1 = fty.multiply(stepSize);
+
+            //Get derivative, f(ti + 2/3h , wi + 2/3ki1)
+            
+
+            //ki2 = h * f(ti + 2/3h , wi + 2/3ki1)
 
 
-        //ki2 = h * f(ti + 2/3h , wi + 2/3ki1)
+            //wi+1 = wi + 1/4(ki1 + 3ki2)
 
-
-        //wi+1 = wi + 1/4(ki1 + 3ki2)
+        }
 
         return initialCondition;
     }
+
 }

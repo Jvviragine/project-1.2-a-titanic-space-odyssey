@@ -62,7 +62,7 @@ public class StateVector {
 
         //Iterate through each vector in the State Vector
         for(int i=0; i<stateVector.length; i++){
-            stateVector[i] = stateVector[i].add(v.getStateVector()[i]);
+            vectors[i] = stateVector[i].add(v.getStateVector()[i]);
         }
 
         //Return State Vector with modified values

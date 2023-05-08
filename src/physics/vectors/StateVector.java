@@ -51,4 +51,28 @@ public class StateVector {
         return numberOfDimensions;
     }
 
+//    /**
+//     * Computes the sum of two vectors
+//     * @param v the vector to be added
+//     * @return the resultant vector when adding v
+//     */
+//    public StateVector add(StateVector v){
+//        for(int i= 0; i<state.length;i++){
+//            state[i] += v.state[i];
+//        }
+//        return this;
+//    }
+
+    /**
+     * Computes the product of a scalar multiplication
+     * @param scalar a double that scales the state vector
+     * @return the scalar product of the state vector and the scalar
+     */
+    public StateVector multiply(double scalar){
+        for(int i=0;i<stateVector.length;i++){
+            stateVector[i] = stateVector[i].multiply(scalar);
+        }
+        return this;
+    }
+
 }

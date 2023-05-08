@@ -1,10 +1,11 @@
 package physics.solvers;
 import physics.vectors.Vector;
+import physics.vectors.StateVector;
 
 public class RK2Solver implements Solver {
-    Vector v;
+    StateVector v;
 
-    public Vector solve() {
+    public StateVector solve() {
         return v;
     }
 }

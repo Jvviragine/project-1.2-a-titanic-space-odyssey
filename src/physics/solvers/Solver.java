@@ -3,5 +3,5 @@ import physics.vectors.Vector;
 import physics.vectors.StateVector;
 
 public interface Solver {
-     StateVector solve();
+     StateVector solve(); // Always dealing with State Vector
 }

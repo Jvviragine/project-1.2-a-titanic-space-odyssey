@@ -1,5 +1,6 @@
 package physics.solvers;
 
+import physics.functions.Function;
 import physics.vectors.StateVector;
 
 public class RK3Solver implements Solver{
@@ -8,7 +9,7 @@ public class RK3Solver implements Solver{
 
     }
 
-    public StateVector solve() {
+    public StateVector solve(Function function, StateVector initialCondition, double t0, double tf, double stepSize) {
         return null;
     }
 }

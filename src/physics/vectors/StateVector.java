@@ -57,10 +57,16 @@ public class StateVector {
      * @return the resultant vector when adding v
      */
     public StateVector add(StateVector v){
+        //Make new vector array for new StateVector
+        Vector[] vectors = stateVector;
+
+        //Iterate through each vector in the State Vector
         for(int i=0; i<stateVector.length; i++){
             stateVector[i] = stateVector[i].add(v.getStateVector()[i]);
         }
-        return this;
+
+        //Return State Vector with modified values
+        return new StateVector(vectors);
     }
 
     /**
@@ -69,10 +75,15 @@ public class StateVector {
      * @return the resultant vector when subtracting v
      */
     public StateVector subtract(StateVector v){
+        //Make new vector array for new StateVector
+        Vector[] vectors = stateVector;
+
+        //Iterate through each vector in the State Vector
         for(int i= 0; i<stateVector.length; i++){
-            stateVector[i] = stateVector[i].subtract(v.getStateVector()[i]);
+            vectors[i] = stateVector[i].subtract(v.getStateVector()[i]);
         }
-        return this;
+        //Return State Vector with modified values
+        return new StateVector(vectors);
     }
 
     /**
@@ -81,10 +92,16 @@ public class StateVector {
      * @return the scalar product of the state vector and the scalar
      */
     public StateVector multiply(double scalar){
+        //Make new vector array for new StateVector
+        Vector[] vectors = stateVector;
+
+        //Iterate through each vector in the State Vector
         for(int i=0; i<stateVector.length; i++){
-            stateVector[i] = stateVector[i].multiply(scalar);
+            vectors[i] = stateVector[i].multiply(scalar);
         }
-        return this;
+
+        //Return State Vector with modified values
+        return new StateVector(vectors);
     }
 
 }

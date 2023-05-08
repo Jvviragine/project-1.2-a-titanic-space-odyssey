@@ -33,41 +33,29 @@ public class EulerSolver implements Solver{
      * @return the next state vector at state yn+1
      */
     public StateVector solve(Function function, StateVector initialCondition, double t0, double tf, double stepSize) {
-        int numberOfVectors = y0.getNumberOfVectors();
-        Vector[] yn = y0.getStateVector();
-        Vector[] fty = this.fty.getStateVector();
-        Vector[] newState = new Vector[2];
 
-        //Going to change all of this to suit function and new statevector operations
+        StateVector currentState = initialCondition;
 
         //Solve Euler for the time period tf-t0
         for(double t=t0; t<tf; t+=stepSize){
-//            StateVector derivative = function.applyFunction()
-        }
+            //Get derivative, f(t,y) of the function
+            StateVector derivative = function.applyFunction(currentState,t);
 
-
-        //f.apply(time, state);
-
-        //Solve Euler for each vector in the state vector
-        for(int i=0;i<numberOfVectors;i++){
             //h * f(t,y)
-            Vector hfty = fty[i].multiply(h);
+            StateVector hfty = derivative.multiply(h);
 
             //yn + hf(t,y)
-            Vector y1 = yn[i].add(hfty);
+            StateVector y1 = currentState.add(hfty);
 
-            //Add vector to vector list
-            newState[i] = y1;
+            //Set y1 to y0 for next iteration
+            currentState = y1;
+
+            //Update solver time
+            this.t +=h;
         }
 
-        //New state vector produced by Euler step
-        StateVector ynplus1 = new StateVector(newState);
-
-        //Update time
-        t+=h;
-
-        return ynplus1;
+        return currentState;
+        
     }
-
 
 }

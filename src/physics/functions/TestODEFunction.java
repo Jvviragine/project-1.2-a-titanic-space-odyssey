@@ -5,15 +5,13 @@ import physics.vectors.Vector;
 
 public class TestODEFunction implements Function{
 
-
     /**
-     * @param stateVector
-     * @param currentVector
+     * @param y
      * @param t
      * @return
      */
     @Override
-    public StateVector applyFunction(StateVector stateVector, StateVector currentVector, double t) {
+    public StateVector applyFunction(StateVector y, double t) {
         return null;
     }
 }

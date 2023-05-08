@@ -17,6 +17,7 @@ public class StateVector {
      */
     public StateVector(Vector[] vectors) {
         if (vectors.length > 0) {
+            this.stateVector = vectors;
             numberOfVectors = vectors.length;
             numberOfDimensions = vectors[0].getDimension();
 
@@ -33,6 +34,8 @@ public class StateVector {
     public Vector[] getStateVector() {
         return stateVector;
     }
+
+    public Vector getVector(int index) {return stateVector[index];}
 
     /**
      * Getter for the Number of Vectors in the State Vector

@@ -30,13 +30,16 @@ public class RK2Solver implements Solver {
             StateVector ki1 = fty.multiply(stepSize);
 
             //Get derivative, f(ti + 2/3h , wi + 2/3ki1)
-
+            StateVector dydt = function.applyFunction((currentState.add(ki1.multiply(2/3))),(t + 2/3*stepSize));
 
             //ki2 = h * f(ti + 2/3h , wi + 2/3ki1)
-
+            StateVector ki2 = dydt.multiply(stepSize);
 
             //wi+1 = wi + 1/4(ki1 + 3ki2)
+            StateVector w2 = currentState.add((ki1.add(ki2)).multiply(1/4));
 
+            //Update current state
+            currentState = w2;
         }
 
         return initialCondition;

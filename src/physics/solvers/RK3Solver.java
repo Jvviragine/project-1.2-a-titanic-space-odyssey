@@ -19,21 +19,21 @@ public class RK3Solver implements Solver{
         StateVector currentState = initialCondition;
 
         for(double t = t0; t<tf; t += stepSize) {
+
             StateVector fty = function.applyFunction(currentState, t);
 
             //k1 = h*f(t,y)
             StateVector k1 = fty.multiply(stepSize);
 
             //k2 = h*f(t + 1/3*h,y + 1/3*k1)
-            Vector tAdd = new Vector(new double[]{3});
-            tAdd.setAll(1/3*stepSize);
-
-            fty.getVector(0).add(tAdd);
-            StateVector k2;
+            StateVector k2 = function.applyFunction(fty.add(k1.multiply(1/3)), t + 1/3*stepSize);
 
             //k3 = h*f(t + 2/3*h, y + 2/3*k2)
+            StateVector k3 = function.applyFunction(fty.add(k2.multiply(2/3)), t + 2/3*stepSize);
 
             //yn+1 = y + 1/4*(k1 + 3*k3)
+            StateVector add = k3.multiply(3).add(k1).multiply(1/4);
+            StateVector yNew = fty.add(add);
 
         }
         return null;

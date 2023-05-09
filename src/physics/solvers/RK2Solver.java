@@ -30,7 +30,7 @@ public class RK2Solver implements Solver {
             StateVector ki1 = fty.multiply(stepSize);
 
             //Get derivative, f(ti + 2/3h , wi + 2/3ki1)
-            
+
 
             //ki2 = h * f(ti + 2/3h , wi + 2/3ki1)
 

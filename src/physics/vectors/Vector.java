@@ -52,10 +52,16 @@ public class Vector {
      * @return the resultant vector when adding v
      */
     public Vector add(Vector v){
+        //New vector to be returned
+        Vector u = new Vector(state);
+
+        //Loop through all coordinates in vector
         for(int i= 0; i<state.length;i++){
-            state[i] += v.state[i];
+            u.state[i] += v.state[i];
         }
-        return this;
+
+        //Return new vector
+        return u;
     }
 
     /**
@@ -64,10 +70,16 @@ public class Vector {
      * @return the resultant vector when subtracting v
      */
     public Vector subtract(Vector v){
+        //New vector to be returned
+        Vector u = new Vector(state);
+
+        //Loop through all coordinates in vector
         for(int i= 0; i<state.length;i++){
-            state[i] -= v.state[i];
+            u.state[i] -= v.state[i];
         }
-        return this;
+
+        //Return new vector
+        return u;
     }
 
     /**
@@ -76,10 +88,16 @@ public class Vector {
      * @return the scalar product of the vector and the scalar
      */
     public Vector multiply(double scalar){
+        //New vector to be returned
+        Vector u = new Vector(state);
+
+        //Loop through all coordinates in vector
         for(int i=0;i<state.length;i++){
-            state[i] *= scalar;
+            u.state[i] *= scalar;
         }
-        return this;
+
+        //Return new vector
+        return u;
     }
 
     /**

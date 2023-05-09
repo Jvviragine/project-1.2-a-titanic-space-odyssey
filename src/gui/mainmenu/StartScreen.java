@@ -1,9 +1,10 @@
 package gui.mainmenu;
 
 import java.awt.*;
+import java.awt.event.ActionListener;
 import javax.swing.*;
 
-public class StartScreen {
+public class StartScreen extends JFrame {
     //opening screen allowing user input of initial velocities and positions
     JFrame frame = new JFrame();
     JLabel x, y, z, v1, v2, v3;
@@ -51,6 +52,34 @@ public class StartScreen {
         zText = new JTextField(30);
         zText.setBounds(200,160,165,25);
         panel.add(zText);
+
+        v1 = new JLabel("v1: ");
+        v1.setBounds(180,200,80,25);
+        panel.add(v1);
+
+        v1Text = new JTextField(30);
+        v1Text.setBounds(200,200,165,25);
+        panel.add(v1Text);
+
+        v2 = new JLabel("v2: ");
+        v2.setBounds(180,240,80,25);
+        panel.add(v2);
+
+        v2Text = new JTextField(30);
+        v2Text.setBounds(200,240,165,25);
+        panel.add(v2Text);
+
+        v3 = new JLabel("v3: ");
+        v3.setBounds(180,280,80,25);
+        panel.add(v3);
+
+        v3Text = new JTextField(30);
+        v3Text.setBounds(200,280,165,25);
+        panel.add(v3Text);
+
+        JCheckBox checkBox = new JCheckBox("Freeze the simulation at the selected time.");
+        checkBox.setBounds(150, 320, 400, 20);
+        panel.add(checkBox);
 
         frame.add(panel);
         frame.setSize(FRAME_WIDTH,FRAME_HEIGHT);

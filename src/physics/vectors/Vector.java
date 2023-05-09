@@ -52,16 +52,16 @@ public class Vector {
      * @return the resultant vector when adding v
      */
     public Vector add(Vector v){
-        //New vector to be returned
-        Vector u = new Vector(state);
 
-        //Loop through all coordinates in vector
-        for(int i= 0; i<state.length;i++){
-            u.state[i] += v.state[i];
+        // Creates a Copy of the Vector in which the Function is called upon
+        double[] sumOfValues = new double[v.getDimension()];
+        // Iterates over the entries of Both Vectors, adding them together
+        for (int i = 0; i < v.getDimension(); i++) {
+            sumOfValues[i] = this.get(i) + v.get(i);
         }
 
-        //Return new vector
-        return u;
+        return new Vector(sumOfValues);
+
     }
 
     /**
@@ -70,16 +70,15 @@ public class Vector {
      * @return the resultant vector when subtracting v
      */
     public Vector subtract(Vector v){
-        //New vector to be returned
-        Vector u = new Vector(state);
 
-        //Loop through all coordinates in vector
-        for(int i= 0; i<state.length;i++){
-            u.state[i] -= v.state[i];
+        // Creates a Copy of the Vector in which the Function is called upon
+        double[] differenceOfValues = new double[v.getDimension()];
+        // Iterates over the entries of Both Vectors, adding them together
+        for (int i = 0; i < v.getDimension(); i++) {
+            differenceOfValues[i] = this.get(i) - v.get(i);
         }
 
-        //Return new vector
-        return u;
+        return new Vector(differenceOfValues);
     }
 
     /**
@@ -88,16 +87,15 @@ public class Vector {
      * @return the scalar product of the vector and the scalar
      */
     public Vector multiply(double scalar){
-        //New vector to be returned
-        Vector u = new Vector(state);
 
-        //Loop through all coordinates in vector
-        for(int i=0;i<state.length;i++){
-            u.state[i] *= scalar;
+        // Creates a Copy of the Vector in which the Function is called upon
+        double[] scalledValues = new double[this.getDimension()];
+        // Iterates over the entries of Both Vectors, adding them together
+        for (int i = 0; i < this.getDimension(); i++) {
+            scalledValues[i] = this.get(i) * scalar;
         }
 
-        //Return new vector
-        return u;
+        return new Vector(scalledValues);
     }
 
     /**

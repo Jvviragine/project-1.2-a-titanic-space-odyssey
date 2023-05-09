@@ -107,4 +107,28 @@ public class StateVector {
         return new StateVector(vectors);
     }
 
+    // Testing the Functionalities of the StateVector
+    public static void main(String[] args) {
+
+        // Creating Vectors
+        Vector v1 = new Vector(new double[]{1, 2, 3});
+        Vector v2 = new Vector(new double[]{21, 42, 63});
+
+        // Setting up the State Vectors
+        StateVector stateVector1 = new StateVector(new Vector[]{v1});
+        StateVector stateVector2 = new StateVector(new Vector[]{v2});
+
+        // Trying to Add V1 and V2
+//        StateVector sumOfStateVectors = stateVector1.add(stateVector2);
+//        for (int i = 0; i < 3; i++) {
+//            //System.out.println(sumOfStateVectors.getVector(0).get(i));
+//        }
+
+        // Trying to Multiply StateVector by a Scalar
+        StateVector scaledStateVector1 = stateVector1.multiply(2);
+        for (int i = 0; i < 3; i++) {
+            System.out.println(scaledStateVector1.getVector(0).get(i));
+        }
+    }
+
 }

@@ -1,15 +1,16 @@
 package gui.mainmenu;
 
-import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
 
-public class StartScreen extends JFrame {
+public class StartScreen extends JFrame implements ActionListener {
     //opening screen allowing user input of initial velocities and positions
     JFrame frame = new JFrame();
-    JLabel x, y, z, v1, v2, v3;
-    JTextField xText, yText, zText, v1Text, v2Text, v3Text;
-    JButton button;
+    JLabel x, y, z, v1, v2, v3, simulationSpeed;
+    JTextField xText, yText, zText, v1Text, v2Text, v3Text, simulationSpeedText;
+    JButton startButton;
+    JCheckBox checkBox;
     final int FRAME_WIDTH = 600;
     final int FRAME_HEIGHT = 500;
 
@@ -77,14 +78,34 @@ public class StartScreen extends JFrame {
         v3Text.setBounds(200,280,165,25);
         panel.add(v3Text);
 
-        JCheckBox checkBox = new JCheckBox("Freeze the simulation at the selected time.");
-        checkBox.setBounds(150, 320, 400, 20);
+        simulationSpeed = new JLabel("Simulation speed: ");
+        simulationSpeed.setBounds(130,320,160,25);
+        panel.add(simulationSpeed);
+
+        simulationSpeedText = new JTextField(30);
+        simulationSpeedText.setBounds(235,320,165,25);
+        panel.add(simulationSpeedText);
+
+        checkBox = new JCheckBox("Freeze the simulation at the given time.");
+        checkBox.setBounds(150, 360, 400, 20);
         panel.add(checkBox);
+
+        startButton = new JButton("Go to Titan!");
+        startButton.setBounds(200, 400, 165, 25);
+        startButton.addActionListener(this);
+        panel.add(startButton);
 
         frame.add(panel);
         frame.setSize(FRAME_WIDTH,FRAME_HEIGHT);
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if(checkBox.isSelected()) {
+            System.out.println("dumbass");
+        }
     }
 }

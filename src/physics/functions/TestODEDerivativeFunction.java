@@ -22,6 +22,6 @@ public class TestODEDerivativeFunction implements Function{
         Function dydt = new TestODEDerivativeFunction();
         Vector v = new Vector(new double[]{1});
         StateVector sv = new StateVector(new Vector[]{v});
-        System.out.println(dydt.applyFunction(sv, 2).getVector(0).get(0));
+        System.out.println(dydt.applyFunction(sv, 1).getVector(0).get(0));
     }
 }

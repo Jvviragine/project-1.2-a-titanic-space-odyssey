@@ -119,16 +119,20 @@ public class StateVector {
         StateVector stateVector2 = new StateVector(new Vector[]{v2});
 
         // Trying to Add V1 and V2
-//        StateVector sumOfStateVectors = stateVector1.add(stateVector2);
-//        for (int i = 0; i < 3; i++) {
-//            //System.out.println(sumOfStateVectors.getVector(0).get(i));
-//        }
+        StateVector sumOfStateVectors = stateVector1.add(stateVector2);
+        for (int i = 0; i < 3; i++) {
+            System.out.println(sumOfStateVectors.getVector(0).get(i));
+        }
+
+        System.out.println();
 
         // Trying to Multiply StateVector by a Scalar
-        StateVector scaledStateVector1 = stateVector1.multiply(2);
+        StateVector scaledStateVector1 = stateVector1.multiply(10);
         for (int i = 0; i < 3; i++) {
             System.out.println(scaledStateVector1.getVector(0).get(i));
         }
+
+
     }
 
 }

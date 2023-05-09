@@ -60,16 +60,21 @@ public class StateVector {
      * @return the resultant vector when adding v
      */
     public StateVector add(StateVector v){
-        //Make new vector array for new StateVector
-        Vector[] vectors = stateVector;
 
-        //Iterate through each vector in the State Vector
-        for(int i=0; i<stateVector.length; i++){
-            vectors[i] = stateVector[i].add(v.getStateVector()[i]);
+        // Stores the Array of Vectors that will be used to create the Result State Vector
+        Vector[] arrayOfVectors = new Vector[this.getNumberOfVectors()];
+
+        // Iterate over the Vectors of the 2 State Vectors and Add them
+        for (int vi = 0; vi < this.getNumberOfVectors(); vi++) {
+
+            // Here we are going though each Vector within the State Vectors
+
+            // Will store the Result of Adding the 2 Vectors from the ith position in the State Vector
+            Vector resultantVector = this.getVector(vi).add(v.getVector(vi));
+            arrayOfVectors[vi] = resultantVector;
         }
 
-        //Return State Vector with modified values
-        return new StateVector(vectors);
+        return new StateVector(arrayOfVectors);
     }
 
     /**

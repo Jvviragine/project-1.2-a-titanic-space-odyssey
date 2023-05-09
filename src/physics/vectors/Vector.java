@@ -4,6 +4,20 @@ public class Vector {
 
     private double[]state;
     private int dimension;
+
+    public static void main(String[] args){
+        double[] s = {1,2,3};
+        double[] t = {1,2,3};
+        Vector u = new Vector(s);
+        Vector v = new Vector(t);
+        Vector w = u.subtract(v);
+        for(int i=0; i <u.getDimension();i++){
+            System.out.println("U position " + i + ":" + u.state[i]);
+            System.out.println("V position " + i + ":" + v.state[i]);
+            System.out.println("W position " + i + ":" + w.state[i]);
+        }
+    }
+
     public Vector(double[] initialState){
         if (initialState.length > 0) {
             this.state = initialState;

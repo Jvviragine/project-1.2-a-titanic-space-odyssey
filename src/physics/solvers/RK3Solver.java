@@ -34,8 +34,9 @@ public class RK3Solver implements Solver{
             //yn+1 = y + 1/4*(k1 + 3*k3)
             StateVector add = k3.multiply(3).add(k1).multiply(1/4);
             StateVector yNew = fty.add(add);
+            currentState = yNew;
 
         }
-        return null;
+        return currentState;
     }
 }

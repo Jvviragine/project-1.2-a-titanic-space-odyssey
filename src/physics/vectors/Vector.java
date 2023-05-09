@@ -39,6 +39,13 @@ public class Vector {
         state[index] = value;
     }
 
+    public Vector setAll(double value){
+        for(int i = 0; i<state.length; i++){
+            set(i, value);
+        }
+        return this;
+    }
+
     /**
      * Computes the sum of two vectors
      * @param v the vector to be added

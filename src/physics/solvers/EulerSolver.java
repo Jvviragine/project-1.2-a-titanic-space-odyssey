@@ -1,6 +1,7 @@
 package physics.solvers;
 
 import physics.functions.Function;
+import physics.functions.TestODEDerivativeFunction;
 import physics.vectors.Vector;
 import physics.vectors.StateVector;
 
@@ -44,6 +45,30 @@ public class EulerSolver implements Solver{
         }
 
         return currentState;
+
+    }
+
+    // Testing the Euler Solver for y'=y, and y(0)=1, for which we know the exact solution y=eˆt
+    public static void main(String[] args) {
+
+        // Defining and Getting the f' = f(t,y) = dy/dt
+        Function dydt = new TestODEDerivativeFunction();
+
+        // Defining the Initial Condition y(0)=1
+        double t0 = 0, tf = 1;
+        Vector y0 = new Vector(new double[]{1}); // Vector that represents y(o)=1
+        StateVector svY0 = new StateVector(new Vector[]{y0}); // Embeds this Vector into a State Vector
+
+        // Defines the step Size
+        double h = 0.1;
+
+        // Calls the Euler Solver to Numerically solve y'=t with y(0)=1 and h=0.1
+        Solver eulerSolver = new EulerSolver();
+        StateVector svYf = eulerSolver.solve(dydt, svY0, t0, tf, h);
+
+        // Prints wt at tf
+        System.out.println(svYf.getVector(0).get(0));
+
 
     }
 

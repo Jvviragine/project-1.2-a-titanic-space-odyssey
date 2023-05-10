@@ -5,8 +5,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
 
+//Opening screen, allowing user input of initial velocities, positions and simulation speed.
+//Also gives the option to freeze the simulation at the inputted time.
 public class StartScreen extends JFrame implements ActionListener {
-    //opening screen allowing user input of initial velocities and positions
     JFrame frame = new JFrame();
     JLabel x, y, z, v1, v2, v3, simulationSpeed, topText01, topText02, errorText;
     JTextField xText, yText, zText, v1Text, v2Text, v3Text, simulationSpeedText;

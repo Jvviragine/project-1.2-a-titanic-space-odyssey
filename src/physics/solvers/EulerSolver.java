@@ -60,7 +60,7 @@ public class EulerSolver implements Solver{
         StateVector svY0 = new StateVector(new Vector[]{y0}); // Embeds this Vector into a State Vector
 
         // Defines the step Size
-        double h = 0.1;
+        double h = 0.0000001;
 
         // Calls the Euler Solver to Numerically solve y'=t with y(0)=1 and h=0.1
         Solver eulerSolver = new EulerSolver();

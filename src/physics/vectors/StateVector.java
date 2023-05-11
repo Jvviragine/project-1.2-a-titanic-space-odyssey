@@ -83,15 +83,20 @@ public class StateVector {
      * @return the resultant vector when subtracting v
      */
     public StateVector subtract(StateVector v){
-        //Make new vector array for new StateVector
-        Vector[] vectors = stateVector;
+        // Stores the Array of Vectors that will be used to create the Result State Vector
+        Vector[] arrayOfVectors = new Vector[this.getNumberOfVectors()];
 
-        //Iterate through each vector in the State Vector
-        for(int i= 0; i<stateVector.length; i++){
-            vectors[i] = stateVector[i].subtract(v.getStateVector()[i]);
+        // Iterate over the Vectors of the 2 State Vectors and Add them
+        for (int vi = 0; vi < this.getNumberOfVectors(); vi++) {
+
+            // Here we are going though each Vector within the State Vectors
+
+            // Will store the Result of Adding the 2 Vectors from the ith position in the State Vector
+            Vector resultantVector = this.getVector(vi).subtract(v.getVector(vi));
+            arrayOfVectors[vi] = resultantVector;
         }
-        //Return State Vector with modified values
-        return new StateVector(vectors);
+
+        return new StateVector(arrayOfVectors);
     }
 
     /**
@@ -100,36 +105,48 @@ public class StateVector {
      * @return the scalar product of the state vector and the scalar
      */
     public StateVector multiply(double scalar){
-        //Make new vector array for new StateVector
-        Vector[] vectors = stateVector;
+        // Stores the Array of Vectors that will be used to create the Result State Vector
+        Vector[] arrayOfVectors = new Vector[this.getNumberOfVectors()];
 
-        //Iterate through each vector in the State Vector
-        for(int i=0; i<stateVector.length; i++){
-            vectors[i] = stateVector[i].multiply(scalar);
+        // Iterate over the Vectors of the 2 State Vectors and Add them
+        for (int vi = 0; vi < this.getNumberOfVectors(); vi++) {
+
+            // Here we are going though each Vector within the State Vectors
+
+            // Will store the Result of Adding the 2 Vectors from the ith position in the State Vector
+            Vector resultantVector = this.getVector(vi).multiply(scalar);
+            arrayOfVectors[vi] = resultantVector;
         }
 
-        //Return State Vector with modified values
-        return new StateVector(vectors);
+        return new StateVector(arrayOfVectors);
     }
 
     // Testing the Functionalities of the StateVector
     public static void main(String[] args) {
 
         // Creating Vectors
-        Vector v1 = new Vector(new double[]{1, 2, 3});
-        Vector v2 = new Vector(new double[]{21, 42, 63});
+        Vector v1 = new Vector(new double[]{2, 4, 6});
+        Vector v2 = new Vector(new double[]{1, 2, 3});
 
         // Setting up the State Vectors
         StateVector stateVector1 = new StateVector(new Vector[]{v1});
         StateVector stateVector2 = new StateVector(new Vector[]{v2});
 
         // Trying to Add V1 and V2
+        System.out.println("Resultant State Vector of adding SV1 and SV2:");
         StateVector sumOfStateVectors = stateVector1.add(stateVector2);
         for (int i = 0; i < 3; i++) {
             System.out.println(sumOfStateVectors.getVector(0).get(i));
         }
 
-        System.out.println();
+        System.out.println("Checking the Value of SV1 after the addition (should not change!):");
+
+        // Checking the values of State Vector 1 after the Adddition
+        for (int i = 0; i < 3; i++) {
+            System.out.println(stateVector1.getVector(0).get(i));
+        }
+
+        System.out.println("State Vector that Represents the SV1 multiplied by a Scalar of 10: ");
 
         // Trying to Multiply StateVector by a Scalar
         StateVector scaledStateVector1 = stateVector1.multiply(10);
@@ -137,6 +154,18 @@ public class StateVector {
             System.out.println(scaledStateVector1.getVector(0).get(i));
         }
 
+        System.out.println("Checking the Values of SV1 after the Multiplication(should not change!):");
+        // Check if the Values of V1 have changed after the Multiplication
+        for (int i = 0; i < 3; i++) {
+            System.out.println(stateVector1.getVector(0).get(i));
+        }
+
+        // Testing the Subtract Method
+        System.out.println("Resultant State vector of the Subtraction of SV2 and SV1");
+        StateVector subtractedStateVector = stateVector2.subtract(stateVector1);
+        for (int i = 0; i < 3; i++) {
+            System.out.println(subtractedStateVector.getVector(0).get(i));
+        }
 
     }
 

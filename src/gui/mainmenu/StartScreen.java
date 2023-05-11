@@ -3,19 +3,20 @@ package gui.mainmenu;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.*;
 
 //Opening screen, allowing user input of initial velocities, positions and simulation speed.
 //Also gives the option to freeze the simulation at the inputted time.
 public class StartScreen extends JFrame implements ActionListener {
-    JFrame frame = new JFrame();
-    JLabel xText, yText, zText, v1Text, v2Text, v3Text, simulationSpeedText, topText01, topText02, errorText;
-    JTextField xInput, yInput, zInput, v1Input, v2Input, v3Input, simulationSpeedInput;
-    JButton startButton;
-    JCheckBox checkBox;
-    final int FRAME_WIDTH = 600;
-    final int FRAME_HEIGHT = 500;
+    private JFrame frame = new JFrame();
+    private JLabel xText, yText, zText, v1Text, v2Text, v3Text, simulationSpeedText, topText01, topText02, errorText;
+    private JTextField xInput, yInput, zInput, v1Input, v2Input, v3Input, simulationSpeedInput;
+    private JButton startButton;
+    private JCheckBox checkBox;
+    private final int FRAME_WIDTH = 600;
+    private final int FRAME_HEIGHT = 500;
 
     //The start screen, where the user can input custom values
     public StartScreen() {
@@ -109,7 +110,17 @@ public class StartScreen extends JFrame implements ActionListener {
         frame.add(panel);
         frame.setSize(FRAME_WIDTH,FRAME_HEIGHT);
         frame.setLocationRelativeTo(null);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+
+        //Closes and stops java from running when the window is closed with the "X" button
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                frame.dispose(); // Close the start screen
+                System.exit(0); // Stop Java from running
+            }
+        });
+
         frame.setVisible(true);
     }
 
@@ -148,7 +159,7 @@ public class StartScreen extends JFrame implements ActionListener {
         //If all input values are valid, removes the error text, closes the screen and opens the main GUI.
         if(allInputsValid) {
             errorText.setText("");      //removes error message
-            frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));    //closes the screen
+            frame.dispose();        //closes the start screen
             MainGUI mainGUI = new MainGUI();        //opens the main GUI
         }
     }

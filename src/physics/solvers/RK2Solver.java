@@ -20,29 +20,30 @@ public class RK2Solver implements Solver {
      */
     public StateVector solve(Function function, StateVector initialCondition, double t0, double tf, double stepSize) {
 
-        StateVector currentState = initialCondition;
+        StateVector currentState = initialCondition; // y(0) - Exact Value
 
+        // Iterate through the Step Sizes until we reach the Final one
         for(double t=t0; t<tf; t+=stepSize){
-            //Get derivative, f(t,y) of the function
-            StateVector fty = function.applyFunction(currentState,t);
 
-            //ki1 = h * f(ti,wi)
-            StateVector ki1 = fty.multiply(stepSize);
+            // Euler Step - K1
+            StateVector k1 = function.applyFunction(currentState, t).multiply(stepSize);
 
-            //Get derivative, f(ti + 2/3h , wi + 2/3ki1)
-            StateVector dydt = function.applyFunction((currentState.add(ki1.multiply(2/3))),(t + 2/3*stepSize));
+            // Second Approximation - K2
+            double k2Time = t + (0.333333333333333)*stepSize;
+            StateVector k2FunctionStateVector = currentState.add(k1.multiply(0.333333333333333));
+            StateVector k2 = function.applyFunction(k2FunctionStateVector, k2Time).multiply(stepSize);
+            StateVector scalledK2 = k2.multiply(3.0);
 
-            //ki2 = h * f(ti + 2/3h , wi + 2/3ki1)
-            StateVector ki2 = dydt.multiply(stepSize);
+            // Sum of Scalled Ks
+            StateVector scalledSumOfKs = k1.add(scalledK2);
 
-            //wi+1 = wi + 1/4(ki1 + 3ki2)
-            StateVector w2 = currentState.add((ki1.add(ki2)).multiply(1/4));
+            // Diving Scalled Sum by 4
+            StateVector averagedScalledStateVector = scalledSumOfKs.multiply(0.25);
 
-            //Update current state
-            currentState = w2;
+            currentState = currentState.add(averagedScalledStateVector);
         }
 
-        return initialCondition;
+        return currentState;
     }
 
 }

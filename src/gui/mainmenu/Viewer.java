@@ -1,16 +1,18 @@
 package gui.mainmenu;
 
-import javax.swing.*;
-import java.awt.*;
+import celestial_bodies.CelestialBody;
+import gui.SolarSystemPanel;
 
-public class MainGUI extends JFrame {
+import javax.swing.*;
+
+public class Viewer {
     private JFrame frame;
     private final int SCREEN_WIDTH = 1920;
     private final int SCREEN_HEIGHT = 1080;
-    public MainGUI() {
+    public Viewer() {
         frame = new JFrame();
 
-        JPanel panel = new JPanel();
+        SolarSystemPanel panel = new SolarSystemPanel();
         panel.setLayout(null);
 
         System.out.println(SCREEN_WIDTH);

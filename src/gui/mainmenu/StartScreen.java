@@ -160,7 +160,7 @@ public class StartScreen extends JFrame implements ActionListener {
         if(allInputsValid) {
             errorText.setText("");      //removes error message
             frame.dispose();        //closes the start screen
-            MainGUI mainGUI = new MainGUI();        //opens the main GUI
+            Viewer mainGUI = new Viewer();        //opens the main GUI
         }
     }
 }

@@ -3,14 +3,15 @@ package gui.mainmenu;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 import javax.swing.*;
 
 //Opening screen, allowing user input of initial velocities, positions and simulation speed.
 //Also gives the option to freeze the simulation at the inputted time.
 public class StartScreen extends JFrame implements ActionListener {
     JFrame frame = new JFrame();
-    JLabel x, y, z, v1, v2, v3, simulationSpeed, topText01, topText02, errorText;
-    JTextField xText, yText, zText, v1Text, v2Text, v3Text, simulationSpeedText;
+    JLabel xText, yText, zText, v1Text, v2Text, v3Text, simulationSpeedText, topText01, topText02, errorText;
+    JTextField xInput, yInput, zInput, v1Input, v2Input, v3Input, simulationSpeedInput;
     JButton startButton;
     JCheckBox checkBox;
     final int FRAME_WIDTH = 600;
@@ -40,61 +41,61 @@ public class StartScreen extends JFrame implements ActionListener {
         errorText.setHorizontalAlignment(JLabel.CENTER);
         panel.add(errorText);
 
-        x = new JLabel("x: ");
-        x.setBounds(180,80,80,25);
-        panel.add(x);
-
-        xText = new JTextField(30);
-        xText.setBounds(200,80,165,25);
+        xText = new JLabel("x: ");
+        xText.setBounds(180,80,80,25);
         panel.add(xText);
 
-        y = new JLabel("y: ");
-        y.setBounds(180,120,80,25);
-        panel.add(y);
+        xInput = new JTextField(30);
+        xInput.setBounds(200,80,165,25);
+        panel.add(xInput);
 
-        yText = new JTextField(30);
-        yText.setBounds(200,120,165,25);
+        yText = new JLabel("y: ");
+        yText.setBounds(180,120,80,25);
         panel.add(yText);
 
-        z = new JLabel("z: ");
-        z.setBounds(180,160,80,25);
-        panel.add(z);
+        yInput = new JTextField(30);
+        yInput.setBounds(200,120,165,25);
+        panel.add(yInput);
 
-        zText = new JTextField(30);
-        zText.setBounds(200,160,165,25);
+        zText = new JLabel("z: ");
+        zText.setBounds(180,160,80,25);
         panel.add(zText);
 
-        v1 = new JLabel("v1: ");
-        v1.setBounds(180,200,80,25);
-        panel.add(v1);
+        zInput = new JTextField(30);
+        zInput.setBounds(200,160,165,25);
+        panel.add(zInput);
 
-        v1Text = new JTextField(30);
-        v1Text.setBounds(200,200,165,25);
+        v1Text = new JLabel("v1: ");
+        v1Text.setBounds(180,200,80,25);
         panel.add(v1Text);
 
-        v2 = new JLabel("v2: ");
-        v2.setBounds(180,240,80,25);
-        panel.add(v2);
+        v1Input = new JTextField(30);
+        v1Input.setBounds(200,200,165,25);
+        panel.add(v1Input);
 
-        v2Text = new JTextField(30);
-        v2Text.setBounds(200,240,165,25);
+        v2Text = new JLabel("v2: ");
+        v2Text.setBounds(180,240,80,25);
         panel.add(v2Text);
 
-        v3 = new JLabel("v3: ");
-        v3.setBounds(180,280,80,25);
-        panel.add(v3);
+        v2Input = new JTextField(30);
+        v2Input.setBounds(200,240,165,25);
+        panel.add(v2Input);
 
-        v3Text = new JTextField(30);
-        v3Text.setBounds(200,280,165,25);
+        v3Text = new JLabel("v3: ");
+        v3Text.setBounds(180,280,80,25);
         panel.add(v3Text);
 
-        simulationSpeed = new JLabel("Simulation speed: ");
-        simulationSpeed.setBounds(130,320,160,25);
-        panel.add(simulationSpeed);
+        v3Input = new JTextField(30);
+        v3Input.setBounds(200,280,165,25);
+        panel.add(v3Input);
 
-        simulationSpeedText = new JTextField(30);
-        simulationSpeedText.setBounds(235,320,165,25);
+        simulationSpeedText = new JLabel("Simulation speed: ");
+        simulationSpeedText.setBounds(130,320,160,25);
         panel.add(simulationSpeedText);
+
+        simulationSpeedInput = new JTextField(30);
+        simulationSpeedInput.setBounds(235,320,165,25);
+        panel.add(simulationSpeedInput);
 
         checkBox = new JCheckBox("Freeze the simulation at the given time.");
         checkBox.setBounds(150, 360, 400, 20);
@@ -114,12 +115,13 @@ public class StartScreen extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent event) {
-        JTextField[] userInputs = {xText, yText, zText, v1Text, v2Text, v3Text, simulationSpeedText};
+        JTextField[] userInputs = {xInput, yInput, zInput, v1Input, v2Input, v3Input, simulationSpeedInput};
         boolean allInputsValid = true;
 
         if(checkBox.isSelected()) {
             //TODO: implement code to freeze the simulation at the time given in simulationSpeedText
             //Do this by setting a speed variable to 0?
+            System.out.println("Jippie! Box is selected.");
         }
 
         //Goes through each textField and checks if it is empty.
@@ -129,24 +131,25 @@ public class StartScreen extends JFrame implements ActionListener {
             if (i.getText().isEmpty()) {
                 //TODO: implement code to use default value for the empty textField
                 //i.setText(actualValue);
-                System.out.println("Empty test successful");
+                System.out.println("Empty test successful");    //testing purposes
             } else {
                 try {
                     Double.parseDouble(i.getText());
-                } catch(NumberFormatException exception) {
+                } catch (NumberFormatException exception) {
                     errorText.setText("Please only use numbers, \".\" and \"-\" as inputs.");
                     i.setText("");
                     allInputsValid = false;
                 }
-
-                //If all input values are valid, remove the error text
-                //Maybe not necessary if we eventually just want to remove the startScreen
-                if(allInputsValid) {
-                    errorText.setText("");
-                }
-
-                System.out.println(i.getText());
+                //TODO: implement values from the physics team
+                System.out.println(i.getText());                //testing purposes
             }
+        }
+
+        //If all input values are valid, removes the error text, closes the screen and opens the main GUI.
+        if(allInputsValid) {
+            errorText.setText("");      //removes error message
+            frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));    //closes the screen
+            MainGUI mainGUI = new MainGUI();        //opens the main GUI
         }
     }
 }

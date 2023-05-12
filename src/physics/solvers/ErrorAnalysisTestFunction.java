@@ -52,10 +52,12 @@ public class ErrorAnalysisTestFunction {
         System.out.println("RK3 = " + "\n" + rungeKutta3Approximation + "\n");
 
         // Approximation using Runge Kutta 4 - Second Order - O(h4)
-//        Solver rungeKutta4Solver = new RK4Solver();
-//        StateVector rk4StateVector = rungeKutta4Solver.solve(dydt, initialValue, t0, tf, h);
-//        double rungeKutta4Approximation = rk4StateVector.getVector(0).get(0);
-//        System.out.println("RK4 = " + "\n" + rungeKutta4Approximation + "\n");
+        Solver rungeKutta4Solver = new RK4Solver();
+        StateVector rk4StateVector = rungeKutta4Solver.solve(dydt, initialValue, t0, tf, h);
+        double rungeKutta4Approximation = rk4StateVector.getVector(0).get(0);
+        System.out.println("RK4 = " + "\n" + rungeKutta4Approximation);
+        double errorRK4 = Math.abs(exactValue - rungeKutta4Approximation);
+        System.out.println("Error RK4 = " + "\n" + errorRK4 + "\n");
 
 
     }

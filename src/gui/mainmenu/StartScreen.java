@@ -27,7 +27,7 @@ public class StartScreen extends JFrame implements ActionListener {
 
     //The start screen, where the user can input custom values
     public StartScreen() {
-        frame = new JFrame("Launch modifier");
+        frame = new JFrame("Launch configuration");
 
         JPanel panel = new JPanel();
         panel.setLayout(null);
@@ -109,7 +109,7 @@ public class StartScreen extends JFrame implements ActionListener {
         checkBox.setBounds(150, 360, 400, 20);
         panel.add(checkBox);
 
-        startButton = new JButton("Initiate launching sequence!");
+        startButton = new JButton("Launch!");
         startButton.setBounds(200, 400, 165, 25);
         startButton.addActionListener(this);
         panel.add(startButton);
@@ -134,7 +134,8 @@ public class StartScreen extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent event) {
         JTextField[] userInputs = {xInput, yInput, zInput, v1Input, v2Input, v3Input, simulationSpeedInput};
-        double[] finalValues = {x, y, z, v1, v2, v3};
+        double[] finalPositions = {x, y, z};
+        double[] finalVelocities = {v1, v2, v3};
         boolean allInputsValid = true;
 
         if(checkBox.isSelected()) {
@@ -168,30 +169,32 @@ public class StartScreen extends JFrame implements ActionListener {
          * removes the error text, closes the screen and opens the main GUI.
          */
         if(allInputsValid) {
-            for(int i = 0; i<finalValues.length; i++) {
-                finalValues[i] = Double.parseDouble(userInputs[i].getText());
-                System.out.println(finalValues[i]);                //testing purposes
+            //Assign the inputted position to the final positions array
+            for(int i = 0; i<finalPositions.length; i++) {
+                finalPositions[i] = Double.parseDouble(userInputs[i].getText());
             }
 
-            Vector initialPosition = new Vector(new double[]{x, y, z});     //defines the initial position
-            Vector initialSpeed = new Vector(new double[] {v1, v2, v3});    //defines the initial velocity
+            //Assign the inputted velocities to the final velocities array
+            for(int i = 0; i<finalVelocities.length; i++) {
+                finalVelocities[i] = Double.parseDouble(userInputs[i+3].getText());
+            }
+
+            Vector initialPosition = new Vector(finalPositions);     //defines the initial positions vector
+            Vector initialSpeed = new Vector(finalVelocities);    //defines the initial velocities vector
 
             //initiate all calculations with the inputted values
             StateVector initialConditions = new StateVector(new Vector[]{initialPosition, initialSpeed});
+
+//            //Test to see if the vector is working (it is!) (as far as i know)
+//            for(int i = 0; i<2; i++) {
+//                for(int j = 0; j<3; j++) {
+//                    System.out.println(initialConditions.getVector(i).get(j));
+//                }
+//            }
 
             errorText.setText("");      //removes error message
             frame.dispose();        //closes the start screen
             SimulationScreen simulationScreen = new SimulationScreen(planetList);        //opens the main GUI
         }
     }
-
-    public double getXInput() {
-        return x;
-    }
-
-    public double getYInput() {
-        return y;
-    }
-
-    //TODO: make getters for all values
 }

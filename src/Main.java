@@ -11,13 +11,5 @@ public class Main {
 
         StartScreen startScreen = new StartScreen();
 
-//        double x = startScreen.getX();
-//        System.out.println(x);
-//        Vector initialPosition = new Vector(new double[]{x, y, z});
-//        Vector initialSpeed = new Vector(new double[] {v1, v2, v3});
-
-//        StateVector initialConditions = new StateVector(new Vector[]{initialPosition, initialSpeed});
-
-
     }
 }

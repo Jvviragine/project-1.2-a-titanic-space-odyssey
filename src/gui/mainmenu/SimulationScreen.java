@@ -18,6 +18,8 @@ public class SimulationScreen extends JPanel {
         panel.setLayout(null);
         panel.setBackground(Color.BLACK);
 
+
+
         frame.add(panel);
         frame.setSize(SCREEN_WIDTH,SCREEN_HEIGHT);
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);

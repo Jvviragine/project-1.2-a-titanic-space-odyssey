@@ -1,5 +1,8 @@
 package gui.mainmenu;
 
+import physics.vectors.StateVector;
+import physics.vectors.Vector;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,14 +16,18 @@ public class StartScreen extends JFrame implements ActionListener {
     private JFrame frame = new JFrame();
     private JLabel xText, yText, zText, v1Text, v2Text, v3Text, simulationSpeedText, topText01, topText02, errorText;
     private JTextField xInput, yInput, zInput, v1Input, v2Input, v3Input, simulationSpeedInput;
+    private double x, y, z, v1, v2, v3, simSpeed;
+    //TODO: remove this defaultConditions variable and replace it with getDefaultConditions function from another class
+    private double[] defaultConditions = {-148458048.395164, -27524868.1841142, 70233.6499287411, 42.42270135156, -43.62738201925, -3.1328169170, 1.0};
     private JButton startButton;
     private JCheckBox checkBox;
     private final int FRAME_WIDTH = 600;
     private final int FRAME_HEIGHT = 500;
+    private PlanetList planetList;
 
     //The start screen, where the user can input custom values
     public StartScreen() {
-        frame = new JFrame();
+        frame = new JFrame("Launch configuration");
 
         JPanel panel = new JPanel();
         panel.setLayout(null);
@@ -102,7 +109,7 @@ public class StartScreen extends JFrame implements ActionListener {
         checkBox.setBounds(150, 360, 400, 20);
         panel.add(checkBox);
 
-        startButton = new JButton("Go to Titan!");
+        startButton = new JButton("Launch!");
         startButton.setBounds(200, 400, 165, 25);
         startButton.addActionListener(this);
         panel.add(startButton);
@@ -127,6 +134,8 @@ public class StartScreen extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent event) {
         JTextField[] userInputs = {xInput, yInput, zInput, v1Input, v2Input, v3Input, simulationSpeedInput};
+        double[] finalPositions = {x, y, z};
+        double[] finalVelocities = {v1, v2, v3};
         boolean allInputsValid = true;
 
         if(checkBox.isSelected()) {
@@ -138,29 +147,54 @@ public class StartScreen extends JFrame implements ActionListener {
         //Goes through each textField and checks if it is empty.
         //If it is not, tries to convert the text in the textField to double.
         //If not successful, shows the error message and clears the value, else it proceeds.
-        for(JTextField i : userInputs) {
-            if (i.getText().isEmpty()) {
+        for(int i = 0; i<userInputs.length; i++) {
+            if (userInputs[i].getText().isEmpty()) {
                 //TODO: implement code to use default value for the empty textField
-                //i.setText(actualValue);
-                System.out.println("Empty test successful");    //testing purposes
-            } else {
+                userInputs[i].setText(String.valueOf(defaultConditions[i]));
+            }
+            else {
                 try {
-                    Double.parseDouble(i.getText());
+                    Double.parseDouble(userInputs[i].getText());
                 } catch (NumberFormatException exception) {
                     errorText.setText("Please only use numbers, \".\" and \"-\" as inputs.");
-                    i.setText("");
+                    userInputs[i].setText("");
                     allInputsValid = false;
                 }
-                //TODO: implement values from the physics team
-                System.out.println(i.getText());                //testing purposes
             }
         }
 
-        //If all input values are valid, removes the error text, closes the screen and opens the main GUI.
+        /*
+         * If all input values are valid:
+         * assigns all final values to variables, which are used to define the initialConditions;
+         * removes the error text, closes the screen and opens the main GUI.
+         */
         if(allInputsValid) {
+            //Assign the inputted position to the final positions array
+            for(int i = 0; i<finalPositions.length; i++) {
+                finalPositions[i] = Double.parseDouble(userInputs[i].getText());
+            }
+
+            //Assign the inputted velocities to the final velocities array
+            for(int i = 0; i<finalVelocities.length; i++) {
+                finalVelocities[i] = Double.parseDouble(userInputs[i+3].getText());
+            }
+
+            Vector initialPosition = new Vector(finalPositions);     //defines the initial positions vector
+            Vector initialSpeed = new Vector(finalVelocities);    //defines the initial velocities vector
+
+            //initiate all calculations with the inputted values
+            StateVector initialConditions = new StateVector(new Vector[]{initialPosition, initialSpeed});
+
+//            //Test to see if the vector is working (it is!) (as far as i know)
+//            for(int i = 0; i<2; i++) {
+//                for(int j = 0; j<3; j++) {
+//                    System.out.println(initialConditions.getVector(i).get(j));
+//                }
+//            }
+
             errorText.setText("");      //removes error message
             frame.dispose();        //closes the start screen
-            Viewer mainGUI = new Viewer();        //opens the main GUI
+            SimulationScreen simulationScreen = new SimulationScreen(planetList);        //opens the main GUI
         }
     }
 }

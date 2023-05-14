@@ -3,7 +3,7 @@ package physics.vectors;
 /**
  * Stores the State Vector of the Differential Equation  of Interest
  *
- * For the Solar Syste, the State Vector will hold 2 3D Vectors (Position and Velocity)
+ * For the Solar System, the State Vector will hold 2 3D Vectors (Position and Velocity)
  */
 public class StateVector {
 
@@ -35,7 +35,9 @@ public class StateVector {
         return stateVector;
     }
 
-    public Vector getVector(int index) {return stateVector[index];}
+    public Vector getVector(int index) {
+        return stateVector[index];
+    }
 
     /**
      * Getter for the Number of Vectors in the State Vector
@@ -67,7 +69,7 @@ public class StateVector {
         // Iterate over the Vectors of the 2 State Vectors and Add them
         for (int vi = 0; vi < this.getNumberOfVectors(); vi++) {
 
-            // Here we are going though each Vector within the State Vectors
+            // Here we are going through each Vector within the State Vectors
 
             // Will store the Result of Adding the 2 Vectors from the ith position in the State Vector
             Vector resultantVector = this.getVector(vi).add(v.getVector(vi));

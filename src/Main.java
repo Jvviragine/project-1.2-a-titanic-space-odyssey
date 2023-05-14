@@ -1,5 +1,7 @@
 import celestial_bodies.CelestialBody;
 import gui.mainmenu.StartScreen;
+import physics.vectors.StateVector;
+import physics.vectors.Vector;
 import solar_system_data.PlanetaryData;
 
 // Press ⇧ twice to open the Search Everywhere dialog and type `show whitespaces`,
@@ -9,14 +11,13 @@ public class Main {
 
         StartScreen startScreen = new StartScreen();
 
-        //initialize the celestial bodies with PlanetaryData
-        CelestialBody venus = new CelestialBody(null, null, 0, null);
-        CelestialBody earth = new CelestialBody(null, null, 0, null);
-        CelestialBody moon = new CelestialBody(null, null, 0, null);
-        CelestialBody mars = new CelestialBody(null, null, 0, null);
-        CelestialBody jupiter = new CelestialBody(null, null, 0, null);
-        CelestialBody saturn = new CelestialBody(null, null, 0, null);
-        CelestialBody titan = new CelestialBody(null, null, 0, null);
+//        double x = startScreen.getX();
+//        System.out.println(x);
+//        Vector initialPosition = new Vector(new double[]{x, y, z});
+//        Vector initialSpeed = new Vector(new double[] {v1, v2, v3});
+
+//        StateVector initialConditions = new StateVector(new Vector[]{initialPosition, initialSpeed});
+
 
     }
 }

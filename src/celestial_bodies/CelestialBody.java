@@ -9,15 +9,13 @@ public class CelestialBody {
     private Vector initialState;
     private double mass;
     private Vector currentState;
-    private JLabel celestialBodyLabel;
 
     public static ArrayList<CelestialBody> bodies;
 
-    public CelestialBody(String name, Vector initialState, double mass, JLabel celestialBodyLabel){
+    public CelestialBody(String name, Vector initialState, double mass){
         this.name = name;
         this.initialState = initialState;
         this.mass = mass;
-        this.celestialBodyLabel = celestialBodyLabel;
         bodies.add(this);
     }
 
@@ -43,16 +41,6 @@ public class CelestialBody {
 
     public static ArrayList<CelestialBody> getBodies() {
         return bodies;
-    }
-
-    public JLabel getCelestialBodyLabel() {
-        return celestialBodyLabel;
-    }
-
-    //updates the position of the celestial object's image according to the given vector
-    public JLabel updateImagePosition(Vector vector) {
-        //TODO : update the  position of the celestialBodyLabel
-        return this.celestialBodyLabel;
     }
 
 }

@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
 import javax.swing.*;
 
 //Opening screen, allowing user input of initial velocities, positions and simulation speed.
@@ -23,10 +24,11 @@ public class StartScreen extends JFrame implements ActionListener {
     private JCheckBox checkBox;
     private final int FRAME_WIDTH = 600;
     private final int FRAME_HEIGHT = 500;
-    private PlanetList planetList;
+    private PlanetList planetList = new PlanetList();
+    private PlanetList.Planet earth = new PlanetList.Planet(500, 500, 50, 20, 0);
 
     //The start screen, where the user can input custom values
-    public StartScreen() {
+    public StartScreen() throws IOException {
         frame = new JFrame("Launch configuration");
 
         JPanel panel = new JPanel();
@@ -194,6 +196,7 @@ public class StartScreen extends JFrame implements ActionListener {
 
             errorText.setText("");      //removes error message
             frame.dispose();        //closes the start screen
+            planetList.addPlanet(earth);
             SimulationScreen simulationScreen = new SimulationScreen(planetList);        //opens the main GUI
         }
     }

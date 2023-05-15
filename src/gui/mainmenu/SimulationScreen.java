@@ -10,15 +10,17 @@ public class SimulationScreen extends JPanel {
     private PlanetList planetList;
 
     public SimulationScreen(PlanetList planetList) {
-        this.planetList = planetList;
-
         frame = new JFrame();
 
         JPanel panel = new JPanel();
         panel.setLayout(null);
         panel.setBackground(Color.BLACK);
 
+        this.planetList = planetList;
 
+        setBounds(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+        setBackground(Color.BLACK);
+        panel.add(this);
 
         frame.add(panel);
         frame.setSize(SCREEN_WIDTH,SCREEN_HEIGHT);
@@ -34,5 +36,6 @@ public class SimulationScreen extends JPanel {
         Graphics2D g2d = (Graphics2D) g;
 
         planetList.draw(g2d);
+        repaint();
     }
 }

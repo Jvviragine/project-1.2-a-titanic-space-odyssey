@@ -42,11 +42,11 @@ public class InitialConditions {
             //here simulation of the trip with the possible velocity
 
             //checking if the simulation with the velocity got us to titan
-            if(closeEnough(system.getStateVectors()[10].getVector(0), system.getStateVectors()[9].getVector(0), dist)){
-                return possibleVel;
-            }
-            //updating the vectors
-            current = possibleVel;
+//            if(closeEnough(system.getStateVectors()[10].getVector(0), system.getStateVectors()[9].getVector(0), dist)){
+//                return possibleVel;
+//            }
+//            //updating the vectors
+//            current = possibleVel;
         }
         return current;
     }

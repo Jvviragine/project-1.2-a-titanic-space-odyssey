@@ -36,11 +36,11 @@ public class InitialConditions {
         int iter = 1000;
         while(iter>0){
             iter--;
-            SolarSystem system = new SolarSystem();
-            Vector possibleVel = gradietDecsent(current, 0.01, new DerivativeFunction(system));
+            //SolarSystem system = new SolarSystem();
+            //Vector possibleVel = gradietDecsent(current, 0.01, new DerivativeFunction(system));
 
             //here simulation of the trip with the possible velocity
-            
+
             //checking if the simulation with the velocity got us to titan
             if(closeEnough(system.getStateVectors()[10].getVector(0), system.getStateVectors()[9].getVector(0), dist)){
                 return possibleVel;

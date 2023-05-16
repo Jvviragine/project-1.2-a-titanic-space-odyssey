@@ -9,8 +9,10 @@ public class Vector {
         double[] s = {1,2,3};
         double[] t = {1,2,3};
         Vector u = new Vector(s);
-        Vector v = new Vector(t);
+        Vector v = u.copyOf();
         Vector w = u.subtract(v);
+        u = v.add(u);
+
         for(int i=0; i <u.getDimension();i++){
             System.out.println("U position " + i + ":" + u.state[i]);
             System.out.println("V position " + i + ":" + v.state[i]);
@@ -66,15 +68,21 @@ public class Vector {
      * @return the resultant vector when adding v
      */
     public Vector add(Vector v){
+        if(v.getDimension() == this.getDimension()){
 
         // Creates a Copy of the Vector in which the Function is called upon
         double[] sumOfValues = new double[v.getDimension()];
+
         // Iterates over the entries of Both Vectors, adding them together
         for (int i = 0; i < v.getDimension(); i++) {
             sumOfValues[i] = this.get(i) + v.get(i);
         }
 
         return new Vector(sumOfValues);
+
+        }
+
+        else throw new IllegalArgumentException("Vectors must have the same dimensions to be subtracted.");
 
     }
 
@@ -84,15 +92,19 @@ public class Vector {
      * @return the resultant vector when subtracting v
      */
     public Vector subtract(Vector v){
+        if(v.getDimension() == this.getDimension()){
 
-        // Creates a Copy of the Vector in which the Function is called upon
-        double[] differenceOfValues = new double[v.getDimension()];
-        // Iterates over the entries of Both Vectors, adding them together
-        for (int i = 0; i < v.getDimension(); i++) {
-            differenceOfValues[i] = this.get(i) - v.get(i);
+            // Creates a Copy of the Vector in which the Function is called upon
+            double[] differenceOfValues = new double[v.getDimension()];
+
+            // Iterates over the entries of Both Vectors, adding them together
+            for (int i = 0; i < v.getDimension(); i++) {
+                differenceOfValues[i] = this.get(i) - v.get(i);
+            }
+
+            return new Vector(differenceOfValues);
         }
-
-        return new Vector(differenceOfValues);
+        else throw new IllegalArgumentException("Vectors must have the same dimensions to be subtracted.");
     }
 
     /**
@@ -137,4 +149,16 @@ public class Vector {
         return Math.sqrt(diffsquared);
     }
 
+    public Vector copyOf(){
+        int dimension = this.getDimension();
+        double[] u = new double[dimension];
+        for(int i = 0; i < dimension; i++){
+            u[i] = this.get(i);
+        }
+        return new Vector(u);
+    }
+
+
 }
+
+

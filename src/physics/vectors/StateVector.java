@@ -63,20 +63,24 @@ public class StateVector {
      */
     public StateVector add(StateVector v){
 
-        // Stores the Array of Vectors that will be used to create the Result State Vector
-        Vector[] arrayOfVectors = new Vector[this.getNumberOfVectors()];
+        if(v.getNumberOfVectors()==this.getNumberOfVectors()){
+            // Stores the Array of Vectors that will be used to create the Result State Vector
+            Vector[] arrayOfVectors = new Vector[this.getNumberOfVectors()];
 
-        // Iterate over the Vectors of the 2 State Vectors and Add them
-        for (int vi = 0; vi < this.getNumberOfVectors(); vi++) {
+            // Iterate over the Vectors of the 2 State Vectors and Add them
+            for (int vi = 0; vi < this.getNumberOfVectors(); vi++) {
 
-            // Here we are going through each Vector within the State Vectors
+                // Here we are going through each Vector within the State Vectors
 
-            // Will store the Result of Adding the 2 Vectors from the ith position in the State Vector
-            Vector resultantVector = this.getVector(vi).add(v.getVector(vi));
-            arrayOfVectors[vi] = resultantVector;
+                // Will store the Result of Adding the 2 Vectors from the ith position in the State Vector
+                Vector resultantVector = this.getVector(vi).add(v.getVector(vi));
+                arrayOfVectors[vi] = resultantVector;
+            }
+
+            return new StateVector(arrayOfVectors);
         }
+        else throw new IllegalArgumentException("State Vectors must have the same number of Vectors to be added.");
 
-        return new StateVector(arrayOfVectors);
     }
 
     /**
@@ -85,20 +89,24 @@ public class StateVector {
      * @return the resultant vector when subtracting v
      */
     public StateVector subtract(StateVector v){
-        // Stores the Array of Vectors that will be used to create the Result State Vector
-        Vector[] arrayOfVectors = new Vector[this.getNumberOfVectors()];
 
-        // Iterate over the Vectors of the 2 State Vectors and Add them
-        for (int vi = 0; vi < this.getNumberOfVectors(); vi++) {
+        if(v.getNumberOfVectors()==this.getNumberOfVectors()){
+            // Stores the Array of Vectors that will be used to create the Result State Vector
+            Vector[] arrayOfVectors = new Vector[this.getNumberOfVectors()];
 
-            // Here we are going though each Vector within the State Vectors
+            // Iterate over the Vectors of the 2 State Vectors and Add them
+            for (int vi = 0; vi < this.getNumberOfVectors(); vi++) {
 
-            // Will store the Result of Adding the 2 Vectors from the ith position in the State Vector
-            Vector resultantVector = this.getVector(vi).subtract(v.getVector(vi));
-            arrayOfVectors[vi] = resultantVector;
+                // Here we are going though each Vector within the State Vectors
+
+                // Will store the Result of Adding the 2 Vectors from the ith position in the State Vector
+                Vector resultantVector = this.getVector(vi).subtract(v.getVector(vi));
+                arrayOfVectors[vi] = resultantVector;
+            }
+
+            return new StateVector(arrayOfVectors);
         }
-
-        return new StateVector(arrayOfVectors);
+        else throw new IllegalArgumentException("State Vectors must have the same number of Vectors to be added.");
     }
 
     /**

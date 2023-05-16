@@ -1,5 +1,7 @@
 package physics.optimalization;
 
+import celestial_bodies.SolarSystem;
+import physics.functions.DerivativeFunction;
 import physics.vectors.StateVector;
 import physics.vectors.Vector;
 
@@ -9,6 +11,7 @@ public class InitialConditions {
 
     /**
      * Finds point on the surface of a planet that is the closest to the desired target,
+     * if we want to find the point on the orbit we increase the radius
      * https://math.stackexchange.com/questions/1784106/how-do-i-compute-the-closest-points-on-a-sphere-given-a-point-outside-the-sphere
      * @param target target point
      * @param center center of a planet
@@ -28,42 +31,46 @@ public class InitialConditions {
         return point;
     }
 
-//    public void findVelocity(Vector current, Vector probe, Vector titan){
-//        double dist = 0;
-//        int iter = 1000;
-//        while(!closeEnough(probe, titan, dist) && iter>0){
-//            iter--;
-//            gradietDecsent(current, 0.01, );
-//        }
-//    }
-//
-//    public void gradietDecsent(Vector current, double learningRate, Function function){
-//
-//        //calculate the derivative (acceleration)
-//        Vector[] vec = new Vector[1];
-//        vec[0] = current;
-//        StateVector sVec = new StateVector(vec);
-//        StateVector sAcc = function.applyFunction(sVec, 0);
-//        Vector acc = sAcc.getVector(0);
-//
-//        //calculating the error which is the expected output - current output,
-//        // in our case the derivative of the velocity (acceleration) - current velocity
-//        Vector error = error(current, acc);
-//
-//        //y_new = currentVel - learningRate*error
-//        Vector newVel = current.subtract(error.multiply(learningRate));
-//
-//        //checking whether the new velocity gets us close enough to Titan by simulating the trip
-//        //TODO simulation of the trip and checking closeEnough
-//
-//
-//    }
-//
-//    public Vector error(Vector initial, Vector expected){
-//        return expected.subtract(initial);
-//    }
-//
-//    public boolean closeEnough(Vector probe, Vector titan, double dist){
-//        return probe.distance(titan)<dist;
-//    }
+    public Vector findVelocity(Vector current, Vector probe, Vector titan){
+        double dist = 0;
+        int iter = 1000;
+        while(iter>0){
+            iter--;
+            SolarSystem system = new SolarSystem();
+            Vector possibleVel = gradietDecsent(current, 0.01, new DerivativeFunction(system));
+
+            //here simulation of the trip with the possible velocity
+            
+            //checking if the simulation with the velocity got us to titan
+            if(closeEnough(system.getStateVectors()[10].getVector(0), system.getStateVectors()[9].getVector(0), dist)){
+                return possibleVel;
+            }
+            //updating the vectors
+            current = possibleVel;
+        }
+        return current;
+    }
+
+    public Vector gradietDecsent(Vector current, double learningRate, DerivativeFunction function){
+
+        //calculate the derivative (acceleration) for the probe
+        Vector acc = function.getAcceleration(10);
+
+        //calculating the error which is the expected output - current output,
+        // in our case the derivative of the velocity (acceleration) - current velocity
+        Vector error = error(current, acc);
+
+        //y_new = currentVel - learningRate*error
+        Vector newVel = current.subtract(error.multiply(learningRate));
+
+        return newVel;
+    }
+
+    public Vector error(Vector initial, Vector expected){
+        return expected.subtract(initial);
+    }
+
+    public boolean closeEnough(Vector probe, Vector titan, double dist){
+        return probe.distance(titan)<dist;
+    }
 }

@@ -12,17 +12,11 @@ public class SimulationScreen extends JPanel {
     public SimulationScreen(PlanetList planetList) {
         frame = new JFrame();
 
-        JPanel panel = new JPanel();
-        panel.setLayout(null);
-        panel.setBackground(Color.BLACK);
-
         this.planetList = planetList;
 
-        setBounds(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
         setBackground(Color.BLACK);
-        panel.add(this);
 
-        frame.add(panel);
+        frame.add(this, BorderLayout.CENTER);
         frame.setSize(SCREEN_WIDTH,SCREEN_HEIGHT);
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.setLocationRelativeTo(null);
@@ -35,7 +29,7 @@ public class SimulationScreen extends JPanel {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
 
-        planetList.draw(g2d);
+        planetList.draw(g2d, getWidth(), getHeight());
         repaint();
     }
 }

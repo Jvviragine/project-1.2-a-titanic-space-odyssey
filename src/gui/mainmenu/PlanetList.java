@@ -24,7 +24,6 @@ public class PlanetList {
         public int x, y, z, diameter;   //planetary data
         public int centerX, centerY, radius;    //center point and radius of the orbit
         public double angle;    //angle of the planet
-        Image planetImage = ImageIO.read(new File("src/gui/mainmenu/images/Earth.png"));
 
         public Planet(int centerX, int centerY, int radius, int diameter, double angle) throws IOException {
             this.centerX = centerX;
@@ -43,11 +42,10 @@ public class PlanetList {
         planets.add(planet);
     }
 
-    public void draw(Graphics2D g) {
+    public void draw(Graphics2D g, int screenWidth, int screenHeight) {
         int counter = 1;
 
-        g.setColor(Color.YELLOW);
-        g.drawImage(planetImages[0], SCREEN_WIDTH/2 - 15, SCREEN_HEIGHT/2 - 15, 30, 30, null);
+        g.drawImage(planetImages[0], screenWidth/2-15, screenHeight/2-15, 30, 30, null);
 
         for(Planet p : planets) {
             p.x = p.centerX + (int) (p.radius * Math.cos(p.angle));

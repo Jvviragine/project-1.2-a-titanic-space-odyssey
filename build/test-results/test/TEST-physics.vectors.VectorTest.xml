@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="physics.vectors.VectorTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2023-05-21T19:24:40" hostname="LAPTOP-VGN7U11N" time="0.042">
+  <properties/>
+  <testcase name="subtract()" classname="physics.vectors.VectorTest" time="0.023"/>
+  <testcase name="getMagnitude()" classname="physics.vectors.VectorTest" time="0.001"/>
+  <testcase name="Vector()" classname="physics.vectors.VectorTest" time="0.001"/>
+  <testcase name="getDimension()" classname="physics.vectors.VectorTest" time="0.001"/>
+  <testcase name="setAll()" classname="physics.vectors.VectorTest" time="0.001"/>
+  <testcase name="add()" classname="physics.vectors.VectorTest" time="0.001"/>
+  <testcase name="get()" classname="physics.vectors.VectorTest" time="0.001"/>
+  <testcase name="set()" classname="physics.vectors.VectorTest" time="0.0"/>
+  <testcase name="distance()" classname="physics.vectors.VectorTest" time="0.001"/>
+  <testcase name="multiply()" classname="physics.vectors.VectorTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

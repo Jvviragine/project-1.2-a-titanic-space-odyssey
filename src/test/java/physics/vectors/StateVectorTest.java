@@ -1,12 +1,8 @@
 package physics.vectors;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-
-import javax.swing.plaf.nimbus.State;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class StateVectorTest {

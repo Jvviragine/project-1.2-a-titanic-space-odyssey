@@ -12,15 +12,15 @@ public class DerivativeFunction implements Function{
     }
 
     public static void main(String[] args) {
-        double [] vector1 = new double[]{1,2,3};
-        double [] vector2 = new double[]{4,5,6};
+        double [] vector1 = new double[]{1,20,300};
+        double [] vector2 = new double[]{4,50,600};
         Vector u = new Vector(vector1);
         Vector v = new Vector(vector2);
         Vector[] vectors1 = new Vector[]{u,v};
         StateVector sv1 = new StateVector(vectors1);
 
-        double [] vector3 = new double[]{7,8,9};
-        double [] vector4 = new double[]{10,11,12};
+        double [] vector3 = new double[]{700,80,9};
+        double [] vector4 = new double[]{1000,110,12};
         Vector s = new Vector(vector3);
         Vector t = new Vector(vector4);
         Vector[] vectors2 = new Vector[]{s,t};
@@ -49,11 +49,11 @@ public class DerivativeFunction implements Function{
     public StateVector applyFunction(StateVector y, double t) {
         Vector[] vectors = new Vector[y.getNumberOfVectors()];
 
-        //Place new position vector (old velocity vector) in new state array
+        //Place new position vector (old velocity vector) in derivative state array
         Vector vector1 = y.getVector(1).copyOf();
         vectors[0] = vector1;
 
-        //Calculate acceleration and place new velocity in new state array
+        //Calculate acceleration and place new velocity in derivative state array
         vectors[1] = getAcceleration(system.getIndex(y));
 
         return new StateVector(vectors);
@@ -81,10 +81,11 @@ public class DerivativeFunction implements Function{
                 Vector div = diff.multiply(1/distance);
 
                 //G * MiMj * Xi - Xj / ||Xi - Xj||^3
-                force = force.add(div.multiply(weight));
+                force = div.multiply(weight);
             }
         }
         force = force.multiply(-1);
+
         Vector acceleration = force.multiply(1/mass);
 
         return acceleration;

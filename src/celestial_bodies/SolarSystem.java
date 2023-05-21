@@ -95,12 +95,10 @@ public class SolarSystem {
 
     /**
      * Updates the state of the system given a given number of steps and step size,h
-     * @param steps number of updates to make
-     * @param h the time difference between each update to be made
+     * @param tf final time after all updates
+     * @param h the time difference between each update
      */
-    public void updateState(int steps,double h){
-        //Time until which new states are calculated
-        double tf = t + steps*h;
+    public void updateState(double tf,double h){
 
         //Update all objects in the Solar System
         for(int i = 0; i < stateVectors.length; i++){

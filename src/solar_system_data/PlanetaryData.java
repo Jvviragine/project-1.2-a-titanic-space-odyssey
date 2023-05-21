@@ -7,4 +7,7 @@ package solar_system_data;
  */
 public class PlanetaryData {
 
+    // Instance Fields
+
+    // Getters
 }

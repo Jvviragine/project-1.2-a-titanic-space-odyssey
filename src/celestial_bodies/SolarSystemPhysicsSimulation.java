@@ -21,7 +21,6 @@ public class SolarSystemPhysicsSimulation {
 
     private List<List<StateVector>> allStates = new ArrayList<>();;
 
-    //Possible ordering : Sun,Venus,Earth,Moon,Mars,Jupiter,Saturn,Titan,Probe
     private String[] names;
 
     public final double G = 6.6743*Math.pow(10,-20);

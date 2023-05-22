@@ -115,6 +115,13 @@ public class PlanetaryData {
         return masses;
     }
 
+    public static String[] getCelestialBodyNames(){
+        String[] names = new String[celestialBodies.length];
 
+        for(int i = 0; i < celestialBodies.length; i++){
+            names[i] = celestialBodies[i].getName();
+        }
+        return names;
+    }
 
 }

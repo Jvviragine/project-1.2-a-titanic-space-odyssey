@@ -1,4 +1,5 @@
 import celestial_bodies.CelestialBody;
+import celestial_bodies.SolarSystemPhysicsSimulation;
 import gui.mainmenu.StartScreen;
 import physics.vectors.StateVector;
 import physics.vectors.Vector;
@@ -12,6 +13,11 @@ public class Main {
     public static void main(String[] args) throws IOException {
 
         StartScreen startScreen = new StartScreen();
+
+        SolarSystemPhysicsSimulation system = new SolarSystemPhysicsSimulation(PlanetaryData.getCCelestialBodiesStateVector(),PlanetaryData.getCelestialBodiesMasses(),PlanetaryData.getCelestialBodyNames());
+
+        //Based on input from GUI (how many steps to take)
+        //system.updateState();
 
     }
 }

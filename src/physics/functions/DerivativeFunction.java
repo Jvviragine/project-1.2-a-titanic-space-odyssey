@@ -1,13 +1,13 @@
 package physics.functions;
 
-import celestial_bodies.SolarSystem;
+import celestial_bodies.SolarSystemPhysicsSimulation;
 import physics.vectors.Vector;
 import physics.vectors.StateVector;
 
 public class DerivativeFunction implements Function{
-    private SolarSystem system;
+    private SolarSystemPhysicsSimulation system;
 
-    public DerivativeFunction(SolarSystem system){
+    public DerivativeFunction(SolarSystemPhysicsSimulation system){
         this.system = system;
     }
 
@@ -32,7 +32,7 @@ public class DerivativeFunction implements Function{
 
         String [] planets = new String[]{"planet1","planet2"};
 
-        SolarSystem mySystem = new SolarSystem(svs,masses,planets);
+        SolarSystemPhysicsSimulation mySystem = new SolarSystemPhysicsSimulation(svs,masses,planets);
 
         DerivativeFunction df = new DerivativeFunction(mySystem);
 

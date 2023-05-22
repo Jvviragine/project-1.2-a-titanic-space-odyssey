@@ -12,12 +12,14 @@ import java.io.IOException;
 public class Main {
     public static void main(String[] args) throws IOException {
 
-        StartScreen startScreen = new StartScreen();
-
         SolarSystemPhysicsSimulation system = new SolarSystemPhysicsSimulation(PlanetaryData.getCelestialBodiesStateVector(),PlanetaryData.getCelestialBodiesMasses(),PlanetaryData.getCelestialBodyNames());
 
-        //Based on input from GUI (how many steps to take)
-        //system.updateState();
+        //Use system.simulateCelestialBodiesOrbit(tf,h) to get list of lists of paths
+        System.out.println(system.simulateCelestialBodiesOrbit(31536000,360));
+
+        StartScreen startScreen = new StartScreen();
+
+
 
     }
 }

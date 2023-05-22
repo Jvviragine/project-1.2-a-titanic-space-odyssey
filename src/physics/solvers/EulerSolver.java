@@ -5,8 +5,12 @@ import physics.functions.TestODEDerivativeFunction;
 import physics.vectors.Vector;
 import physics.vectors.StateVector;
 
+import java.util.ArrayList;
+
 public class EulerSolver implements Solver{
     static double t;
+
+    ArrayList<StateVector> allStates;
 
     public EulerSolver(){
 
@@ -23,6 +27,9 @@ public class EulerSolver implements Solver{
      * @return the state vector at the end of the time period tf - t0
      */
     public StateVector solve(Function function, StateVector initialCondition, double t0, double tf, double stepSize) {
+
+        //List of states at each step
+        ArrayList<StateVector> stateVectors = new ArrayList<>();
 
         StateVector currentState = initialCondition;
 
@@ -42,11 +49,25 @@ public class EulerSolver implements Solver{
 
             //Update solver time
             this.t +=stepSize;
+
+            //Add current state to all existing states
+            stateVectors.add(currentState);
         }
+
+        allStates = stateVectors;
 
         return currentState;
 
     }
+
+    public ArrayList<StateVector> getAllStates(){
+        ArrayList<StateVector> states = new ArrayList<>();
+        for(int i=0; i<allStates.size();i++){
+            states.add(allStates.get(i));
+        }
+        return states;
+    }
+
 
     // Testing the Euler Solver for y'=y, and y(0)=1, for which we know the exact solution y=eˆt
     public static void main(String[] args) {
@@ -68,7 +89,6 @@ public class EulerSolver implements Solver{
 
         // Prints wt at tf
         System.out.println(svYf.getVector(0).get(0));
-
 
     }
 

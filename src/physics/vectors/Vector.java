@@ -158,6 +158,13 @@ public class Vector {
         return new Vector(u);
     }
 
+    public boolean isEqual(Vector v){
+        for(int i = 0; i < v.getDimension(); i++){
+            if(!(v.get(i) == this.get(i)))return false;
+        }
+        return true;
+    }
+
 
 }
 

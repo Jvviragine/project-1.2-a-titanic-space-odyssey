@@ -56,8 +56,12 @@ public class SolarSystemPhysicsSimulation {
             List <StateVector> state = new ArrayList<>();
             state.add(stateVectors[i]);
             allStates.add(state);
-            initialStates[i] = stateVectors[i]; //check
+            initialStates[i] = stateVectors[i];
         }
+    }
+
+    public void addState(int index, StateVector stateVector){
+        allStates.get(index).add(stateVector);
     }
 
     /**
@@ -77,39 +81,31 @@ public class SolarSystemPhysicsSimulation {
     }
 
     /**
-     * Updates the state of the system given a given number of steps and step size,h
-     * @param tf final time after all updates
+     * Updates the state of the system given a final time, and step size,h
+     * @param tf the final time after all updates
      * @param h the time difference between each update
+     * @return
      */
-    public void updateState(double tf,double h){
+    public List<List<StateVector>> simulateCelestialBodiesOrbit(double tf,double h){
 
-        //Update all objects in the Solar System
-        for(int i = 0; i < stateVectors.length; i++){
-            StateVector newState = solver.solve(df,stateVectors[i],t,tf,h);
-            allStates.get(i).add(newState);
-            //Update current state
-            stateVectors[i] = newState;
-        }
-
-        //Update the time of the system
-        t = tf;
-    }
-
-    public void simulateCelestialBodiesOrbit(double tf,double h){
-
+        //List containing all orbits of all planets
         List<List<StateVector>> orbits = new ArrayList<>();
 
-
         //Update all objects in the Solar System
         for(int i = 0; i < stateVectors.length; i++){
+
+            //Solve for time period using solver
             StateVector newState = solver.solve(df,stateVectors[i],0,tf,h);
-            allStates.get(i).add(newState);
+
+            //Add all states (path) of current body to the orbits list
+            orbits.add(solver.getAllStates());
+
             //Update current state
             stateVectors[i] = newState;
         }
 
-        //Update the time of the system
-        t = tf;
+        allStates = orbits;
+        return orbits;
     }
 
     /**
@@ -128,7 +124,7 @@ public class SolarSystemPhysicsSimulation {
     public int getIndex(StateVector v){
 
         for(int i = 0; i < stateVectors.length; i++){
-            if(v == stateVectors[i]){
+            if(v.isEqual(stateVectors[i])){
                 return i;
             }
         }
@@ -174,7 +170,5 @@ public class SolarSystemPhysicsSimulation {
         String [] planets = new String[]{"planet1","planet2"};
 
         SolarSystemPhysicsSimulation mySystem = new SolarSystemPhysicsSimulation(svs,masses,planets);
-
-        System.out.println(mySystem.getPath().toString());
     }
 }

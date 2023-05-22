@@ -3,7 +3,11 @@ package physics.solvers;
 import physics.functions.Function;
 import physics.vectors.StateVector;
 
+import java.util.ArrayList;
+
 public class RK3Solver implements Solver{
+
+    ArrayList<StateVector> allStates;
 
     public RK3Solver(){
     }
@@ -19,6 +23,9 @@ public class RK3Solver implements Solver{
      */
     public StateVector solve(Function function, StateVector initialCondition, double t0, double tf, double stepSize) {
         StateVector currentState = initialCondition;
+
+        //List of states at each step
+        ArrayList<StateVector> stateVectors = new ArrayList<>();
 
         for(double t = t0; t<tf; t += stepSize) {
 
@@ -40,7 +47,17 @@ public class RK3Solver implements Solver{
             StateVector add = k3.multiply(3.0).add(k1).multiply(0.25);
             currentState = currentState.add(add);
 
+            //Add current state to all existing states
+            stateVectors.add(currentState);
         }
+
+        allStates = stateVectors;
+
         return currentState;
     }
+
+    public ArrayList<StateVector> getAllStates(){
+        return allStates;
+    }
+
 }

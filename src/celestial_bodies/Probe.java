@@ -38,5 +38,7 @@ public class Probe {
         return name;
     }
 
-    public Vector getProbe
+    public double getProbeMass() {
+        return mass;
+    }
 }

@@ -9,8 +9,14 @@ import physics.vectors.Vector;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class responsible for performing the Physics simulation of our Trip to Titan
+ * The GUI will know nothing about how the Physics works; it will only receive the paths of each object and display it
+ */
 public class SolarSystemPhysicsSimulation {
-    private double[] masses;
+
+    // Instance Fields
+    private double[] masses; // Masses of each Celestial Body
     private StateVector[] stateVectors;
 
     private List<List<StateVector>> allStates = new ArrayList<>();;

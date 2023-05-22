@@ -25,33 +25,6 @@ public class SolarSystem {
     private Solver solver;
 
     private double t;
-
-    public static void main(String[] args) {
-        double [] vector1 = new double[]{1,2,3};
-        double [] vector2 = new double[]{4,5,6};
-        Vector u = new Vector(vector1);
-        Vector v = new Vector(vector2);
-        Vector[] vectors1 = new Vector[]{u,v};
-        StateVector sv1 = new StateVector(vectors1);
-
-        double [] vector3 = new double[]{7,8,9};
-        double [] vector4 = new double[]{10,11,12};
-        Vector s = new Vector(vector3);
-        Vector t = new Vector(vector4);
-        Vector[] vectors2 = new Vector[]{s,t};
-        StateVector sv2 = new StateVector(vectors2);
-
-        StateVector[] svs = new StateVector[]{sv1,sv2};
-
-        double[] masses = new double[]{50,100};
-
-        String [] planets = new String[]{"planet1","planet2"};
-
-        SolarSystem mySystem = new SolarSystem(svs,masses,planets);
-
-        System.out.println(mySystem.getPath().toString());
-    }
-
     public SolarSystem(StateVector[] stateVectors, double[] masses, String[] names){
         this.stateVectors = stateVectors;
         this.masses = masses;
@@ -149,5 +122,32 @@ public class SolarSystem {
      */
     public int totalBodies(){
         return names.length;
+    }
+
+    // MAIN for Testing 
+    public static void main(String[] args) {
+        double [] vector1 = new double[]{1,2,3};
+        double [] vector2 = new double[]{4,5,6};
+        Vector u = new Vector(vector1);
+        Vector v = new Vector(vector2);
+        Vector[] vectors1 = new Vector[]{u,v};
+        StateVector sv1 = new StateVector(vectors1);
+
+        double [] vector3 = new double[]{7,8,9};
+        double [] vector4 = new double[]{10,11,12};
+        Vector s = new Vector(vector3);
+        Vector t = new Vector(vector4);
+        Vector[] vectors2 = new Vector[]{s,t};
+        StateVector sv2 = new StateVector(vectors2);
+
+        StateVector[] svs = new StateVector[]{sv1,sv2};
+
+        double[] masses = new double[]{50,100};
+
+        String [] planets = new String[]{"planet1","planet2"};
+
+        SolarSystem mySystem = new SolarSystem(svs,masses,planets);
+
+        System.out.println(mySystem.getPath().toString());
     }
 }

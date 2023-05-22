@@ -19,7 +19,9 @@ public class SolarSystemPhysicsSimulation {
     private double[] masses; // Masses of each Celestial Body
     private StateVector[] stateVectors;
 
-    private List<List<StateVector>> allStates = new ArrayList<>();;
+    private StateVector[] initialStates;
+
+    private List<List<StateVector>> allStates = new ArrayList<>();
 
     private String[] names;
 
@@ -48,10 +50,13 @@ public class SolarSystemPhysicsSimulation {
      * Initialises the allStates array that holds all current and past positions of the bodies in the system
      */
     public void initialiseStates(){
+        initialStates = new StateVector[stateVectors.length];
+
         for(int i = 0; i < stateVectors.length; i++){
             List <StateVector> state = new ArrayList<>();
             state.add(stateVectors[i]);
             allStates.add(state);
+            initialStates[i] = stateVectors[i]; //check
         }
     }
 
@@ -81,6 +86,23 @@ public class SolarSystemPhysicsSimulation {
         //Update all objects in the Solar System
         for(int i = 0; i < stateVectors.length; i++){
             StateVector newState = solver.solve(df,stateVectors[i],t,tf,h);
+            allStates.get(i).add(newState);
+            //Update current state
+            stateVectors[i] = newState;
+        }
+
+        //Update the time of the system
+        t = tf;
+    }
+
+    public void simulateCelestialBodiesOrbit(double tf,double h){
+
+        List<List<StateVector>> orbits = new ArrayList<>();
+
+
+        //Update all objects in the Solar System
+        for(int i = 0; i < stateVectors.length; i++){
+            StateVector newState = solver.solve(df,stateVectors[i],0,tf,h);
             allStates.get(i).add(newState);
             //Update current state
             stateVectors[i] = newState;

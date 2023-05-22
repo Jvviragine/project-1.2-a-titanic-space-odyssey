@@ -9,7 +9,7 @@ import physics.vectors.Vector;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SolarSystem {
+public class SolarSystemPhysicsSimulation {
     private double[] masses;
     private StateVector[] stateVectors;
 
@@ -25,7 +25,7 @@ public class SolarSystem {
     private Solver solver;
 
     private double t;
-    public SolarSystem(StateVector[] stateVectors, double[] masses, String[] names){
+    public SolarSystemPhysicsSimulation(StateVector[] stateVectors, double[] masses, String[] names){
         this.stateVectors = stateVectors;
         this.masses = masses;
         this.names = names;
@@ -124,7 +124,7 @@ public class SolarSystem {
         return names.length;
     }
 
-    // MAIN for Testing 
+    // MAIN for Testing
     public static void main(String[] args) {
         double [] vector1 = new double[]{1,2,3};
         double [] vector2 = new double[]{4,5,6};
@@ -146,7 +146,7 @@ public class SolarSystem {
 
         String [] planets = new String[]{"planet1","planet2"};
 
-        SolarSystem mySystem = new SolarSystem(svs,masses,planets);
+        SolarSystemPhysicsSimulation mySystem = new SolarSystemPhysicsSimulation(svs,masses,planets);
 
         System.out.println(mySystem.getPath().toString());
     }

@@ -1,11 +1,7 @@
 package physics.optimalization;
 
-import celestial_bodies.SolarSystem;
 import physics.functions.DerivativeFunction;
-import physics.vectors.StateVector;
 import physics.vectors.Vector;
-
-import physics.functions.Function;
 
 public class InitialConditions {
 

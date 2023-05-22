@@ -18,6 +18,12 @@ public class Probe {
 
     private double mass;
 
+    /**
+     * Constructor for the Probe
+     * @param name the name for the Probe(model of Spacecraft if using a real one)
+     * @param mass total mass of the Probe in Kg
+     * @param initialConditions state vector composed of position and velocity
+     */
     public Probe(String name, double mass, StateVector initialConditions) {
         this.name = name;
         this.mass = mass;
@@ -26,4 +32,11 @@ public class Probe {
         this.initialPosition = initialConditions.getVector(0);
         this.initialVelocity = initialConditions.getVector(1);
     }
+
+    // Getters
+    public String getProbeName() {
+        return name;
+    }
+
+    public Vector getProbe
 }

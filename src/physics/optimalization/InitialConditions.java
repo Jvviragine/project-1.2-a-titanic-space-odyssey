@@ -1,5 +1,6 @@
 package physics.optimalization;
 
+import celestial_bodies.SolarSystemPhysicsSimulation;
 import physics.functions.DerivativeFunction;
 import physics.vectors.Vector;
 
@@ -32,7 +33,7 @@ public class InitialConditions {
         int iter = 1000;
         while(iter>0){
             iter--;
-            //SolarSystem system = new SolarSystem();
+            //SolarSystemPhysicsSimulation system = new SolarSystemPhysicsSimulation();
             //Vector possibleVel = gradietDecsent(current, 0.01, new DerivativeFunction(system));
 
             //here simulation of the trip with the possible velocity

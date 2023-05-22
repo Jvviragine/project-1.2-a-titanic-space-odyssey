@@ -2,21 +2,26 @@ package gui.mainmenu;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
+import celestial_bodies.SolarSystemPhysicsSimulation;
+import physics.vectors.StateVector;
 
 public class SimulationScreen extends JPanel {
     private JFrame frame;
-    private final int SCREEN_WIDTH = 1920;
-    private final int SCREEN_HEIGHT = 1080;
+    private final int SCREEN_WIDTH = 1536;
+    private final int SCREEN_HEIGHT = 801;
     private PlanetList planetList;
 
-    public SimulationScreen(PlanetList planetList) {
-        frame = new JFrame();
+    private SolarSystemPhysicsSimulation simulation = new SolarSystemPhysicsSimulation();
+    private List<List<StateVector>> planetPaths = simulation.getPath();
 
-        this.planetList = planetList;
+    public SimulationScreen() {
+        frame = new JFrame("Simulation Screen");
 
-        setBackground(Color.BLACK);
+        this.setLayout(null);
+        this.setBackground(Color.BLACK);
 
-        frame.add(this, BorderLayout.CENTER);
+        frame.add(this);
         frame.setSize(SCREEN_WIDTH,SCREEN_HEIGHT);
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.setLocationRelativeTo(null);
@@ -29,7 +34,6 @@ public class SimulationScreen extends JPanel {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
 
-        planetList.draw(g2d, getWidth(), getHeight());
         repaint();
     }
 }

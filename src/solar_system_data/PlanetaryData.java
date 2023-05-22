@@ -93,11 +93,10 @@ public class PlanetaryData {
 
     // Getters
     public static CelestialBody[] getCelestialBodies() {
-
         return celestialBodies;
     }
 
-    public static StateVector[] getCCelestialBodiesStateVector() {
+    public static StateVector[] getCelestialBodiesStateVector() {
         StateVector[] stateVectors = new StateVector[celestialBodies.length];
 
         for (int i = 0; i < celestialBodies.length; i++) {

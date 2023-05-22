@@ -24,8 +24,6 @@ public class StartScreen extends JFrame implements ActionListener {
     private JCheckBox checkBox;
     private final int FRAME_WIDTH = 600;
     private final int FRAME_HEIGHT = 500;
-    private PlanetList planetList = new PlanetList();
-    private PlanetList.Planet earth = new PlanetList.Planet(500, 500, 50, 20, 0);
 
     //The start screen, where the user can input custom values
     public StartScreen() throws IOException {
@@ -52,59 +50,59 @@ public class StartScreen extends JFrame implements ActionListener {
         panel.add(errorText);
 
         xText = new JLabel("x: ");
-        xText.setBounds(180,80,80,25);
+        xText.setBounds(180, 80, 80, 25);
         panel.add(xText);
 
         xInput = new JTextField(30);
-        xInput.setBounds(200,80,165,25);
+        xInput.setBounds(200, 80, 165, 25);
         panel.add(xInput);
 
         yText = new JLabel("y: ");
-        yText.setBounds(180,120,80,25);
+        yText.setBounds(180, 120, 80, 25);
         panel.add(yText);
 
         yInput = new JTextField(30);
-        yInput.setBounds(200,120,165,25);
+        yInput.setBounds(200, 120, 165, 25);
         panel.add(yInput);
 
         zText = new JLabel("z: ");
-        zText.setBounds(180,160,80,25);
+        zText.setBounds(180, 160, 80, 25);
         panel.add(zText);
 
         zInput = new JTextField(30);
-        zInput.setBounds(200,160,165,25);
+        zInput.setBounds(200, 160, 165, 25);
         panel.add(zInput);
 
         v1Text = new JLabel("v1: ");
-        v1Text.setBounds(180,200,80,25);
+        v1Text.setBounds(180, 200, 80, 25);
         panel.add(v1Text);
 
         v1Input = new JTextField(30);
-        v1Input.setBounds(200,200,165,25);
+        v1Input.setBounds(200, 200, 165, 25);
         panel.add(v1Input);
 
         v2Text = new JLabel("v2: ");
-        v2Text.setBounds(180,240,80,25);
+        v2Text.setBounds(180, 240, 80, 25);
         panel.add(v2Text);
 
         v2Input = new JTextField(30);
-        v2Input.setBounds(200,240,165,25);
+        v2Input.setBounds(200, 240, 165, 25);
         panel.add(v2Input);
 
         v3Text = new JLabel("v3: ");
-        v3Text.setBounds(180,280,80,25);
+        v3Text.setBounds(180, 280, 80, 25);
         panel.add(v3Text);
 
         v3Input = new JTextField(30);
-        v3Input.setBounds(200,280,165,25);
+        v3Input.setBounds(200, 280, 165, 25);
         panel.add(v3Input);
 
         simulationSpeedText = new JLabel("Simulation speed: ");
-        simulationSpeedText.setBounds(130,320,160,25);
+        simulationSpeedText.setBounds(130, 320, 160, 25);
         panel.add(simulationSpeedText);
 
         simulationSpeedInput = new JTextField(30);
-        simulationSpeedInput.setBounds(235,320,165,25);
+        simulationSpeedInput.setBounds(235, 320, 165, 25);
         panel.add(simulationSpeedInput);
 
         checkBox = new JCheckBox("Freeze the simulation at the given time.");
@@ -117,7 +115,7 @@ public class StartScreen extends JFrame implements ActionListener {
         panel.add(startButton);
 
         frame.add(panel);
-        frame.setSize(FRAME_WIDTH,FRAME_HEIGHT);
+        frame.setSize(FRAME_WIDTH, FRAME_HEIGHT);
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
@@ -140,16 +138,18 @@ public class StartScreen extends JFrame implements ActionListener {
         double[] finalVelocities = {v1, v2, v3};
         boolean allInputsValid = true;
 
-        if(checkBox.isSelected()) {
+        if (checkBox.isSelected()) {
             //TODO: implement code to freeze the simulation at the time given in simulationSpeedText
             //Do this by setting a speed variable to 0?
             System.out.println("Jippie! Box is selected.");
         }
 
-        //Goes through each textField and checks if it is empty.
-        //If it is not, tries to convert the text in the textField to double.
-        //If not successful, shows the error message and clears the value, else it proceeds.
-        for(int i = 0; i<userInputs.length; i++) {
+        /**
+         * Goes through each textField and checks if it is empty.
+         * If it is not, tries to convert the text in the textField to double.
+         * If not successful, shows the error message and clears the value, else it proceeds.
+         */
+        for (int i = 0; i < userInputs.length; i++) {
             if (userInputs[i].getText().isEmpty()) {
                 //TODO: implement code to use default value for the empty textField
                 userInputs[i].setText(String.valueOf(defaultConditions[i]));
@@ -165,20 +165,20 @@ public class StartScreen extends JFrame implements ActionListener {
             }
         }
 
-        /*
+        /**
          * If all input values are valid:
          * assigns all final values to variables, which are used to define the initialConditions;
          * removes the error text, closes the screen and opens the main GUI.
          */
-        if(allInputsValid) {
+        if (allInputsValid) {
             //Assign the inputted position to the final positions array
-            for(int i = 0; i<finalPositions.length; i++) {
+            for (int i = 0; i < finalPositions.length; i++) {
                 finalPositions[i] = Double.parseDouble(userInputs[i].getText());
             }
 
             //Assign the inputted velocities to the final velocities array
-            for(int i = 0; i<finalVelocities.length; i++) {
-                finalVelocities[i] = Double.parseDouble(userInputs[i+3].getText());
+            for (int i = 0; i < finalVelocities.length; i++) {
+                finalVelocities[i] = Double.parseDouble(userInputs[i + 3].getText());
             }
 
             Vector initialPosition = new Vector(finalPositions);     //defines the initial positions vector
@@ -193,11 +193,9 @@ public class StartScreen extends JFrame implements ActionListener {
 //                    System.out.println(initialConditions.getVector(i).get(j));
 //                }
 //            }
-
             errorText.setText("");      //removes error message
             frame.dispose();        //closes the start screen
-            planetList.addPlanet(earth);
-            SimulationScreen simulationScreen = new SimulationScreen(planetList);        //opens the main GUI
+            SimulationScreen simulationScreen = new SimulationScreen();
         }
     }
 }

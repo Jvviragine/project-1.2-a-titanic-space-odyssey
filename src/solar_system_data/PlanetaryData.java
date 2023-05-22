@@ -46,9 +46,6 @@ public class PlanetaryData {
     private static double moonMass = 7.349 * Math.pow(10, 22);
     private static CelestialBody moon = new CelestialBody("Moon", moonInitialStateVector, moonMass);
 
-    // List of Celestial Bodies - Used when creating the Solar System Simulation
-    private CelestialBody[] celestialBodies = new CelestialBody[]{};
-
     // Mars
     private static Vector marsInitialPosition = new Vector(new double[]{-159116303.422552, 189235671.561057, 7870476.08522969});
     private static Vector marsInitialVelocity = new Vector(new double[]{-17.6954469224752, -13.4635253412947, 0.152331928200531});
@@ -91,5 +88,33 @@ public class PlanetaryData {
     private static double uranusMass = 86.813 * Math.pow(10, 24);
     private static CelestialBody uranus = new CelestialBody("Uranus", uranusInitialStateVector, uranusMass);
 
+    // List of Celestial Bodies - It will be Passed to the SolarSystem class to start the simulation
+    private static CelestialBody[] celestialBodies = new CelestialBody[]{sun, mercury, venus, earth, moon, mars, jupiter, saturn, titan, neptune, uranus};
+
     // Getters
+    public static CelestialBody[] getCelestialBodies() {
+
+        return celestialBodies;
+    }
+
+    public static StateVector[] getCCelestialBodiesStateVector() {
+        StateVector[] stateVectors = new StateVector[celestialBodies.length];
+
+        for (int i = 0; i < celestialBodies.length; i++) {
+            stateVectors[i] = celestialBodies[i].getInitialState();
+        }
+        return stateVectors;
+    }
+
+    public static double[] getCelestialBodiesMasses() {
+        double[] masses = new double[celestialBodies.length];
+
+        for (int i = 0; i < celestialBodies.length; i++) {
+            masses[i] = celestialBodies[i].getMass();
+        }
+        return masses;
+    }
+
+
+
 }

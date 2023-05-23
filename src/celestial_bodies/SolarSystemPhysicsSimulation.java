@@ -91,6 +91,10 @@ public class SolarSystemPhysicsSimulation {
         //List containing all orbits of all planets
         List<List<StateVector>> orbits = new ArrayList<>();
 
+        //Send to GUI
+//        int length = (int) (Math.ceil(tf/h));
+//        double[][] coordinates= new double[2][length];
+
         //Update all objects in the Solar System
         for(int i = 0; i < stateVectors.length; i++){
 

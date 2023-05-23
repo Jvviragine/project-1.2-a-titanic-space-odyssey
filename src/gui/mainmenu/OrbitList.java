@@ -34,6 +34,12 @@ public class OrbitList {
         }
         return planetPath;
     }
+
+    public static int[][] getPath(int index){
+        for(int i = 0; i < planetPaths.get(0).size(); i++){
+            
+        }
+    }
     public static int[][] getExamplePath1() {
         return examplePath1;
     }

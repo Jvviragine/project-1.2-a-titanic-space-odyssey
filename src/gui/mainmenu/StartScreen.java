@@ -26,7 +26,7 @@ public class StartScreen extends JFrame implements ActionListener {
     private final int FRAME_HEIGHT = 500;
 
     //The start screen, where the user can input custom values
-    public StartScreen() throws IOException {
+    public StartScreen() {
         frame = new JFrame("Launch configuration");
 
         JPanel panel = new JPanel();

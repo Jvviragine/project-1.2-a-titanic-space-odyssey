@@ -11,7 +11,7 @@ import java.util.Arrays;
 
 public class InitialConditions {
     static Vector pos;
-    static Vector current = new Vector(new double[]{42.42270135156,-43.62738201925,-3.1328169170});
+    static Vector current = new Vector(new double[]{4.42270135156,-43.62738201925,-3.1328169170});
     double value = 0.5;
 
     /**
@@ -121,7 +121,7 @@ public class InitialConditions {
                 probePos = system.getStateVectors()[0].getVector(0);
                 //probePos = system.getPath().get(0).get(system.getPath().get(0).size() - 1).getVector(0);
                 titanPos = system.getStateVectors()[9].getVector(0);
-                titanPos = system.getPath().get(9).get(system.getPath().get(9).size() - 1).getVector(0);
+                //titanPos = system.getPath().get(9).get(system.getPath().get(9).size() - 1).getVector(0);
                 double distance = probePos.distance(titanPos);
                 if (distance < bestDistance) {
                     bestDistance = distance;

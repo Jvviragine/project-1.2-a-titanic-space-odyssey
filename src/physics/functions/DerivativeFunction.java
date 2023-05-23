@@ -7,6 +7,8 @@ import physics.vectors.StateVector;
 public class DerivativeFunction implements Function{
     private SolarSystemPhysicsSimulation system;
 
+    private int index;
+
     public DerivativeFunction(SolarSystemPhysicsSimulation system){
         this.system = system;
     }
@@ -47,6 +49,8 @@ public class DerivativeFunction implements Function{
 
     @Override
     public StateVector applyFunction(StateVector y, double t) {
+        int possibleIndex= system.getIndex(y);
+        if(possibleIndex!=-1) index = possibleIndex;
         Vector[] vectors = new Vector[y.getNumberOfVectors()];
 
         //Place new position vector (old velocity vector) in derivative state array
@@ -55,6 +59,7 @@ public class DerivativeFunction implements Function{
 
         //Calculate acceleration and place new velocity in derivative state array
         vectors[1] = getAcceleration(system.getIndex(y));
+        vectors[1] = getAcceleration(index);
 
         return new StateVector(vectors);
     }

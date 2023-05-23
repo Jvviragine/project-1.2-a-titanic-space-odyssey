@@ -3,7 +3,11 @@ import physics.functions.Function;
 import physics.vectors.Vector;
 import physics.vectors.StateVector;
 
+import java.util.ArrayList;
+
 public class RK2Solver implements Solver {
+
+    ArrayList<StateVector> allStates;
 
     public RK2Solver(){
 
@@ -22,7 +26,10 @@ public class RK2Solver implements Solver {
 
         StateVector currentState = initialCondition; // y(0) - Exact Value
 
-        // Iterate through the Step Sizes until we reach the Final one
+        //List of states at each step
+        ArrayList<StateVector> stateVectors = new ArrayList<>();
+
+        // Iterate through the Step Sizes until the final one, tf
         for(double t=t0; t<tf; t+=stepSize){
 
             // Euler Step - K1
@@ -34,16 +41,25 @@ public class RK2Solver implements Solver {
             StateVector k2 = function.applyFunction(k2FunctionStateVector, k2Time).multiply(stepSize);
             StateVector scalledK2 = k2.multiply(3.0);
 
-            // Sum of Scalled Ks
-            StateVector scalledSumOfKs = k1.add(scalledK2);
+            // Sum of Scaled Ks
+            StateVector scaledSumOfKs = k1.add(scalledK2);
 
             // Diving Scalled Sum by 4
-            StateVector averagedScalledStateVector = scalledSumOfKs.multiply(0.25);
+            StateVector averagedScaledStateVector = scaledSumOfKs.multiply(0.25);
 
-            currentState = currentState.add(averagedScalledStateVector);
+            currentState = currentState.add(averagedScaledStateVector);
+
+            //Add current state to all existing states
+            stateVectors.add(currentState);
         }
 
+        allStates = stateVectors;
+
         return currentState;
+    }
+
+    public ArrayList<StateVector> getAllStates(){
+        return allStates;
     }
 
 }

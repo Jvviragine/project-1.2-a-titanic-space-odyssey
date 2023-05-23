@@ -131,6 +131,13 @@ public class StateVector {
         return new StateVector(arrayOfVectors);
     }
 
+    public boolean isEqual(StateVector v){
+        for(int i=0; i<v.getNumberOfVectors();i++){
+            if(!(v.getVector(i).isEqual(this.getVector((i))))) return false;
+        }
+        return true;
+    }
+
     // Testing the Functionalities of the StateVector
     public static void main(String[] args) {
 

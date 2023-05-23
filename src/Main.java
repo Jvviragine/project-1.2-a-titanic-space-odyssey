@@ -15,7 +15,7 @@ public class Main {
         SolarSystemPhysicsSimulation system = new SolarSystemPhysicsSimulation(PlanetaryData.getCelestialBodiesStateVector(),PlanetaryData.getCelestialBodiesMasses(),PlanetaryData.getCelestialBodyNames());
 
         //Use system.simulateCelestialBodiesOrbit(tf,h) to get list of lists of paths
-        System.out.println(system.simulateCelestialBodiesOrbit(31536000,360));
+        //System.out.println(system.simulateCelestialBodiesOrbit(31536000,360).toString());
 
         StartScreen startScreen = new StartScreen();
 

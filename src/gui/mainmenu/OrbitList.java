@@ -19,7 +19,11 @@ public class OrbitList {
     private static int[][] examplePath1 = {{400, 400}, {300, 300}, {400, 200}, {500, 300}};
     private static int[][] examplePath2 = {{300, 400}, {200, 300}, {300, 200}, {400, 300}};
 
+    //Converts the state vector of a planet to an array
     public static int[][] convertStateVectorToArray(StateVector stateVector) {
+        //TODO: this method gives me the first two values of each of the chosen planet's vectors within its state vector;
+        // -thus also gives velocities which i don't need
+        // -figure out how to get all the x and y values so that nothing goes out of bounds anymore
         int[][] planetPath = new int[stateVector.getNumberOfVectors()][2];
         for(int i = 0; i < planetPath.length; i++) {
             for(int j = 0; j < planetPath[i].length; j++) {
@@ -37,7 +41,7 @@ public class OrbitList {
     }
 
 //    public static int[][] getPath(int index){
-//        for(int i = 0; i < planetPaths.get(0).size(); i++){
+//        for(int i = 0; i < planetPaths.size(); i++){        //removed the .get(0), should be good like this right?
 //
 //        }
 //    }

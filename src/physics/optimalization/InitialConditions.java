@@ -118,7 +118,9 @@ public class InitialConditions {
                 states = setStates(neighbour);
                 system = new SolarSystemPhysicsSimulation(states, masses, PlanetaryData.getCelestialBodyNames());
                 system.simulateCelestialBodiesOrbit(31536000, 5800);
-                probePos = system.getPath().get(0).get(system.getPath().get(0).size() - 1).getVector(0);
+                probePos = system.getStateVectors()[0].getVector(0);
+                //probePos = system.getPath().get(0).get(system.getPath().get(0).size() - 1).getVector(0);
+                titanPos = system.getStateVectors()[9].getVector(0);
                 titanPos = system.getPath().get(9).get(system.getPath().get(9).size() - 1).getVector(0);
                 double distance = probePos.distance(titanPos);
                 if (distance < bestDistance) {

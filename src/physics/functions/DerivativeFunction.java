@@ -96,3 +96,4 @@ public class DerivativeFunction implements Function{
     }
 
 }
+

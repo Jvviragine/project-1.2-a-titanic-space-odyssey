@@ -20,18 +20,24 @@ public class OrbitList {
     private static int[][] examplePath2 = {{300, 400}, {200, 300}, {300, 200}, {400, 300}};
 
     //Converts the state vector of a planet to an array
-    public static int[][] convertStateVectorToArray(StateVector stateVector) {
+    public static int[][] convertStateVectorToArray(StateVector stateVector, int indexSize) {
         //TODO: this method gives me the first two values of each of the chosen planet's vectors within its state vector;
         // -thus also gives velocities which i don't need
         // -figure out how to get all the x and y values so that nothing goes out of bounds anymore
-        int[][] planetPath = new int[stateVector.getNumberOfVectors()][2];
+
+        int planetPathSize = planetPaths.get(indexSize).size();     //defines the size of the full stateVector and sets it equal to the planets stateVector size
+
+        int[][] planetPath = new int[planetPathSize][2];
+
         for(int i = 0; i < planetPath.length; i++) {
             for(int j = 0; j < planetPath[i].length; j++) {
                 if(j == 0) {
                     planetPath[i][j] = (int) stateVector.getVector(i).get(0);       //assigns x coordinate as an int
                     System.out.println(planetPath[i][j]);
+                    System.out.println(planetPath.length);
+                    System.out.println(planetPathSize);
                 }
-                else {
+                if(j == 1) {
                     planetPath[i][j] = (int) stateVector.getVector(i).get(1);       //assigns y coordinate as an int
                     System.out.println(planetPath[i][j]);
                 }
@@ -67,11 +73,11 @@ public class OrbitList {
     }
 
     public static int[][] getSunPath() {
-        return convertStateVectorToArray(sunPath);
+        return convertStateVectorToArray(sunPath, 0);
     }
 
     public static int[][] getMercuryPath() {
-        return convertStateVectorToArray(mercuryPath);
+        return convertStateVectorToArray(mercuryPath, 1);
     }
 
 

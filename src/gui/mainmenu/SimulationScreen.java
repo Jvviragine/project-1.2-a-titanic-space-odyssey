@@ -22,8 +22,14 @@ public class SimulationScreen extends JPanel {
     private OrbitList orbitList = new OrbitList();
     private int[][] sunPath = orbitList.getPath(0);
     private int[][] mercuryPath = orbitList.getPath(1);
-    private int[][] saturnPath = orbitList.getPath(8);
-    private int[][][] allPaths = {sunPath, mercuryPath};
+    private int[][] venusPath = orbitList.getPath(2);
+    private int[][] earthPath = orbitList.getPath(3);
+    private int[][] marsPath = orbitList.getPath(4);
+    private int[][] jupiterPath = orbitList.getPath(5);
+    private int[][] saturnPath = orbitList.getPath(6);
+    private int[][] uranusPath = orbitList.getPath(7);
+    private int[][] neptunePath = orbitList.getPath(8);
+    private int[][][] allPaths = {sunPath, mercuryPath, venusPath, marsPath, jupiterPath, saturnPath, uranusPath, neptunePath};
 
     public SimulationScreen() {
         frame = new JFrame("Simulation Screen");
@@ -38,8 +44,8 @@ public class SimulationScreen extends JPanel {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
 
-        // Create a timer with a delay of 0.5 second
-        timer = new Timer(1, new ActionListener() {
+        // Create a timer with a delay of 1 millisecond
+        timer = new Timer(20, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 iterateThroughOrbit();
@@ -57,8 +63,20 @@ public class SimulationScreen extends JPanel {
 
         g2d.setColor(Color.YELLOW);
         g2d.fillOval(XCENTER + sunPath[currentIndex][0] - 20, YCENTER + sunPath[currentIndex][1] - 20, 40, 40);
+        g2d.setColor(Color.ORANGE);
+        g2d.fillOval(XCENTER + venusPath[currentIndex][0] - 10,  YCENTER + venusPath[currentIndex][1] - 10, 20, 20);
         g2d.setColor(Color.BLUE);
+        g2d.fillOval(XCENTER + earthPath[currentIndex][0] - 10,  YCENTER + earthPath[currentIndex][1] - 10, 20, 20);
+        g2d.setColor(Color.RED);
+        g2d.fillOval(XCENTER + marsPath[currentIndex][0] - 10,  YCENTER + marsPath[currentIndex][1] - 10, 20, 20);
+        g2d.setColor(Color.ORANGE);
+        g2d.fillOval(XCENTER + jupiterPath[currentIndex][0] - 10,  YCENTER + jupiterPath[currentIndex][1] - 10, 20, 20);
+        g2d.setColor(Color.YELLOW);
         g2d.fillOval(XCENTER + saturnPath[currentIndex][0] - 10,  YCENTER + saturnPath[currentIndex][1] - 10, 20, 20);
+        g2d.setColor(Color.LIGHT_GRAY);
+        g2d.fillOval(XCENTER + uranusPath[currentIndex][0] - 10,  YCENTER + uranusPath[currentIndex][1] - 10, 20, 20);
+        g2d.setColor(Color.BLUE);
+        g2d.fillOval(XCENTER + neptunePath[currentIndex][0] - 10,  YCENTER + neptunePath[currentIndex][1] - 10, 20, 20);
     }
 
     public void iterateThroughOrbit() {
@@ -70,7 +88,7 @@ public class SimulationScreen extends JPanel {
                 currentIndex = 0;
             }
             //System.out.println(sunPath[currentIndex][0] + " " + sunPath[currentIndex][1]);
-            System.out.println(saturnPath[currentIndex][0] + " " + saturnPath[currentIndex][1]);
+            //System.out.println(mercuryPath[currentIndex][0] + " " + mercuryPath[currentIndex][1]);
             repaint();
         }
 

@@ -33,7 +33,7 @@ public class PlanetaryData {
     private static CelestialBody venus = new CelestialBody("Venus", venusInitialStateVector, venusMass);
 
     // Earth
-    private static Vector earthInitialPosition = new Vector(new double[]{148186906.893642, -27823158.5715694, 33746.8987977113});
+    private static Vector earthInitialPosition = new Vector(new double[]{-148186906.893642, -27823158.5715694, 33746.8987977113});
     private static Vector earthInitialVelocity = new Vector(new double[]{5.05251577575409, -29.3926687625899, 0.00170974277401292});
     private static StateVector earthInitialStateVector = new StateVector(new Vector[]{earthInitialPosition, earthInitialVelocity});
     private static double earthMass = 5.97219 * Math.pow(10, 24);

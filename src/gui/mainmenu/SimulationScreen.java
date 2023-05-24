@@ -20,9 +20,9 @@ public class SimulationScreen extends JPanel {
     private OrbitList orbitList = new OrbitList();
     private int[][] testPath1 = orbitList.getExamplePath1();
     private int[][] testPath2 = orbitList.getExamplePath2();
-    private int[][] sunPath = orbitList.getSunPath();
+    //private int[][] sunPath = orbitList.getSunPath();
     private int[][] mercuryPath = orbitList.getMercuryPath();
-    private int[][][] allPaths = {testPath1, testPath2, sunPath};
+    private int[][][] allPaths = {mercuryPath};
 
     public SimulationScreen() {
         frame = new JFrame("Simulation Screen");
@@ -55,9 +55,9 @@ public class SimulationScreen extends JPanel {
         Graphics2D g2d = (Graphics2D) g;
 
         g2d.setColor(Color.YELLOW);
-        g2d.fillOval(testPath1[currentIndex][0], testPath1[currentIndex][1], 20, 20);
-        g2d.fillOval(testPath2[currentIndex][0], testPath2[currentIndex][1], 20, 20);
-        g2d.fillOval(sunPath[currentIndex][0], sunPath[currentIndex][1], 40, 40);
+//        g2d.fillOval(testPath1[currentIndex][0], testPath1[currentIndex][1], 20, 20);
+//        g2d.fillOval(testPath2[currentIndex][0], testPath2[currentIndex][1], 20, 20);
+        //g2d.fillOval(sunPath[currentIndex][0], sunPath[currentIndex][1], 40, 40);
         g2d.fillOval(mercuryPath[currentIndex][0], mercuryPath[currentIndex][1], 20, 20);
 //        int xPath1 = testPath1[currentIndex][0];
 //        int yPath1 = testPath1[currentIndex][1];

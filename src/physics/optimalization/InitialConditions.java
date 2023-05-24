@@ -8,9 +8,10 @@ import solar_system_data.PlanetaryData;
 import celestial_bodies.Probe;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class InitialConditions {
-    static Vector pos;
+    static Vector pos = findPosOnSurface(new Vector(new double[]{1254501624.95946, -761340299.067828, -36309613.8378104}), new Vector(new double[]{148186906.893642, -27823158.5715694, 33746.8987977113}), 6400);
     static Vector current = new Vector(new double[]{0,0,0});
     double value = 0.5;
 
@@ -106,23 +107,23 @@ public class InitialConditions {
         StateVector[] states = setStates(current);
         double[] masses = setMasses();
         SolarSystemPhysicsSimulation system = new SolarSystemPhysicsSimulation(states,masses,PlanetaryData.getCelestialBodyNames());
-        system.simulateCelestialBodiesOrbit(31536000,5800);
-        Vector probePos = system.getPath().get(0).get(system.getPath().get(0).size()-1).getVector(0);
-        Vector titanPos = system.getPath().get(9).get(system.getPath().get(9).size()-1).getVector(0);
-        double bestDistance = probePos.distance(titanPos);
+        system.simulateCelestialBodiesOrbit(31536000,23200);
+        List<StateVector> probePath = system.getPath().get(0);
+        List<StateVector> titanPath = system.getPath().get(9);
+        double bestDistance = closest(probePath,titanPath);
+        System.out.println(bestDistance);
         while(iter>0){
             iter--;
             System.out.println(iter);
             Vector[] neighbours = generateNeighbours(current);
             for (Vector neighbour : neighbours) {
-                states = setStates(neighbour);
+                states[0].getStateVector()[1] = neighbour;
+                //System.out.println(states[0].getStateVector()[1].get(0));
                 system = new SolarSystemPhysicsSimulation(states, masses, PlanetaryData.getCelestialBodyNames());
                 system.simulateCelestialBodiesOrbit(31536000, 23200);
-                probePos = system.getStateVectors()[0].getVector(0);
-                //probePos = system.getPath().get(0).get(system.getPath().get(0).size() - 1).getVector(0);
-                titanPos = system.getStateVectors()[9].getVector(0);
-                //titanPos = system.getPath().get(9).get(system.getPath().get(9).size() - 1).getVector(0);
-                double distance = probePos.distance(titanPos);
+                probePath = system.getPath().get(0);
+                titanPath = system.getPath().get(9);
+                double distance = closest(probePath,titanPath);
                 if (distance < bestDistance) {
                     bestDistance = distance;
                     current = neighbour;
@@ -136,7 +137,7 @@ public class InitialConditions {
     public static Vector[] generateNeighbours(Vector current){
         Vector[] neighbours = new Vector[20];
         for(int i = 0; i<neighbours.length;i++){
-            Vector n = current.add(randomVector(2.5));
+            Vector n = current.add(randomVector(1.0));
             neighbours[i] = n;
             //System.out.print(n.get(0) + " ");
             //System.out.print(n.get(1) + " ");
@@ -149,7 +150,8 @@ public class InitialConditions {
         double[] rand = new double[3];
         double min = max*(-1);
         for(int i=0; i<rand.length;i++) {
-            rand[i] = Math.random() * (max - min + 1) + min;
+            double r = Math.random() * (max - min + 1) + min;
+            rand[i] = r;
         }
         Vector rnd = new Vector(rand);
         return rnd;
@@ -162,7 +164,7 @@ public class InitialConditions {
         stateP[1] = vel;
         states[0] = new StateVector(stateP);
         for(int i = 1; i<PlanetaryData.getCelestialBodiesStateVector().length;i++){
-            states[i] = PlanetaryData.getCelestialBodiesStateVector()[i];
+            states[i] = PlanetaryData.getCelestialBodiesStateVector()[i-1];
         }
         return states;
     }
@@ -171,9 +173,21 @@ public class InitialConditions {
         double[] masses = new double[PlanetaryData.getCelestialBodiesMasses().length];
         masses[0] = 50000;
         for(int i = 1; i<PlanetaryData.getCelestialBodiesMasses().length;i++){
-            masses[i] = PlanetaryData.getCelestialBodiesMasses()[i];
+            masses[i] = PlanetaryData.getCelestialBodiesMasses()[i-1];
         }
         return masses;
+    }
+
+    public static double closest(List<StateVector> pathProbe, List<StateVector> pathTitan){
+        //distance at the beggining
+        double dist = pathProbe.get(0).getVector(0).distance(pathTitan.get(0).getVector(0));
+        for(int i = 0;i<pathProbe.size();i++){
+            double ndist = pathProbe.get(i).getVector(0).distance(pathTitan.get(i).getVector(0));
+            if(ndist<dist){
+                dist = ndist;
+            }
+        }
+        return dist;
     }
 
 
@@ -187,7 +201,7 @@ public class InitialConditions {
 //   }
 
     public static void main(String[] args) {
-        pos = findPosOnSurface(new Vector(new double[]{1254501624.95946, -761340299.067828, -36309613.8378104}), new Vector(new double[]{148186906.893642, -27823158.5715694, 33746.8987977113}), 6400);
+        //pos = findPosOnSurface(new Vector(new double[]{1254501624.95946, -761340299.067828, -36309613.8378104}), new Vector(new double[]{148186906.893642, -27823158.5715694, 33746.8987977113}), 6400);
         Vector vel = findVel(current);
         System.out.println(vel.get(0));
         System.out.println(vel.get(1));

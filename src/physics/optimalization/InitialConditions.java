@@ -105,9 +105,11 @@ public class InitialConditions {
 
     public static Vector findVel(Vector current){
         int iter = 1000;
-        StateVector[] states = setStates(current);
-        double[] masses = setMasses();
-        SolarSystemPhysicsSimulation system = new SolarSystemPhysicsSimulation(states,masses,PlanetaryData.getCelestialBodyNames());
+        //StateVector[] states = setStates(current);
+        //System.out.println(states[0].getStateVector()[0].get(1));
+        //double[] masses = setMasses();
+        //String[] names = setNames();
+        SolarSystemPhysicsSimulation system = new SolarSystemPhysicsSimulation(PlanetaryData.getCelestialBodiesStateVector(),PlanetaryData.getCelestialBodiesMasses(),PlanetaryData.getCelestialBodyNames());
         system.simulateCelestialBodiesOrbit(31536000,23200);
         List<StateVector> probePath = system.getPath().get(0);
         List<StateVector> titanPath = system.getPath().get(9);
@@ -118,8 +120,8 @@ public class InitialConditions {
             System.out.println(iter);
             Vector[] neighbours = generateNeighbours(current);
             for (Vector neighbour : neighbours) {
-                states[0].getStateVector()[1] = neighbour;
-                system = new SolarSystemPhysicsSimulation(states, masses, PlanetaryData.getCelestialBodyNames());
+                //states = setStates(current);
+                system = new SolarSystemPhysicsSimulation(PlanetaryData.getCelestialBodiesStateVector(),PlanetaryData.getCelestialBodiesMasses(),PlanetaryData.getCelestialBodyNames());
                 system.simulateCelestialBodiesOrbit(31536000, 23200);
                 probePath = system.getPath().get(0);
                 titanPath = system.getPath().get(9);
@@ -158,22 +160,31 @@ public class InitialConditions {
     public static StateVector[] setStates(Vector vel){
         Vector[] stateP = new Vector[2];
         stateP[0] = pos;
-        StateVector[] states = new StateVector[PlanetaryData.getCelestialBodiesStateVector().length];
+        StateVector[] states = new StateVector[PlanetaryData.getCelestialBodiesStateVector().length+1];
         stateP[1] = vel;
         states[0] = new StateVector(stateP);
-        for(int i = 1; i<PlanetaryData.getCelestialBodiesStateVector().length;i++){
-            states[i] = PlanetaryData.getCelestialBodiesStateVector()[i-1];
+        for(int i = 0; i<PlanetaryData.getCelestialBodiesStateVector().length;i++){
+            states[i+1] = PlanetaryData.getCelestialBodiesStateVector()[i];
         }
         return states;
     }
 
     public static double[] setMasses(){
-        double[] masses = new double[PlanetaryData.getCelestialBodiesMasses().length];
+        double[] masses = new double[PlanetaryData.getCelestialBodiesMasses().length+1];
         masses[0] = 50000;
-        for(int i = 1; i<PlanetaryData.getCelestialBodiesMasses().length;i++){
-            masses[i] = PlanetaryData.getCelestialBodiesMasses()[i-1];
+        for(int i = 0; i<PlanetaryData.getCelestialBodiesMasses().length;i++){
+            masses[i+1] = PlanetaryData.getCelestialBodiesMasses()[i];
         }
         return masses;
+    }
+
+    public static String[] setNames(){
+        String[] names = new String[PlanetaryData.getCelestialBodyNames().length+1];
+        names[0] = "Probe";
+        for(int i = 0; i<PlanetaryData.getCelestialBodyNames().length;i++){
+            names[i+1] = PlanetaryData.getCelestialBodyNames()[i];
+        }
+        return names;
     }
 
     public static double closest(List<StateVector> pathProbe, List<StateVector> pathTitan){
@@ -199,7 +210,7 @@ public class InitialConditions {
 //   }
 
     public static void main(String[] args) {
-        //pos = findPosOnSurface(new Vector(new double[]{1254501624.95946, -761340299.067828, -36309613.8378104}), new Vector(new double[]{148186906.893642, -27823158.5715694, 33746.8987977113}), 6400);
+        //pos = findPosOnSurface(new Vector(new double[]{1254501624.95946, -761340299.067828, -36309613.8378104}), new Vector(new double[]{148186906.893642, -27823158.5715694, 33746.8987977113}), 6400);;
         Vector vel = findVel(current);
         System.out.println(vel.get(0));
         System.out.println(vel.get(1));

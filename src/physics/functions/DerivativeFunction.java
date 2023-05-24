@@ -85,7 +85,7 @@ public class DerivativeFunction implements Function{
                 Vector div = diff.multiply(1/distance);
 
                 //G * MiMj * Xi - Xj / ||Xi - Xj||^3
-                force = div.multiply(weight);
+                force = force.add(div.multiply(weight));
             }
         }
         force = force.multiply(-1);

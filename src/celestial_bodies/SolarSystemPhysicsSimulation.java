@@ -90,7 +90,7 @@ public class SolarSystemPhysicsSimulation {
         //List containing all orbits of all planets
         List<List<StateVector>> orbits = new ArrayList<>();
 
-        StateVector[] newState = solver.solve(df,stateVectors,0,tf,h);
+        solver.solve(df,stateVectors,0,tf,h);
 
         for(int i = 0; i< stateVectors.length; i++){
             orbits.add(solver.getAllStates(i));
@@ -100,43 +100,34 @@ public class SolarSystemPhysicsSimulation {
     }
 
     public List<List<StateVector>> simulateOrbitsWithProbe(StateVector initialProbeState, double tf,double h){
+        StateVector [] vectorsWithProbe = new StateVector[stateVectors.length+1];
 
-//        //Store the initial celestial bodies, and any updates to them
-//        StateVector [] storeCelestialBodies = new StateVector[stateVectors.length];
-//        for(int i = 0; i < stateVectors.length; i++){
-//            storeCelestialBodies[i] = stateVectors[i];
-//        }
-
-        //Add probe to the bodies in the system
-        StateVector [] bodiesWithProbe = new StateVector[stateVectors.length + 1];
         for(int i = 0; i < stateVectors.length; i++){
-            bodiesWithProbe[i] = stateVectors[i];
+            vectorsWithProbe[i] = stateVectors[i];
         }
+        vectorsWithProbe[vectorsWithProbe.length -1] = initialProbeState;
 
-        bodiesWithProbe[stateVectors.length-1] = initialProbeState;
-
-        stateVectors = bodiesWithProbe;
+        stateVectors = vectorsWithProbe;
 
         //List containing all orbits of all planets
         List<List<StateVector>> orbits = new ArrayList<>();
 
-        //Solve for time period using solver
         solver.solve(df,stateVectors,0,tf,h);
 
-        for(int i = 0; i < stateVectors.length; i++){
+        for(int i = 0; i< stateVectors.length; i++){
             orbits.add(solver.getAllStates(i));
-            if(i != stateVectors.length - 1) allStates.add(solver.getAllStates(i));
         }
 
-        StateVector [] statesWithoutProbe = new StateVector[stateVectors.length - 1];
-        for(int i = 0; i < statesWithoutProbe.length; i++){
-            statesWithoutProbe[i] = stateVectors[i];
+        StateVector [] restoreStateVectors = new StateVector[vectorsWithProbe.length-1];
+
+        for(int i = 0; i < restoreStateVectors.length;i++){
+            restoreStateVectors[i] = stateVectors[i];
         }
 
-        //Remove probe from stateVectors list
-        stateVectors = statesWithoutProbe;
+        stateVectors = restoreStateVectors;
 
         return orbits;
+
     }
 
     /**

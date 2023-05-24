@@ -3,6 +3,7 @@ package physics.functions;
 import celestial_bodies.SolarSystemPhysicsSimulation;
 import physics.vectors.Vector;
 import physics.vectors.StateVector;
+import solar_system_data.InitialConditions;
 
 public class DerivativeFunction implements Function{
     private SolarSystemPhysicsSimulation system;
@@ -68,8 +69,13 @@ public class DerivativeFunction implements Function{
     }
 
     public Vector getAcceleration(int index){
+
         Vector force = new Vector(new double[3]);
-        double mass = system.getMasses()[index];
+        
+        double mass;
+        if(index == system.totalBodies()) mass = InitialConditions.getProbeMass();
+        else mass = system.getMasses()[index];
+
         Vector position = system.getStateVectors()[index].getVector(0).copyOf();
         //needs to get updated statevectors
 

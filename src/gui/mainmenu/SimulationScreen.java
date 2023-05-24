@@ -4,11 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
-import celestial_bodies.SolarSystemPhysicsSimulation;
-import physics.vectors.StateVector;
-import solar_system_data.PlanetaryData;
 
 public class SimulationScreen extends JPanel {
     private JFrame frame;
@@ -48,10 +43,12 @@ public class SimulationScreen extends JPanel {
         frame.setVisible(true);
 
         // Create a timer with a delay of 1 millisecond
-        timer = new Timer(20, new ActionListener() {
+        timer = new Timer(StartScreen.timerInterval, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                iterateThroughOrbit();
+                if(!StartScreen.freezeSimulation) {
+                    iterateThroughOrbit();
+                }
             }
         });
 

@@ -8,22 +8,25 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.IOException;
 import javax.swing.*;
 
 //Opening screen, allowing user input of initial velocities, positions and simulation speed.
 //Also gives the option to freeze the simulation at the inputted time.
 public class StartScreen extends JFrame implements ActionListener {
     private JFrame frame = new JFrame();
-    private JLabel xText, yText, zText, v1Text, v2Text, v3Text, simulationSpeedText, topText01, topText02, errorText;
+    private JLabel xText, yText, zText, v1Text, v2Text, v3Text, simulationSpeedText1, simulationSpeedText2, topText01, topText02, errorText;
     private JTextField xInput, yInput, zInput, v1Input, v2Input, v3Input, simulationSpeedInput;
     private double x, y, z, v1, v2, v3, simSpeed;
     //TODO: remove this defaultConditions variable and replace it with getDefaultConditions function from another class
-    private double[] defaultConditions = {-148458048.395164, -27524868.1841142, 70233.6499287411, 42.42270135156, -43.62738201925, -3.1328169170, 1.0};
+    private double[] defaultConditions = {-148458048.395164, -27524868.1841142, 70233.6499287411, 42.42270135156, -43.62738201925, -3.1328169170, 5};
     private JButton startButton;
     private JCheckBox checkBox;
     private final int FRAME_WIDTH = 600;
     private final int FRAME_HEIGHT = 500;
+
+    public static boolean freezeSimulation = false;       //boolean to see if the simulation should go
+    public static int timerInterval = 5;
+    public static StateVector initialProbeConditions;
 
     //The start screen, where the user can input custom values
     public StartScreen() {
@@ -97,9 +100,13 @@ public class StartScreen extends JFrame implements ActionListener {
         v3Input.setBounds(200, 280, 165, 25);
         panel.add(v3Input);
 
-        simulationSpeedText = new JLabel("Simulation speed: ");
-        simulationSpeedText.setBounds(130, 320, 160, 25);
-        panel.add(simulationSpeedText);
+        simulationSpeedText1 = new JLabel("Simulation speed: ");
+        simulationSpeedText1.setBounds(130, 310, 160, 25);
+        panel.add(simulationSpeedText1);
+
+        simulationSpeedText2 = new JLabel("(higher = slower)");
+        simulationSpeedText2.setBounds(130, 325, 160, 25);
+        panel.add(simulationSpeedText2);
 
         simulationSpeedInput = new JTextField(30);
         simulationSpeedInput.setBounds(235, 320, 165, 25);
@@ -119,12 +126,12 @@ public class StartScreen extends JFrame implements ActionListener {
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
-        //Closes and stops java from running when the window is closed with the "X" button
+        //Closes and exits java when the window is closed with the "X" button
         frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                frame.dispose(); // Close the start screen
-                System.exit(0); // Stop Java from running
+                frame.dispose();        // Close the start screen
+                System.exit(0);   // Stop Java from running
             }
         });
 
@@ -139,6 +146,7 @@ public class StartScreen extends JFrame implements ActionListener {
         boolean allInputsValid = true;
 
         if (checkBox.isSelected()) {
+            freezeSimulation = true;
             //TODO: implement code to freeze the simulation at the time given in simulationSpeedText
             //Do this by setting a speed variable to 0?
             System.out.println("Jippie! Box is selected.");
@@ -185,7 +193,7 @@ public class StartScreen extends JFrame implements ActionListener {
             Vector initialSpeed = new Vector(finalVelocities);    //defines the initial velocities vector
 
             //initiate all calculations with the inputted values
-            StateVector initialConditions = new StateVector(new Vector[]{initialPosition, initialSpeed});
+            initialProbeConditions = new StateVector(new Vector[]{initialPosition, initialSpeed});
 
 //            //Test to see if the vector is working (it is!) (as far as i know)
 //            for(int i = 0; i<2; i++) {
@@ -193,6 +201,9 @@ public class StartScreen extends JFrame implements ActionListener {
 //                    System.out.println(initialConditions.getVector(i).get(j));
 //                }
 //            }
+
+            timerInterval = (int) Double.parseDouble(userInputs[6].getText());
+
             errorText.setText("");      //removes error message
             frame.dispose();        //closes the start screen
             SimulationScreen simulationScreen = new SimulationScreen();

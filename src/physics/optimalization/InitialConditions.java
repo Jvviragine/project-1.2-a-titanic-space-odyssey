@@ -11,7 +11,7 @@ import java.util.Arrays;
 
 public class InitialConditions {
     static Vector pos;
-    static Vector current = new Vector(new double[]{4.42270135156,-43.62738201925,-3.1328169170});
+    static Vector current = new Vector(new double[]{0,0,0});
     double value = 0.5;
 
     /**
@@ -102,7 +102,7 @@ public class InitialConditions {
 //    }
 
     public static Vector findVel(Vector current){
-        int iter = 100;
+        int iter = 1000;
         StateVector[] states = setStates(current);
         double[] masses = setMasses();
         SolarSystemPhysicsSimulation system = new SolarSystemPhysicsSimulation(states,masses,PlanetaryData.getCelestialBodyNames());
@@ -117,7 +117,7 @@ public class InitialConditions {
             for (Vector neighbour : neighbours) {
                 states = setStates(neighbour);
                 system = new SolarSystemPhysicsSimulation(states, masses, PlanetaryData.getCelestialBodyNames());
-                system.simulateCelestialBodiesOrbit(31536000, 5800);
+                system.simulateCelestialBodiesOrbit(31536000, 23200);
                 probePos = system.getStateVectors()[0].getVector(0);
                 //probePos = system.getPath().get(0).get(system.getPath().get(0).size() - 1).getVector(0);
                 titanPos = system.getStateVectors()[9].getVector(0);
@@ -136,7 +136,7 @@ public class InitialConditions {
     public static Vector[] generateNeighbours(Vector current){
         Vector[] neighbours = new Vector[20];
         for(int i = 0; i<neighbours.length;i++){
-            Vector n = current.add(randomVector(10));
+            Vector n = current.add(randomVector(2.5));
             neighbours[i] = n;
             //System.out.print(n.get(0) + " ");
             //System.out.print(n.get(1) + " ");

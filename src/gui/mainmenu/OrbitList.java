@@ -16,7 +16,7 @@ public class OrbitList {
     private static final int SCREEN_HEIGHT = 801;
 
     private static SolarSystemPhysicsSimulation simulation = new SolarSystemPhysicsSimulation(PlanetaryData.getCelestialBodiesStateVector(),PlanetaryData.getCelestialBodiesMasses(),PlanetaryData.getCelestialBodyNames());
-    private static List<List<StateVector>> planetPaths = simulation.simulateCelestialBodiesOrbit(31536000,86400);
+    private static List<List<StateVector>> planetPaths = simulation.simulateCelestialBodiesOrbit(31536000,3600);
 
     private static double saturnMaxDistance = getMaxDistanceFromSun(1253801723.95465, -760453007.810989);
     final private static double scale = Math.min(SCREEN_WIDTH, SCREEN_HEIGHT) / (2 * saturnMaxDistance);

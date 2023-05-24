@@ -16,7 +16,7 @@ public class Probe {
 
     private StateVector initialConditions;
 
-    private double mass;
+    private static double mass;
 
     /**
      * Constructor for the Probe
@@ -38,7 +38,7 @@ public class Probe {
         return name;
     }
 
-    public double getProbeMass() {
+    public static double getProbeMass() {
         return mass;
     }
 }

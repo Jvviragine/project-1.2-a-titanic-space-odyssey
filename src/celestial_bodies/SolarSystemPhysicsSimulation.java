@@ -91,10 +91,6 @@ public class SolarSystemPhysicsSimulation {
         //List containing all orbits of all planets
         List<List<StateVector>> orbits = new ArrayList<>();
 
-        //Send to GUI
-//        int length = (int) (Math.ceil(tf/h));
-//        double[][] coordinates= new double[2][length];
-
         //Update all objects in the Solar System
         for(int i = 0; i < stateVectors.length; i++){
 
@@ -112,12 +108,34 @@ public class SolarSystemPhysicsSimulation {
         return orbits;
     }
 
-    public List<List<StateVector>> simulateCelestialBodiesOrbit(double tf,double h){
+    public List<StateVector> simulateProbePath(StateVector initialProbeState, double tf,double h){
+        StateVector [] storeCelestialBodies = new StateVector[stateVectors.length];
+        for(int i = 0; i < stateVectors.length; i++){
+            storeCelestialBodies[i] = stateVectors[i];
+        }
 
-        //List containing all orbits of all planets
-        List<List<StateVector>> orbits = new ArrayList<>();
+        //Add probe to the bodies in the system
+        StateVector [] bodiesWithProbe = new StateVector[stateVectors.length + 1];
+        for(int i = 0; i < stateVectors.length; i++){
+            bodiesWithProbe[i] = stateVectors[i];
+        }
+        bodiesWithProbe[stateVectors.length-1] = initialProbeState;
 
+        stateVectors = bodiesWithProbe;
 
+        //List containing path of probe
+        List<StateVector> probePath = new ArrayList<>();
+
+        //Solve for time period using solver
+        StateVector newState = solver.solve(df,initialProbeState,0,tf,h);
+
+        //Get the whole path of the probe for the time period
+        probePath = solver.getAllStates();
+
+        //Remove probe from stateVectors list
+        stateVectors = storeCelestialBodies;
+
+        return probePath;
     }
 
     /**

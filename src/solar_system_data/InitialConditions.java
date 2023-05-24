@@ -30,4 +30,8 @@ public class InitialConditions {
         initialProbeVelocity = initialProbeVelocityVector;
     }
 
+    public static StateVector getProbeInitialState(){
+        return new StateVector(new Vector[]{initialProbePosition,initialProbeVelocity});
+    }
+
 }

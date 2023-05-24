@@ -4,10 +4,13 @@ import physics.vectors.Vector;
 import physics.vectors.StateVector;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class RK2Solver implements Solver {
 
     ArrayList<StateVector> allStates;
+
+    List<List<StateVector>> allPlanetStates;
 
     public RK2Solver(){
 
@@ -39,12 +42,12 @@ public class RK2Solver implements Solver {
             double k2Time = t + (0.333333333333333)*stepSize;
             StateVector k2FunctionStateVector = currentState.add(k1.multiply(0.333333333333333));
             StateVector k2 = function.applyFunction(k2FunctionStateVector, k2Time).multiply(stepSize);
-            StateVector scalledK2 = k2.multiply(3.0);
+            StateVector scaledK2 = k2.multiply(3.0);
 
             // Sum of Scaled Ks
-            StateVector scaledSumOfKs = k1.add(scalledK2);
+            StateVector scaledSumOfKs = k1.add(scaledK2);
 
-            // Diving Scalled Sum by 4
+            // Diving Scaled Sum by 4
             StateVector averagedScaledStateVector = scaledSumOfKs.multiply(0.25);
 
             currentState = currentState.add(averagedScaledStateVector);
@@ -58,18 +61,73 @@ public class RK2Solver implements Solver {
         return currentState;
     }
 
-    //TODO Implement this function to return array of statevectors
     public StateVector[] solve(Function function, StateVector[] initialConditions, double t0, double tf, double stepSize){
-        return initialConditions;
+        //List of states at each step
+        ArrayList<StateVector> stateVectors = new ArrayList<>();
+        List<List<StateVector>> allPlanetStateVectors = new ArrayList<>(initialConditions.length);
+        for(int i=0; i< initialConditions.length;i++){
+            ArrayList<StateVector> planetStates = new ArrayList<>();
+            planetStates.add(initialConditions[i]);
+            allPlanetStateVectors.add(planetStates);
+        }
+
+        StateVector currentStates[] = initialConditions;
+        StateVector nextStates[] = new StateVector[initialConditions.length];
+
+        //Solve Euler for the time period tf-t0
+        for(double t=t0; t<tf; t+=stepSize){
+
+            for(int i = 0; i < initialConditions.length; i++){
+
+                StateVector currentState = currentStates[i];
+
+                // Euler Step - K1
+                StateVector k1 = function.applyFunction(currentState, t).multiply(stepSize);
+
+                // Second Approximation - K2
+                double k2Time = t + (0.333333333333333)*stepSize;
+                StateVector k2FunctionStateVector = currentState.add(k1.multiply(0.333333333333333));
+                StateVector k2 = function.applyFunction(k2FunctionStateVector, k2Time).multiply(stepSize);
+                StateVector scaledK2 = k2.multiply(3.0);
+
+                // Sum of Scaled Ks
+                StateVector scaledSumOfKs = k1.add(scaledK2);
+
+                // Diving Scaled Sum by 4
+                StateVector averagedScaledStateVector = scaledSumOfKs.multiply(0.25);
+
+                currentState = currentState.add(averagedScaledStateVector);
+
+                //Add current state to all existing states
+                stateVectors.add(currentState);
+
+                //Set y1 to y0 for next iteration
+                nextStates[i] = currentState;
+
+                //Add current state to all existing states
+                allPlanetStateVectors.get(i).add(nextStates[i]);
+
+            }
+            currentStates = nextStates;
+            function.resetState(currentStates);
+        }
+
+        allPlanetStates = allPlanetStateVectors;
+        allStates = stateVectors;
+
+        return currentStates;
     }
 
     public ArrayList<StateVector> getAllStates(){
         return allStates;
     }
 
-    //TODO Implement
     public ArrayList<StateVector> getAllStates(int index){
-        return allStates;
+        ArrayList<StateVector> states = new ArrayList<>();
+        for(int i=0; i<allPlanetStates.get(index).size();i++){
+            states.add(allPlanetStates.get(index).get(i));
+        }
+        return states;
     }
 
 }

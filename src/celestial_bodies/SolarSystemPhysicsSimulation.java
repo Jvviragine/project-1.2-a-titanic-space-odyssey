@@ -1,9 +1,7 @@
 package celestial_bodies;
 
 import physics.functions.DerivativeFunction;
-import physics.solvers.EulerSolver;
-import physics.solvers.RK4Solver;
-import physics.solvers.Solver;
+import physics.solvers.*;
 import physics.vectors.StateVector;
 import physics.vectors.Vector;
 

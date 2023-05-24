@@ -109,7 +109,6 @@ public class EulerSolver implements Solver{
         allStates = stateVectors;
 
         return currentStates;
-
     }
 
     public ArrayList<StateVector> getAllStates(int index){

@@ -19,7 +19,5 @@ public class Main {
 
         StartScreen startScreen = new StartScreen();
 
-
-
     }
 }

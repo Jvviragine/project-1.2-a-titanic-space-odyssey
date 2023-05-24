@@ -46,19 +46,13 @@ public class OrbitList {
         return planetPath;
     }
 
-//    public static int[][] getPath(int index){
-//        for(int i = 0; i < planetPaths.size(); i++){        //removed the .get(0), should be good like this right?
-//
-//        }
-//    }
+    public static int[][] getPath(int index){
 
-    public static double[][] getPath(int index){
-
-        double[][] path = new double[planetPaths.get(index).size()][2];
+        int[][] path = new int[planetPaths.get(index).size()][2];
 
         for(int i = 0; i < planetPaths.get(index).size(); i++){
-            path[i][0] = planetPaths.get(index).get(i).getVector(0).get(0);
-            path[i][1] = planetPaths.get(index).get(i).getVector(0).get(1);
+            path[i][0] = (int) planetPaths.get(index).get(i).getVector(0).get(0);
+            path[i][1] = (int) planetPaths.get(index).get(i).getVector(0).get(1);
         }
 
         return path;

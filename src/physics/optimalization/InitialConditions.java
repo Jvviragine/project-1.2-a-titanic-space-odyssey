@@ -11,8 +11,9 @@ import java.util.Arrays;
 import java.util.List;
 
 public class InitialConditions {
-    static Vector pos = findPosOnSurface(new Vector(new double[]{1254501624.95946, -761340299.067828, -36309613.8378104}), new Vector(new double[]{148186906.893642, -27823158.5715694, 33746.8987977113}), 6400);
-    static Vector current = new Vector(new double[]{0,0,0});
+    //static Vector pos = findPosOnSurface(new Vector(new double[]{1254501624.95946, -761340299.067828, -36309613.8378104}), new Vector(new double[]{148186906.893642, -27823158.5715694, 33746.8987977113}), 6400);
+    static Vector pos = new Vector(new double[]{-148458048.395164,-27524868.1841142,70233.6499287411});
+    static Vector current = new Vector(new double[]{42.42270135156,-43.62738201925,-3.1328169170});
     double value = 0.5;
 
     /**
@@ -118,7 +119,6 @@ public class InitialConditions {
             Vector[] neighbours = generateNeighbours(current);
             for (Vector neighbour : neighbours) {
                 states[0].getStateVector()[1] = neighbour;
-                //System.out.println(states[0].getStateVector()[1].get(0));
                 system = new SolarSystemPhysicsSimulation(states, masses, PlanetaryData.getCelestialBodyNames());
                 system.simulateCelestialBodiesOrbit(31536000, 23200);
                 probePath = system.getPath().get(0);
@@ -137,7 +137,7 @@ public class InitialConditions {
     public static Vector[] generateNeighbours(Vector current){
         Vector[] neighbours = new Vector[20];
         for(int i = 0; i<neighbours.length;i++){
-            Vector n = current.add(randomVector(1.0));
+            Vector n = current.add(randomVector(0.1));
             neighbours[i] = n;
             //System.out.print(n.get(0) + " ");
             //System.out.print(n.get(1) + " ");
@@ -147,14 +147,12 @@ public class InitialConditions {
     }
 
     public static Vector randomVector(double max){
-        double[] rand = new double[3];
+        Vector rand = new Vector(new double[]{0,0,0});
         double min = max*(-1);
-        for(int i=0; i<rand.length;i++) {
-            double r = Math.random() * (max - min + 1) + min;
-            rand[i] = r;
-        }
-        Vector rnd = new Vector(rand);
-        return rnd;
+        int n = (int) (Math.random() * 3);
+        double r = Math.random() * (max - min + 1) + min;
+        rand.set(n, r);
+        return rand;
     }
 
     public static StateVector[] setStates(Vector vel){

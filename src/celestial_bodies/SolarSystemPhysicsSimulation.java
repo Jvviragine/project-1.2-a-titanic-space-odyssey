@@ -112,6 +112,14 @@ public class SolarSystemPhysicsSimulation {
         return orbits;
     }
 
+    public List<List<StateVector>> simulateCelestialBodiesOrbit(double tf,double h){
+
+        //List containing all orbits of all planets
+        List<List<StateVector>> orbits = new ArrayList<>();
+
+
+    }
+
     /**
      * List containing the List of StateVectors for each of the bodies in the system
      * @return StateVector 2-D list

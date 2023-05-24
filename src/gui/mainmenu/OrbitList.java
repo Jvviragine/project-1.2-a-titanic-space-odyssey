@@ -46,6 +46,18 @@ public class OrbitList {
 //        }
 //    }
 
+    public static double[][] getPath(int index){
+
+        double[][] path = new double[planetPaths.get(index).size()][2];
+
+        for(int i = 0; i < planetPaths.get(index).size(); i++){
+            path[i][0] = planetPaths.get(index).get(i).getVector(0).get(0);
+            path[i][1] = planetPaths.get(index).get(i).getVector(0).get(1);
+        }
+
+        return path;
+    }
+
     public static int[][] getExamplePath1() {
         return examplePath1;
     }

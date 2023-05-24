@@ -63,10 +63,15 @@ public class DerivativeFunction implements Function{
         return new StateVector(vectors);
     }
 
+    public void resetState(StateVector[] stateVectors){
+        system.setStateVectors(stateVectors);
+    }
+
     public Vector getAcceleration(int index){
         Vector force = new Vector(new double[3]);
         double mass = system.getMasses()[index];
         Vector position = system.getStateVectors()[index].getVector(0).copyOf();
+        //needs to get updated statevectors
 
         for(int i = 0; i < system.totalBodies(); i++) {
             if(i != index){

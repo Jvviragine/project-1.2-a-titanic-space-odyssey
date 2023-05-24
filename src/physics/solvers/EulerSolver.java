@@ -6,11 +6,14 @@ import physics.vectors.Vector;
 import physics.vectors.StateVector;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class EulerSolver implements Solver{
     static double t;
 
     ArrayList<StateVector> allStates;
+
+    List<List<StateVector>> allPlanetStates;
 
     public EulerSolver(){
 
@@ -26,6 +29,7 @@ public class EulerSolver implements Solver{
      * @param stepSize the time interval at which evaluations of the derivative are made
      * @return the state vector at the end of the time period tf - t0
      */
+    //change to have array of initial conditions fo all states
     public StateVector solve(Function function, StateVector initialCondition, double t0, double tf, double stepSize) {
 
         //List of states at each step
@@ -60,11 +64,65 @@ public class EulerSolver implements Solver{
 
     }
 
+    public StateVector[] solve(Function function, StateVector[] initialConditions, double t0, double tf, double stepSize) {
+
+        //List of states at each step
+        ArrayList<StateVector> stateVectors = new ArrayList<>();
+        List<List<StateVector>> allPlanetStateVectors = new ArrayList<>(initialConditions.length);
+        for(int i=0; i< initialConditions.length;i++){
+            ArrayList<StateVector> planetStates = new ArrayList<>();
+            planetStates.add(initialConditions[i]);
+            allPlanetStateVectors.add(planetStates);
+        }
+
+        StateVector currentStates[] = initialConditions;
+        StateVector nextStates[] = new StateVector[initialConditions.length];
+
+        //Solve Euler for the time period tf-t0
+        for(double t=t0; t<tf; t+=stepSize){
+
+            for(int i = 0; i < initialConditions.length; i++){
+
+                StateVector currentState = currentStates[i];
+
+                //Get derivative, f(t,y) of the function
+                StateVector derivative = function.applyFunction(currentState,t);
+
+                //h * f(t,y)
+                StateVector hfty = derivative.multiply(stepSize);
+
+                //yn + hf(t,y)
+                StateVector y1 = currentState.add(hfty);
+
+                //Set y1 to y0 for next iteration
+                nextStates[i] = y1;
+
+                //Add current state to all existing states
+                allPlanetStateVectors.get(i).add(y1);
+
+            }
+            currentStates = nextStates;
+            function.resetState(currentStates);
+        }
+
+        allPlanetStates = allPlanetStateVectors;
+        allStates = stateVectors;
+
+        return currentStates;
+
+    }
+
+    public ArrayList<StateVector> getAllStates(int index){
+        ArrayList<StateVector> states = new ArrayList<>();
+        for(int i=0; i<allPlanetStates.get(index).size();i++){
+            states.add(allPlanetStates.get(index).get(i));
+        }
+        return states;
+    }
+
     public ArrayList<StateVector> getAllStates(){
         ArrayList<StateVector> states = new ArrayList<>();
-        for(int i=0; i<allStates.size();i++){
-            states.add(allStates.get(i));
-        }
+
         return states;
     }
 

@@ -28,6 +28,10 @@ public class TestODEFunction implements Function{
         }
     }
 
+    public void resetState(StateVector[] stateVectors){
+        //Do nothing
+    }
+
     public static void main(String[] args) {
 
         // Testing the Evaluation of the Function y = e^t

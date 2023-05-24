@@ -58,7 +58,17 @@ public class RK2Solver implements Solver {
         return currentState;
     }
 
+    //TODO Implement this function to return array of statevectors
+    public StateVector[] solve(Function function, StateVector[] initialConditions, double t0, double tf, double stepSize){
+        return initialConditions;
+    }
+
     public ArrayList<StateVector> getAllStates(){
+        return allStates;
+    }
+
+    //TODO Implement
+    public ArrayList<StateVector> getAllStates(int index){
         return allStates;
     }
 

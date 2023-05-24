@@ -16,6 +16,10 @@ public class TestODEDerivativeFunction implements Function{
         return y;
     }
 
+    public void resetState(StateVector[] stateVectors){
+        //Do nothing
+    }
+
     public static void main(String[] args) {
 
         // Testing the Evaluation of the Derivative of the Function y = e^t, namely y'=y

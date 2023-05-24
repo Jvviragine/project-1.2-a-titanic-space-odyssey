@@ -1,6 +1,7 @@
 package celestial_bodies;
 
 import physics.functions.DerivativeFunction;
+import physics.solvers.EulerSolver;
 import physics.solvers.RK4Solver;
 import physics.solvers.Solver;
 import physics.vectors.StateVector;
@@ -91,36 +92,22 @@ public class SolarSystemPhysicsSimulation {
         //List containing all orbits of all planets
         List<List<StateVector>> orbits = new ArrayList<>();
 
-        //Store changed states
-        StateVector [] storeCelestialBodies = new StateVector[stateVectors.length];
+        StateVector[] newState = solver.solve(df,stateVectors,0,tf,h);
 
-        //Update all objects in the Solar System
-        for(int i = 0; i < stateVectors.length; i++){
-
-            //Solve for time period using solver
-            StateVector newState = solver.solve(df,stateVectors[i],0,tf,h);
-
-            //Add all states (path) of current body to the orbits list
-            orbits.add(solver.getAllStates());
-
-            //Update current state
-            storeCelestialBodies[i] = newState;
+        for(int i = 0; i< stateVectors.length; i++){
+            orbits.add(solver.getAllStates(i));
         }
-
-        stateVectors = storeCelestialBodies;
-
-        allStates = orbits;
 
         return orbits;
     }
 
     public List<List<StateVector>> simulateOrbitsWithProbe(StateVector initialProbeState, double tf,double h){
 
-        //Store the initial celestial bodies, and any updates to them
-        StateVector [] storeCelestialBodies = new StateVector[stateVectors.length];
-        for(int i = 0; i < stateVectors.length; i++){
-            storeCelestialBodies[i] = stateVectors[i];
-        }
+//        //Store the initial celestial bodies, and any updates to them
+//        StateVector [] storeCelestialBodies = new StateVector[stateVectors.length];
+//        for(int i = 0; i < stateVectors.length; i++){
+//            storeCelestialBodies[i] = stateVectors[i];
+//        }
 
         //Add probe to the bodies in the system
         StateVector [] bodiesWithProbe = new StateVector[stateVectors.length + 1];
@@ -135,29 +122,21 @@ public class SolarSystemPhysicsSimulation {
         //List containing all orbits of all planets
         List<List<StateVector>> orbits = new ArrayList<>();
 
-        //Initialise all states without probe
-        List<List<StateVector>> withoutProbe = new ArrayList<>();
+        //Solve for time period using solver
+        solver.solve(df,stateVectors,0,tf,h);
 
-        //Update all objects in the Solar System
         for(int i = 0; i < stateVectors.length; i++){
-
-            //Solve for time period using solver
-            StateVector newState = solver.solve(df,stateVectors[i],0,tf,h);
-
-            //Add all states (path) of current body to the orbits list
-            orbits.add(solver.getAllStates());
-
-            //Add all states except probe
-            if(i != stateVectors.length-1) withoutProbe.add(solver.getAllStates());
-
-            //Update current state
-            if(i != stateVectors.length-1) storeCelestialBodies[i] = newState;
+            orbits.add(solver.getAllStates(i));
+            if(i != stateVectors.length - 1) allStates.add(solver.getAllStates(i));
         }
 
-        allStates = withoutProbe;
+        StateVector [] statesWithoutProbe = new StateVector[stateVectors.length - 1];
+        for(int i = 0; i < statesWithoutProbe.length; i++){
+            statesWithoutProbe[i] = stateVectors[i];
+        }
 
         //Remove probe from stateVectors list
-        stateVectors = storeCelestialBodies;
+        stateVectors = statesWithoutProbe;
 
         return orbits;
     }

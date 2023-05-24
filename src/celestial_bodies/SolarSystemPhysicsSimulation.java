@@ -91,6 +91,9 @@ public class SolarSystemPhysicsSimulation {
         //List containing all orbits of all planets
         List<List<StateVector>> orbits = new ArrayList<>();
 
+        //Store changed states
+        StateVector [] storeCelestialBodies = new StateVector[stateVectors.length];
+
         //Update all objects in the Solar System
         for(int i = 0; i < stateVectors.length; i++){
 
@@ -101,14 +104,19 @@ public class SolarSystemPhysicsSimulation {
             orbits.add(solver.getAllStates());
 
             //Update current state
-            stateVectors[i] = newState;
+            storeCelestialBodies[i] = newState;
         }
 
+        stateVectors = storeCelestialBodies;
+
         allStates = orbits;
+
         return orbits;
     }
 
-    public List<StateVector> simulateProbePath(StateVector initialProbeState, double tf,double h){
+    public List<List<StateVector>> simulateOrbitsWithProbe(StateVector initialProbeState, double tf,double h){
+
+        //Store the initial celestial bodies, and any updates to them
         StateVector [] storeCelestialBodies = new StateVector[stateVectors.length];
         for(int i = 0; i < stateVectors.length; i++){
             storeCelestialBodies[i] = stateVectors[i];
@@ -119,23 +127,39 @@ public class SolarSystemPhysicsSimulation {
         for(int i = 0; i < stateVectors.length; i++){
             bodiesWithProbe[i] = stateVectors[i];
         }
+
         bodiesWithProbe[stateVectors.length-1] = initialProbeState;
 
         stateVectors = bodiesWithProbe;
 
-        //List containing path of probe
-        List<StateVector> probePath = new ArrayList<>();
+        //List containing all orbits of all planets
+        List<List<StateVector>> orbits = new ArrayList<>();
 
-        //Solve for time period using solver
-        StateVector newState = solver.solve(df,initialProbeState,0,tf,h);
+        //Initialise all states without probe
+        List<List<StateVector>> withoutProbe = new ArrayList<>();
 
-        //Get the whole path of the probe for the time period
-        probePath = solver.getAllStates();
+        //Update all objects in the Solar System
+        for(int i = 0; i < stateVectors.length; i++){
+
+            //Solve for time period using solver
+            StateVector newState = solver.solve(df,stateVectors[i],0,tf,h);
+
+            //Add all states (path) of current body to the orbits list
+            orbits.add(solver.getAllStates());
+
+            //Add all states except probe
+            if(i != stateVectors.length-1) withoutProbe.add(solver.getAllStates());
+
+            //Update current state
+            if(i != stateVectors.length-1) storeCelestialBodies[i] = newState;
+        }
+
+        allStates = withoutProbe;
 
         //Remove probe from stateVectors list
         stateVectors = storeCelestialBodies;
 
-        return probePath;
+        return orbits;
     }
 
     /**

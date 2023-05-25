@@ -71,7 +71,7 @@ public class DerivativeFunction implements Function{
     public Vector getAcceleration(int index){
 
         Vector force = new Vector(new double[3]);
-        
+
         double mass;
         if(index == system.totalBodies()) mass = InitialConditions.getProbeMass();
         else mass = system.getMasses()[index];

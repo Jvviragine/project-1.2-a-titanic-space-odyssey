@@ -23,7 +23,7 @@ public class StateVector {
 
         }
         else {
-            System.out.println("You have not provided any Vectors to make your State Vector");
+            throw new IllegalArgumentException("You have not provided any Vectors to make your State Vector");
         }
     }
 

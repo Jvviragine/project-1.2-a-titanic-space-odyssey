@@ -68,18 +68,18 @@ public class SimulationScreen extends JPanel {
 
         //Mercury
         g2d.setColor(Color.GRAY);
-        g2d.fillOval(XCENTER + mercuryPath[currentIndex][0] - 10,  YCENTER + mercuryPath[currentIndex][1] - 10, 20, 20);
-        g2d.drawString("Mercury", XCENTER + mercuryPath[currentIndex][0] - 20, YCENTER + mercuryPath[currentIndex][1] + 20);
+        g2d.fillOval(XCENTER + mercuryPath[currentIndex][0] - 10,  YCENTER + mercuryPath[currentIndex][1] - 10, 12, 12);
+        g2d.drawString("Mercury", XCENTER + mercuryPath[currentIndex][0] - 25, YCENTER + mercuryPath[currentIndex][1] + 11);
 
         //Venus
         g2d.setColor(Color.ORANGE);
-        g2d.fillOval(XCENTER + venusPath[currentIndex][0] - 10,  YCENTER + venusPath[currentIndex][1] - 10, 20, 20);
-        g2d.drawString("Venus", XCENTER + venusPath[currentIndex][0] - 16, YCENTER + venusPath[currentIndex][1] + 20);
+        g2d.fillOval(XCENTER + venusPath[currentIndex][0] - 10,  YCENTER + venusPath[currentIndex][1] - 10, 13, 13);
+        g2d.drawString("Venus", XCENTER + venusPath[currentIndex][0] - 18, YCENTER + venusPath[currentIndex][1] + 13);
 
         //Earth
         g2d.setColor(Color.BLUE);
-        g2d.fillOval(XCENTER + earthPath[currentIndex][0] - 10,  YCENTER + earthPath[currentIndex][1] - 10, 20, 20);
-        g2d.drawString("Earth", XCENTER + earthPath[currentIndex][0] - 14, YCENTER + earthPath[currentIndex][1] + 20);
+        g2d.fillOval(XCENTER + earthPath[currentIndex][0] - 10,  YCENTER + earthPath[currentIndex][1] - 10, 15,15);
+        g2d.drawString("Earth", XCENTER + earthPath[currentIndex][0] - 16, YCENTER + earthPath[currentIndex][1] + 17);
 
         //Moon
         g2d.setColor(Color.WHITE);
@@ -88,18 +88,18 @@ public class SimulationScreen extends JPanel {
 
         //Mars
         g2d.setColor(Color.RED);
-        g2d.fillOval(XCENTER + marsPath[currentIndex][0] - 10,  YCENTER + marsPath[currentIndex][1] - 10, 20, 20);
-        g2d.drawString("Mars", XCENTER + marsPath[currentIndex][0] - 12, YCENTER + marsPath[currentIndex][1] + 20);
+        g2d.fillOval(XCENTER + marsPath[currentIndex][0] - 10,  YCENTER + marsPath[currentIndex][1] - 10, 14, 14);
+        g2d.drawString("Mars", XCENTER + marsPath[currentIndex][0] - 16, YCENTER + marsPath[currentIndex][1] + 15);
 
         //Jupiter
         g2d.setColor(Color.ORANGE);
-        g2d.fillOval(XCENTER + jupiterPath[currentIndex][0] - 10,  YCENTER + jupiterPath[currentIndex][1] - 10, 20, 20);
-        g2d.drawString("Jupiter", XCENTER + jupiterPath[currentIndex][0] - 16, YCENTER + jupiterPath[currentIndex][1] + 20);
+        g2d.fillOval(XCENTER + jupiterPath[currentIndex][0] - 10,  YCENTER + jupiterPath[currentIndex][1] - 10, 25, 25);
+        g2d.drawString("Jupiter", XCENTER + jupiterPath[currentIndex][0] - 14, YCENTER + jupiterPath[currentIndex][1] + 25);
 
         //Saturn
         g2d.setColor(Color.YELLOW);
         g2d.fillOval(XCENTER + saturnPath[currentIndex][0] - 10,  YCENTER + saturnPath[currentIndex][1] - 10, 20, 20);
-        g2d.drawString("Saturn", XCENTER + saturnPath[currentIndex][0] - 13, YCENTER + saturnPath[currentIndex][1] + 20);
+        g2d.drawString("Saturn", XCENTER + saturnPath[currentIndex][0] - 15, YCENTER + saturnPath[currentIndex][1] + 22);
 
         //Titan
         g2d.setColor(Color.WHITE);

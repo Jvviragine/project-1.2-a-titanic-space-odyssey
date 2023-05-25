@@ -20,7 +20,7 @@ public class OrbitList {
     private static List<List<StateVector>> planetPaths = simulation.simulateOrbitsWithProbe(InitialConditions.getProbeInitialState(),31536000,14400);
 
     private static double saturnMaxDistance = getMaxDistanceFromSun(1253801723.95465, -760453007.810989);
-    final private static double scale = Math.min(SCREEN_WIDTH, SCREEN_HEIGHT) / (2 * saturnMaxDistance);
+    final private static double scale = Math.min(SCREEN_WIDTH, SCREEN_HEIGHT) / (1.5 * saturnMaxDistance);
 
     /**
      * Gets the path of the planet with

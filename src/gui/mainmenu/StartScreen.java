@@ -15,24 +15,25 @@ import javax.swing.*;
 //Also gives the option to freeze the simulation at the inputted time.
 public class StartScreen extends JFrame implements ActionListener {
     private JFrame frame = new JFrame();
-    private JLabel solverText, xText, yText, zText, v1Text, v2Text, v3Text, simulationSpeedText1, simulationSpeedText2, stepSizeText, topText01, topText02, errorText;
-    private JTextField xInput, yInput, zInput, v1Input, v2Input, v3Input, simulationSpeedInput, stepSizeInput;
+    private JLabel solverText, xText, yText, zText, v1Text, v2Text, v3Text, simulationSpeedText1, simulationSpeedText2, stepSizeText, simulationEndTimeText, topText01, topText02, errorText;
+    private JTextField xInput, yInput, zInput, v1Input, v2Input, v3Input, simulationSpeedInput, stepSizeInput, simulationEndTimeInput;
     private JComboBox solverChooser;
+    private JButton startButton;
+
     private double x, y, z, v1, v2, v3, simSpeed;
     //TODO: remove this defaultConditions variable and replace it with getDefaultConditions function from another class
-    private double[] defaultConditions = {-148458048.395164, -27524868.1841142, 70233.6499287411, 42.42270135156, -43.62738201925, -3.1328169170, 5};
-    private JButton startButton;
-    private JCheckBox checkBox;
+    private double[] defaultConditions = {-148458048.395164, -27524868.1841142, 70233.6499287411, 42.42270135156, -43.62738201925, -3.1328169170, 2, 3600, 78892315};
     private String[] solverOptions = {"Euler", "RK2", "RK3", "RK4"};
     private final int FRAME_WIDTH = 600;
-    private final int FRAME_HEIGHT = 570;
+    private final int FRAME_HEIGHT = 590;
 
     //Values to be passed on and used in other functions
     public static boolean freezeSimulation = false;         //boolean that determines if the simulation should go
-    public static int timerInterval = 2;                    //amount of time between each timer step (speed of the simulation)
+    public static int timerInterval;                    //amount of time between each timer step (speed of the simulation)
     public static StateVector initialProbeConditions;       //initial conditions for the probe, inputted by the user
     public static Solver finalSolver;                       //solver chosen by the user
-    public static double h = 3600;                          //step size in seconds
+    public static double h;                          //step size in seconds
+    public static int simulationEndTime;
 
     //The start screen, where the user can input custom values
     public StartScreen() {
@@ -120,7 +121,7 @@ public class StartScreen extends JFrame implements ActionListener {
         simulationSpeedText1.setBounds(96, 360, 160, 25);
         panel.add(simulationSpeedText1);
 
-        simulationSpeedText2 = new JLabel("Default is 5 (higher = slower).");
+        simulationSpeedText2 = new JLabel("Default is 2 (higher = slower).");
         simulationSpeedText2.setBounds(370, 360, 200, 25);
         panel.add(simulationSpeedText2);
 
@@ -136,12 +137,16 @@ public class StartScreen extends JFrame implements ActionListener {
         stepSizeInput.setBounds(200, 400, 165, 25);
         panel.add(stepSizeInput);
 
-        checkBox = new JCheckBox("Freeze the simulation at the given time.");
-        checkBox.setBounds(152, 440, 400, 20);
-        panel.add(checkBox);
+        simulationEndTimeText = new JLabel("Simulation end time (s): ");
+        simulationEndTimeText.setBounds(65, 440, 160, 25);
+        panel.add(simulationEndTimeText);
+
+        simulationEndTimeInput = new JTextField(30);
+        simulationEndTimeInput.setBounds(200, 440, 165, 25);
+        panel.add(simulationEndTimeInput);
 
         startButton = new JButton("Launch!");
-        startButton.setBounds(200, 480, 165, 25);
+        startButton.setBounds(200, 490, 165, 25);
         startButton.addActionListener(this);
         panel.add(startButton);
 
@@ -164,18 +169,10 @@ public class StartScreen extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent event) {
-        JTextField[] userInputs = {xInput, yInput, zInput, v1Input, v2Input, v3Input, simulationSpeedInput, stepSizeInput};
+        JTextField[] userInputs = {xInput, yInput, zInput, v1Input, v2Input, v3Input, simulationSpeedInput, stepSizeInput, simulationEndTimeInput};
         double[] finalPositions = {x, y, z};
         double[] finalVelocities = {v1, v2, v3};
         boolean allInputsValid = true;
-
-        //If the checkbox is selected, the simulation will be frozen at the inputted time
-        if (checkBox.isSelected()) {
-            freezeSimulation = true;
-            //TODO: implement code to freeze the simulation at the time given in simulationSpeedText
-            //Do this by setting a speed variable to 0?
-            System.out.println("Jippie! Box is selected.");
-        }
 
         /**
          * Goes through each textField and checks if it is empty.
@@ -253,6 +250,10 @@ public class StartScreen extends JFrame implements ActionListener {
 
             //Sets the step size
             h = Math.ceil(Math.abs(Double.parseDouble(userInputs[7].getText())));
+
+            //Sets the simulation end time
+            simulationEndTime = (int) Math.ceil(Math.abs(Double.parseDouble(userInputs[8].getText())));
+            System.out.println(simulationEndTime);
 
             errorText.setText("");      //removes error message
             frame.dispose();        //closes the start screen

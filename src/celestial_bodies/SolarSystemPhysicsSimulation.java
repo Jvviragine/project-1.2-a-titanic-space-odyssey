@@ -4,6 +4,7 @@ import physics.functions.DerivativeFunction;
 import physics.solvers.*;
 import physics.vectors.StateVector;
 import physics.vectors.Vector;
+import solar_system_data.PlanetaryData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,11 +27,14 @@ public class SolarSystemPhysicsSimulation {
 
     public final double G = 6.6743*Math.pow(10,-20);
 
+    private double t;
+
+    private double h;
+
     private DerivativeFunction df;
 
     private Solver solver;
 
-    private double t;
     public SolarSystemPhysicsSimulation(StateVector[] stateVectors, double[] masses, String[] names){
         this.stateVectors = stateVectors;
         this.masses = masses;
@@ -57,6 +61,19 @@ public class SolarSystemPhysicsSimulation {
             allStates.add(state);
             initialStates[i] = stateVectors[i];
         }
+    }
+
+    public StateVector[] getStatesOfProbeAndTitan(double time){
+        int indexOfState;
+        StateVector[] statesOfProbeAndTitan;
+        if(time < t){
+            indexOfState = (int)(time/h);
+            statesOfProbeAndTitan = new StateVector[2];
+            statesOfProbeAndTitan[0] = allStates.get(allStates.size()-1).get(indexOfState);
+            statesOfProbeAndTitan[1] = allStates.get(PlanetaryData.indexOf("Titan")).get(indexOfState);
+        }
+        else throw new IllegalArgumentException("Time must be within simulation time frame. Try simulating again with a longer time.");
+        return statesOfProbeAndTitan;
     }
 
     public void addState(int index, StateVector stateVector){
@@ -96,6 +113,11 @@ public class SolarSystemPhysicsSimulation {
             orbits.add(solver.getAllStates(i));
         }
 
+        this.t = tf;
+        this.h = h;
+
+        allStates = orbits;
+
         return orbits;
     }
 
@@ -125,6 +147,10 @@ public class SolarSystemPhysicsSimulation {
         }
 
         stateVectors = restoreStateVectors;
+
+        this.t = tf;
+        this.h = h;
+        allStates = orbits;
 
         return orbits;
 

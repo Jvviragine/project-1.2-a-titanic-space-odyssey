@@ -1,5 +1,7 @@
 package gui.mainmenu;
 
+import physics.functions.Function;
+import physics.solvers.*;
 import physics.vectors.StateVector;
 import physics.vectors.Vector;
 
@@ -14,19 +16,23 @@ import javax.swing.*;
 //Also gives the option to freeze the simulation at the inputted time.
 public class StartScreen extends JFrame implements ActionListener {
     private JFrame frame = new JFrame();
-    private JLabel xText, yText, zText, v1Text, v2Text, v3Text, simulationSpeedText1, simulationSpeedText2, topText01, topText02, errorText;
+    private JLabel solverText, xText, yText, zText, v1Text, v2Text, v3Text, simulationSpeedText1, simulationSpeedText2, topText01, topText02, errorText;
     private JTextField xInput, yInput, zInput, v1Input, v2Input, v3Input, simulationSpeedInput;
+    private JComboBox solverChooser;
     private double x, y, z, v1, v2, v3, simSpeed;
     //TODO: remove this defaultConditions variable and replace it with getDefaultConditions function from another class
     private double[] defaultConditions = {-148458048.395164, -27524868.1841142, 70233.6499287411, 42.42270135156, -43.62738201925, -3.1328169170, 5};
     private JButton startButton;
     private JCheckBox checkBox;
+    private String[] solverOptions = {"Euler", "RK2", "RK3", "RK4"};
     private final int FRAME_WIDTH = 600;
-    private final int FRAME_HEIGHT = 500;
+    private final int FRAME_HEIGHT = 530;
 
-    public static boolean freezeSimulation = false;       //boolean to see if the simulation should go
-    public static int timerInterval = 5;
-    public static StateVector initialProbeConditions;
+    //Values to be passed on and used in other functions
+    public static boolean freezeSimulation = false;         //boolean that determines if the simulation should go
+    public static int timerInterval = 5;                    //amount of time between each timer step (speed of the simulation)
+    public static StateVector initialProbeConditions;       //initial conditions for the probe, inputted by the user
+    public static Solver finalSolver;                    //solver chosen by the user
 
     //The start screen, where the user can input custom values
     public StartScreen() {
@@ -47,77 +53,87 @@ public class StartScreen extends JFrame implements ActionListener {
 
         //Error message to be printed when an invalid value inputted.
         errorText = new JLabel("");
-        errorText.setBounds(30, 425, 500, 25);
+        errorText.setBounds(30, 505, 500, 25);
         errorText.setForeground(Color.RED);
         errorText.setHorizontalAlignment(JLabel.CENTER);
         panel.add(errorText);
 
+        //Solver text
+        solverText = new JLabel("Solver: ");
+        solverText.setBounds(262, 58, 70, 25);
+        panel.add(solverText);
+
+        //Solver chooser
+        solverChooser = new JComboBox(solverOptions);
+        solverChooser.setBounds(182, 78, 200, 25);
+        panel.add(solverChooser);
+
         xText = new JLabel("x: ");
-        xText.setBounds(180, 80, 80, 25);
+        xText.setBounds(180, 120, 80, 25);
         panel.add(xText);
 
         xInput = new JTextField(30);
-        xInput.setBounds(200, 80, 165, 25);
+        xInput.setBounds(200, 120, 165, 25);
         panel.add(xInput);
 
         yText = new JLabel("y: ");
-        yText.setBounds(180, 120, 80, 25);
+        yText.setBounds(180, 160, 80, 25);
         panel.add(yText);
 
         yInput = new JTextField(30);
-        yInput.setBounds(200, 120, 165, 25);
+        yInput.setBounds(200, 160, 165, 25);
         panel.add(yInput);
 
         zText = new JLabel("z: ");
-        zText.setBounds(180, 160, 80, 25);
+        zText.setBounds(180, 200, 80, 25);
         panel.add(zText);
 
         zInput = new JTextField(30);
-        zInput.setBounds(200, 160, 165, 25);
+        zInput.setBounds(200, 200, 165, 25);
         panel.add(zInput);
 
         v1Text = new JLabel("v1: ");
-        v1Text.setBounds(180, 200, 80, 25);
+        v1Text.setBounds(180, 240, 80, 25);
         panel.add(v1Text);
 
         v1Input = new JTextField(30);
-        v1Input.setBounds(200, 200, 165, 25);
+        v1Input.setBounds(200, 240, 165, 25);
         panel.add(v1Input);
 
         v2Text = new JLabel("v2: ");
-        v2Text.setBounds(180, 240, 80, 25);
+        v2Text.setBounds(180, 280, 80, 25);
         panel.add(v2Text);
 
         v2Input = new JTextField(30);
-        v2Input.setBounds(200, 240, 165, 25);
+        v2Input.setBounds(200, 280, 165, 25);
         panel.add(v2Input);
 
         v3Text = new JLabel("v3: ");
-        v3Text.setBounds(180, 280, 80, 25);
+        v3Text.setBounds(180, 320, 80, 25);
         panel.add(v3Text);
 
         v3Input = new JTextField(30);
-        v3Input.setBounds(200, 280, 165, 25);
+        v3Input.setBounds(200, 320, 165, 25);
         panel.add(v3Input);
 
         simulationSpeedText1 = new JLabel("Simulation speed: ");
-        simulationSpeedText1.setBounds(130, 310, 160, 25);
+        simulationSpeedText1.setBounds(95, 360, 160, 25);
         panel.add(simulationSpeedText1);
 
-        simulationSpeedText2 = new JLabel("(higher = slower)");
-        simulationSpeedText2.setBounds(130, 325, 160, 25);
+        simulationSpeedText2 = new JLabel("Default is 5 (higher = slower).");
+        simulationSpeedText2.setBounds(370, 360, 200, 25);
         panel.add(simulationSpeedText2);
 
         simulationSpeedInput = new JTextField(30);
-        simulationSpeedInput.setBounds(235, 320, 165, 25);
+        simulationSpeedInput.setBounds(200, 360, 165, 25);
         panel.add(simulationSpeedInput);
 
         checkBox = new JCheckBox("Freeze the simulation at the given time.");
-        checkBox.setBounds(150, 360, 400, 20);
+        checkBox.setBounds(152, 400, 400, 20);
         panel.add(checkBox);
 
         startButton = new JButton("Launch!");
-        startButton.setBounds(200, 400, 165, 25);
+        startButton.setBounds(200, 440, 165, 25);
         startButton.addActionListener(this);
         panel.add(startButton);
 
@@ -145,6 +161,7 @@ public class StartScreen extends JFrame implements ActionListener {
         double[] finalVelocities = {v1, v2, v3};
         boolean allInputsValid = true;
 
+        //If the checkbox is selected, the simulation will be frozen at the inputted time
         if (checkBox.isSelected()) {
             freezeSimulation = true;
             //TODO: implement code to freeze the simulation at the time given in simulationSpeedText
@@ -192,7 +209,7 @@ public class StartScreen extends JFrame implements ActionListener {
             Vector initialPosition = new Vector(finalPositions);     //defines the initial positions vector
             Vector initialSpeed = new Vector(finalVelocities);    //defines the initial velocities vector
 
-            //initiate all calculations with the inputted values
+            //Initiate probe path calculations with the inputted values
             initialProbeConditions = new StateVector(new Vector[]{initialPosition, initialSpeed});
 
 //            //Test to see if the vector is working (it is!) (as far as i know)
@@ -202,7 +219,29 @@ public class StartScreen extends JFrame implements ActionListener {
 //                }
 //            }
 
+            //Sets the timer interval
             timerInterval = (int) Double.parseDouble(userInputs[6].getText());
+
+            //Sets the solver
+            int selectedSolverOption = solverChooser.getSelectedIndex();
+            switch(selectedSolverOption) {
+                case 0:
+                    finalSolver = new EulerSolver();
+                    //System.out.println("Euler");
+                    break;
+                case 1:
+                    finalSolver = new RK2Solver();
+                    //System.out.println("RK2");
+                    break;
+                case 2:
+                    finalSolver = new RK3Solver();
+                    //System.out.println("RK3");
+                    break;
+                case 3:
+                    finalSolver = new RK4Solver();
+                    //System.out.println("RK4");
+                    break;
+            }
 
             errorText.setText("");      //removes error message
             frame.dispose();        //closes the start screen

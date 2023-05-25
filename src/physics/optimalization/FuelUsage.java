@@ -1,8 +1,8 @@
 package physics.optimalization;
 
 public class FuelUsage {
-    private final int ISP = 280; //Specific Impulse taken from a rocket with similar mass (Atlas V)
-    private final int MASS = 50000; //Mass of our rocket in kilograms
+    private static final int ISP = 280; //Specific Impulse taken from a rocket with similar mass (Atlas V)
+    private static final int MASS = 50000; //Mass of our rocket in kilograms
 
     /**
      * Calculates the fuel consumption in kilograms for any constant maneuver. No code optimization,
@@ -19,7 +19,7 @@ public class FuelUsage {
         double thrust = (momentum / timeframe) - (gravity * MASS);
         return (thrust / (gravity * ISP)) * timeframe;
     }
-    public double Alternative(double startVelocity, double endVelocity, double gravity){
+    public static double Alternative(double startVelocity, double endVelocity, double gravity){
         double e = 2.718;
         double wetMass = MASS * Math.pow (e, Math.abs(startVelocity - endVelocity) / (ISP * gravity));
         return wetMass - MASS;

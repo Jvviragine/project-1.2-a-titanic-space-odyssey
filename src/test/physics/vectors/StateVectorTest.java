@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import javax.swing.plaf.nimbus.State;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class StateVectorTest {
 
@@ -15,6 +16,7 @@ class StateVectorTest {
     private StateVector v;
 
     @BeforeEach
+    //Initializes two 3-dimensional test vectors "u" and "v" before each test
     void setUp() {
         Vector vector_u1 = new Vector(new double[]{1, 2, 3});
         Vector vector_u2 = new Vector(new double[]{-1, -2, -3});
@@ -25,13 +27,15 @@ class StateVectorTest {
     }
 
     @AfterEach
+    //Deletes the two 3-dimensional test vectors "u" and "v" before reinitializing them
     void tearDown() {
         this.u = null;
         this.v = null;
     }
 
     @Test
-    void stateVector() {
+    //covers StateVector with input.length > 0
+    void testStateVectorWithProperInput() {
         Vector vector1 = new Vector(new double[]{1, 2, 3});
         Vector vector2 = new Vector(new double[]{-1, -2, -3});
         Vector[] vectorsExpected = {vector1, vector2};
@@ -48,6 +52,17 @@ class StateVectorTest {
         assertEquals(numberOfVectorsExpected, output.getNumberOfVectors());
         assertEquals(numberOfDimensionsExpected, output.getNumberOfDimensions());
     }
+
+    @Test
+    //covers StateVector with input.length = 0
+    void testStateVectorWithIncorrectInput() {
+        Vector[] input = new Vector[]{};
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> new StateVector(input));
+        String expected = "You have not provided any Vectors to make your State Vector";
+        String output = exception.getMessage();
+        assertEquals(expected, output);
+    }
+
 
     @Test
     void getStateVector() {

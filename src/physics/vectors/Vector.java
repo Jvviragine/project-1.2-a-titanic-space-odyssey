@@ -82,7 +82,7 @@ public class Vector {
 
         }
 
-        else throw new IllegalArgumentException("Vectors must have the same dimensions to be subtracted.");
+        else throw new IllegalArgumentException("Vectors must have the same dimensions to be added.");
 
     }
 

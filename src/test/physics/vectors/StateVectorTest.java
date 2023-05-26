@@ -33,11 +33,12 @@ class StateVectorTest {
     void tearDown() {
         this.u = null;
         this.v = null;
+        this.w = null;
     }
 
     @Test
     //covers StateVector with vector.length > 0
-    void testStateVectorWithNonNullVector() {
+    void testStateVectorWithNonEmptyVector() {
         Vector vector1 = new Vector(new double[]{1, 2, 3});
         Vector vector2 = new Vector(new double[]{-1, -2, -3});
         Vector[] vectorsExpected = {vector1, vector2};
@@ -87,7 +88,7 @@ class StateVectorTest {
     }
 
     @Test
-    //covers getVector for index < stateVector.length
+    //covers getVector for index > stateVector.length
     void testGetVectorWithIndexOutOfBounds() {
         int index = u.getNumberOfVectors();
         assertThrows(IndexOutOfBoundsException.class, () -> u.getVector(index));
@@ -124,7 +125,7 @@ class StateVectorTest {
     }
 
     @Test
-    //covers add for a StateVector with the different number of vectors
+    //covers add for a StateVector with a different number of vectors
     void testAddStateVectorWithDifferentVectorNumber() {
         assertThrows(IllegalArgumentException.class, () -> u.add(w));
         assertThrows(IllegalArgumentException.class, () -> w.add(u));
@@ -154,7 +155,7 @@ class StateVectorTest {
     }
 
     @Test
-    //covers multiply for a negative integer scalar
+    //covers multiply for scalar != 0
     void testMultiplyWithNonNullScalar() {
         Vector vector1 = new Vector(new double[]{-2, -4, -6});
         Vector vector2 = new Vector(new double[]{2, 4, 6});
@@ -168,7 +169,7 @@ class StateVectorTest {
     }
 
     @Test
-    //covers multiply for a null scalar
+    //covers multiply for scalar = 0
     void testMultiplyWithNullScalar() {
         Vector[] expected = {new Vector(new double[]{0, -0.0, 0})};
         StateVector output = w.multiply(0);
@@ -180,8 +181,8 @@ class StateVectorTest {
     }
 
     @Test
-    //covers isEqual for StateVector containing the same vectors
-    void testIsEqualForIdenticalStateVector() {
+    //covers isEqual for a StateVector containing the same vectors
+    void testIsEqualWithIdenticalStateVector() {
         Vector vector1 = new Vector(new double[]{1, 2, 3});
         Vector vector2 = new Vector(new double[]{-1, -2, -3});
         StateVector u2 = new StateVector(new Vector[]{vector1, vector2});
@@ -190,8 +191,8 @@ class StateVectorTest {
     }
 
     @Test
-    //covers isEqual for StateVector with different vectors
-    void testIsEqualForDifferentStateVector() {
+    //covers isEqual for a StateVector with different vectors
+    void testIsEqualWithDifferentStateVector() {
         assertFalse(u.isEqual(v));
         assertFalse(v.isEqual(u));
     }

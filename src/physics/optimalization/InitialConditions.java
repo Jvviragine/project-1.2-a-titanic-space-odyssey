@@ -11,9 +11,9 @@ import java.util.Arrays;
 import java.util.List;
 
 public class InitialConditions {
-    static Vector pos = findPosOnSurface(new Vector(new double[]{1254501624.95946, -761340299.067828, -36309613.8378104}), new Vector(new double[]{148186906.893642, -27823158.5715694, 33746.8987977113}), 6400);
-    //static Vector pos = new Vector(new double[]{-148458048.395164,-27524868.1841142,70233.6499287411});
-    static Vector current = new Vector(new double[]{12.052321865687869, -43.62738201925, 1.9120013360583714});
+    //static Vector pos = findPosOnSurface(new Vector(new double[]{1254501624.95946, -761340299.067828, -36309613.8378104}), new Vector(new double[]{148186906.893642, -27823158.5715694, 33746.8987977113}), 6400);
+    static Vector pos = new Vector(new double[]{-1.48e08,-2.78e07,40070});
+    static Vector current = new Vector(new double[]{43.92009492802754, -43.90984012615626, -3.2416738828357268});
     double value = 0.5;
 
     /**
@@ -104,7 +104,7 @@ public class InitialConditions {
 //    }
 
     public static Vector findVel(Vector current){
-        int iter = 500;
+        int iter = 100;
         StateVector iniState = new StateVector(new Vector[]{pos, current});
         SolarSystemPhysicsSimulation system = new SolarSystemPhysicsSimulation(PlanetaryData.getCelestialBodiesStateVector(),PlanetaryData.getCelestialBodiesMasses(),PlanetaryData.getCelestialBodyNames());
         List<List<StateVector>> paths = system.simulateOrbitsWithProbe(iniState,31536000,23200);
@@ -119,7 +119,8 @@ public class InitialConditions {
             Vector[] neighbours = generateNeighbours(current);
             for (Vector neighbour : neighbours) {
                 iniState.getStateVector()[1] = neighbour;
-                //system = new SolarSystemPhysicsSimulation(PlanetaryData.getCelestialBodiesStateVector(),PlanetaryData.getCelestialBodiesMasses(),PlanetaryData.getCelestialBodyNames());
+                //System.out.println(bestDistance);
+                system = new SolarSystemPhysicsSimulation(PlanetaryData.getCelestialBodiesStateVector(),PlanetaryData.getCelestialBodiesMasses(),PlanetaryData.getCelestialBodyNames());
                 paths = system.simulateOrbitsWithProbe(iniState,31536000,23200);
                 probePath = paths.get(11);
                 titanPath = paths.get(8);
@@ -141,7 +142,7 @@ public class InitialConditions {
     public static Vector[] generateNeighbours(Vector current){
         Vector[] neighbours = new Vector[20];
         for(int i = 0; i<neighbours.length;i++){
-            Vector n = current.add(randomVector(2));
+            Vector n = current.add(randomVector(1));
             neighbours[i] = n;
             //System.out.print(n.get(0) + " ");
             //System.out.print(n.get(1) + " ");
@@ -196,7 +197,7 @@ public class InitialConditions {
             double ndist = pathProbe.get(i).getVector(0).distance(pathTitan.get(i).getVector(0));
             if(ndist<dist){
                 dist = ndist;
-                System.out.println(dist);
+                //System.out.println(dist);
             }
         }
         return dist;

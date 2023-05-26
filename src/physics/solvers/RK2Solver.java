@@ -39,8 +39,8 @@ public class RK2Solver implements Solver {
             StateVector k1 = function.applyFunction(currentState, t).multiply(stepSize);
 
             // Second Approximation - K2
-            double k2Time = t + (0.333333333333333)*stepSize;
-            StateVector k2FunctionStateVector = currentState.add(k1.multiply(0.333333333333333));
+            double k2Time = t + (0.6666666666666)*stepSize;
+            StateVector k2FunctionStateVector = currentState.add(k1.multiply(0.6666666666666));
             StateVector k2 = function.applyFunction(k2FunctionStateVector, k2Time).multiply(stepSize);
             StateVector scaledK2 = k2.multiply(3.0);
 
@@ -85,8 +85,8 @@ public class RK2Solver implements Solver {
                 StateVector k1 = function.applyFunction(currentState, t).multiply(stepSize);
 
                 // Second Approximation - K2
-                double k2Time = t + (0.333333333333333)*stepSize;
-                StateVector k2FunctionStateVector = currentState.add(k1.multiply(0.333333333333333));
+                double k2Time = t + (0.6666666666666)*stepSize;
+                StateVector k2FunctionStateVector = currentState.add(k1.multiply(0.6666666666666));
                 StateVector k2 = function.applyFunction(k2FunctionStateVector, k2Time).multiply(stepSize);
                 StateVector scaledK2 = k2.multiply(3.0);
 

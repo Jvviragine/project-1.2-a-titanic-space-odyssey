@@ -123,4 +123,11 @@ public class PlanetaryData {
         return names;
     }
 
+    public static int indexOf(String name){
+        for(int i = 0; i < celestialBodies.length; i++){
+            if(name.equals(celestialBodies[i].getName())) return i;
+        }
+        return -1;
+    }
+
 }

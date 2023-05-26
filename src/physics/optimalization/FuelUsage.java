@@ -12,16 +12,24 @@ public class FuelUsage {
      * @param endVelocity velocity in m/s when deactivating thrusters
      * @param gravity gravitational force of the planet in m/s^2
      * @param timeframe time in seconds it takes from start to end of the maneuver
+     * @param distance the distance between entering a planet's orbit and reaching its surface in km
      * @return point on the surface closest to the target
      */
-    public double CalculateFuel(double startVelocity, double endVelocity, double gravity, double timeframe){
+    public static double CalculateFuel(double startVelocity, double endVelocity, double gravity, double timeframe){
         double momentum = MASS * Math.abs(endVelocity - startVelocity);
         double thrust = (momentum / timeframe) - (gravity * MASS);
         return (thrust / (gravity * ISP)) * timeframe;
     }
-    public static double Alternative(double startVelocity, double endVelocity, double gravity){
+    public static double Takeoff(double startVelocity, double endVelocity, double gravity){
         double e = 2.718;
         double wetMass = MASS * Math.pow (e, Math.abs(startVelocity - endVelocity) / (ISP * gravity));
         return wetMass - MASS;
+    }
+
+    public static double Landing(double startVelocity, double endVelocity, double gravity, double distance){
+        double acc = (Math.pow(startVelocity, 2) - Math.pow(endVelocity, 2)) / (2* distance);
+        //double thrust = MASS * (acc + gravity);
+        double time = (startVelocity - endVelocity) / acc;
+        return CalculateFuel(startVelocity, endVelocity, gravity, time);
     }
 }

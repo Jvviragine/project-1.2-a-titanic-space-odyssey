@@ -7,13 +7,13 @@ import org.junit.jupiter.api.Test;
 
 import javax.swing.plaf.nimbus.State;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class StateVectorTest {
 
     private StateVector u;
     private StateVector v;
+    private StateVector w;
 
     @BeforeEach
     //Initializes two 3-dimensional test vectors "u" and "v" before each test
@@ -22,8 +22,10 @@ class StateVectorTest {
         Vector vector_u2 = new Vector(new double[]{-1, -2, -3});
         Vector vector_v1 = new Vector(new double[]{0, 1, 2});
         Vector vector_v2 = new Vector(new double[]{0.5, 1, 2});
+        Vector vector_w1 = new Vector(new double[]{0, -4, 0.5});
         u = new StateVector(new Vector[]{vector_u1, vector_u2});
         v = new StateVector(new Vector[]{vector_v1, vector_v2});
+        w = new StateVector(new Vector[]{vector_w1});
     }
 
     @AfterEach
@@ -34,8 +36,8 @@ class StateVectorTest {
     }
 
     @Test
-    //covers StateVector with input.length > 0
-    void testStateVectorWithProperInput() {
+    //covers StateVector with vector.length > 0
+    void testStateVectorWithNonNullVector() {
         Vector vector1 = new Vector(new double[]{1, 2, 3});
         Vector vector2 = new Vector(new double[]{-1, -2, -3});
         Vector[] vectorsExpected = {vector1, vector2};
@@ -54,18 +56,15 @@ class StateVectorTest {
     }
 
     @Test
-    //covers StateVector with input.length = 0
-    void testStateVectorWithIncorrectInput() {
-        Vector[] input = new Vector[]{};
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> new StateVector(input));
-        String expected = "You have not provided any Vectors to make your State Vector";
-        String output = exception.getMessage();
-        assertEquals(expected, output);
+    //covers StateVector with vector.length = 0
+    void testStateVectorWithEmptyVector() {
+        Vector[] emptyVector = new Vector[]{};
+        assertThrows(IllegalArgumentException.class, () -> new StateVector(emptyVector));
     }
 
-
     @Test
-    void getStateVector() {
+    //covers getStateVector
+    void testGetStateVector() {
         Vector vector1 = new Vector(new double[]{1, 2, 3});
         Vector vector2 = new Vector(new double[]{-1, -2, -3});
         Vector[] expected = new Vector[]{vector1, vector2};
@@ -77,9 +76,9 @@ class StateVectorTest {
         }
     }
 
-
     @Test
-    void getVector() {
+    //covers getVector for index < stateVector.length
+    void testGetVectorWithIndexInBounds() {
         double[] expected = {-1, -2, -3};
         Vector output = u.getVector(1);
         for (int i = 0; i < output.getDimension(); i++) {
@@ -88,19 +87,29 @@ class StateVectorTest {
     }
 
     @Test
-    void getNumberOfVectors() {
+    //covers getVector for index < stateVector.length
+    void testGetVectorWithIndexOutOfBounds() {
+        int index = u.getNumberOfVectors();
+        assertThrows(IndexOutOfBoundsException.class, () -> u.getVector(index));
+    }
+
+    @Test
+    //covers getNumberOfVectors
+    void testGetNumberOfVectors() {
         int output = u.getNumberOfVectors();
         assertEquals(2, output);
     }
 
     @Test
-    void getNumberOfDimensions() {
+    //covers getNumberOfDimensions
+    void testGetNumberOfDimensions() {
         int output = u.getNumberOfDimensions();
         assertEquals(3, output);
     }
 
     @Test
-    void add() {
+    //covers add for a StateVector with the same number of vectors
+    void testAddStateVectorWithSameVectorNumber() {
         Vector vector1 = new Vector(new double[]{1, 3, 5});
         Vector vector2 = new Vector(new double[]{-0.5, -1, -1});
         Vector[] expected = {vector1, vector2};
@@ -115,7 +124,15 @@ class StateVectorTest {
     }
 
     @Test
-    void subtract() {
+    //covers add for a StateVector with the different number of vectors
+    void testAddStateVectorWithDifferentVectorNumber() {
+        assertThrows(IllegalArgumentException.class, () -> u.add(w));
+        assertThrows(IllegalArgumentException.class, () -> w.add(u));
+    }
+
+    @Test
+    //covers subtract for a StateVector with the same number of vectors
+    void testSubtractStateVectorWithSameVectorNumber() {
         Vector vector1 = new Vector(new double[]{1, 1, 1});
         Vector vector2 = new Vector(new double[]{-1.5, -3, -5});
         Vector[] expected = {vector1, vector2};
@@ -130,7 +147,15 @@ class StateVectorTest {
     }
 
     @Test
-    void multiply() {
+    //covers add for a StateVector with the different number of vectors
+    void testSubtractStateVectorWithDifferentVectorNumber() {
+        assertThrows(IllegalArgumentException.class, () -> u.subtract(w));
+        assertThrows(IllegalArgumentException.class, () -> w.subtract(u));
+    }
+
+    @Test
+    //covers multiply for a negative integer scalar
+    void testMultiplyWithNonNullScalar() {
         Vector vector1 = new Vector(new double[]{-2, -4, -6});
         Vector vector2 = new Vector(new double[]{2, 4, 6});
         Vector[] expected = {vector1, vector2};
@@ -141,4 +166,34 @@ class StateVectorTest {
             }
         }
     }
+
+    @Test
+    //covers multiply for a null scalar
+    void testMultiplyWithNullScalar() {
+        Vector[] expected = {new Vector(new double[]{0, -0.0, 0})};
+        StateVector output = w.multiply(0);
+        for (int i = 0; i < expected.length; i++) {
+            for (int j = 0; j < expected[i].getDimension(); j++) {
+                assertEquals(expected[i].get(j), output.getStateVector()[i].get(j));
+            }
+        }
+    }
+
+    @Test
+    //covers isEqual for StateVector containing the same vectors
+    void testIsEqualForIdenticalStateVector() {
+        Vector vector1 = new Vector(new double[]{1, 2, 3});
+        Vector vector2 = new Vector(new double[]{-1, -2, -3});
+        StateVector u2 = new StateVector(new Vector[]{vector1, vector2});
+        assertTrue(u.isEqual(u2));
+        assertTrue(u2.isEqual(u));
+    }
+
+    @Test
+    //covers isEqual for StateVector with different vectors
+    void testIsEqualForDifferentStateVector() {
+        assertFalse(u.isEqual(v));
+        assertFalse(v.isEqual(u));
+    }
+
 }

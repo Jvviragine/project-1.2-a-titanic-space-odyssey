@@ -97,7 +97,7 @@ public class StateVector {
             // Iterate over the Vectors of the 2 State Vectors and Add them
             for (int vi = 0; vi < this.getNumberOfVectors(); vi++) {
 
-                // Here we are going though each Vector within the State Vectors
+                // Here we are going through each Vector within the State Vectors
 
                 // Will store the Result of Adding the 2 Vectors from the ith position in the State Vector
                 Vector resultantVector = this.getVector(vi).subtract(v.getVector(vi));
@@ -121,7 +121,7 @@ public class StateVector {
         // Iterate over the Vectors of the 2 State Vectors and Add them
         for (int vi = 0; vi < this.getNumberOfVectors(); vi++) {
 
-            // Here we are going though each Vector within the State Vectors
+            // Here we are going through each Vector within the State Vectors
 
             // Will store the Result of Adding the 2 Vectors from the ith position in the State Vector
             Vector resultantVector = this.getVector(vi).multiply(scalar);
@@ -133,7 +133,7 @@ public class StateVector {
 
     public boolean isEqual(StateVector v){
         for(int i=0; i<v.getNumberOfVectors();i++){
-            if(!(v.getVector(i).isEqual(this.getVector((i))))) return false;
+            if(!(v.getVector(i).isEqual(this.getVector(i)))) return false;
         }
         return true;
     }

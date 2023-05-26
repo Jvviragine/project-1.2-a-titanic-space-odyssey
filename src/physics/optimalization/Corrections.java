@@ -11,7 +11,7 @@ public class Corrections {
         StateVector diff = probePos.subtract(titanPos);
         for(int i = 0; i < diff.getNumberOfVectors(); i++){
             diff.getVector(i).multiply((double) 1 / timeElapsed);
-            vectorChanges += FuelUsage.Alternative(probeTraj.getVector(i).getMagnitude(), diff.getVector(i).getMagnitude(), 6.6743*Math.pow(10, -20));
+            vectorChanges += FuelUsage.Takeoff(probeTraj.getVector(i).getMagnitude(), diff.getVector(i).getMagnitude(), 6.6743*Math.pow(10, -20));
         }
         return diff;
     }

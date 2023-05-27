@@ -41,4 +41,5 @@ public class Probe {
     public static double getProbeMass() {
         return mass;
     }
+
 }

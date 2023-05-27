@@ -14,6 +14,7 @@ class StateVectorTest {
     private StateVector u;
     private StateVector v;
     private StateVector w;
+    private StateVector z;
 
     @BeforeEach
     //Initializes two 3-dimensional test vectors "u" and "v" before each test
@@ -22,10 +23,12 @@ class StateVectorTest {
         Vector vector_u2 = new Vector(new double[]{-1, -2, -3});
         Vector vector_v1 = new Vector(new double[]{0, 1, 2});
         Vector vector_v2 = new Vector(new double[]{0.5, 1, 2});
-        Vector vector_w1 = new Vector(new double[]{0, -4, 0.5});
+        Vector vector_w1 = new Vector(new double[]{0.3, -4});
         u = new StateVector(new Vector[]{vector_u1, vector_u2});
         v = new StateVector(new Vector[]{vector_v1, vector_v2});
         w = new StateVector(new Vector[]{vector_w1});
+        z = new StateVector((new Vector[]{vector_u1, vector_w1}));
+
     }
 
     @AfterEach
@@ -48,7 +51,7 @@ class StateVectorTest {
 
         for (int i = 0; i < numberOfVectorsExpected; i++) {
             for (int j = 0; j < numberOfDimensionsExpected; j++) {
-                assertEquals(vectorsExpected[i].get(j), output.getStateVector()[i].get(j));
+                assertEquals(vectorsExpected[i].get(j), output.getVector(i).get(j));
             }
         }
 
@@ -102,10 +105,21 @@ class StateVectorTest {
     }
 
     @Test
-    //covers getNumberOfDimensions
-    void testGetNumberOfDimensions() {
+    //covers getNumberOfDimensions for a stateVector with vectors of the same dimension
+    void testGetNumberOfDimensionsWithSameDimensions() {
         int output = u.getNumberOfDimensions();
-        assertEquals(3, output);
+        for (Vector v : u.getStateVector()) {
+            assertEquals(v.getDimension(), output);
+        }
+    }
+
+    @Test
+    //covers getNumberOfDimensions for a stateVector with vectors of different dimensions
+    void testGetNumberOfDimensionsWithDifferentDimensions() {
+        int output = z.getNumberOfDimensions();
+        for (Vector v : z.getStateVector()) {
+            assertEquals(v.getDimension(), output);
+        }
     }
 
     @Test
@@ -118,8 +132,8 @@ class StateVectorTest {
         StateVector output2 = v.add(u);
         for (int i = 0; i < expected.length; i++) {
             for (int j = 0; j < expected[0].getDimension(); j++) {
-                assertEquals(expected[i].get(j), output1.getStateVector()[i].get(j));
-                assertEquals(expected[i].get(j), output2.getStateVector()[i].get(j));
+                assertEquals(expected[i].get(j), output1.getVector(i).get(j));
+                assertEquals(expected[i].get(j), output2.getVector(i).get(j));
             }
         }
     }
@@ -141,8 +155,8 @@ class StateVectorTest {
         StateVector output2 = v.subtract(u);
         for (int i = 0; i < expected.length; i++) {
             for (int j = 0; j < expected[i].getDimension(); j++) {
-                assertEquals(expected[i].get(j), output1.getStateVector()[i].get(j));
-                assertEquals(-1*expected[i].get(j), output2.getStateVector()[i].get(j));
+                assertEquals(expected[i].get(j), output1.getVector(i).get(j));
+                assertEquals(-1*expected[i].get(j), output2.getVector(i).get(j));
             }
         }
     }
@@ -163,7 +177,7 @@ class StateVectorTest {
         StateVector output = u.multiply(-2);
         for (int i = 0; i < expected.length; i++) {
             for (int j = 0; j < expected[i].getDimension(); j++) {
-                assertEquals(expected[i].get(j), output.getStateVector()[i].get(j));
+                assertEquals(expected[i].get(j), output.getVector(i).get(j));
             }
         }
     }
@@ -171,11 +185,11 @@ class StateVectorTest {
     @Test
     //covers multiply for scalar = 0
     void testMultiplyWithNullScalar() {
-        Vector[] expected = {new Vector(new double[]{0, -0.0, 0})};
+        Vector[] expected = {new Vector(new double[]{0, -0.0})};
         StateVector output = w.multiply(0);
         for (int i = 0; i < expected.length; i++) {
             for (int j = 0; j < expected[i].getDimension(); j++) {
-                assertEquals(expected[i].get(j), output.getStateVector()[i].get(j));
+                assertEquals(expected[i].get(j), output.getVector(i).get(j));
             }
         }
     }

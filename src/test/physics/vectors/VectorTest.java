@@ -74,7 +74,7 @@ class VectorTest {
     @Test
     //covers Set for index >= state.length
     void testSetWithIndexOutOfBounds() {
-        int index = u.getDimension() + 1;
+        int index = u.getDimension();
         assertThrows(IndexOutOfBoundsException.class, () -> u.set(index, 10));
     }
 

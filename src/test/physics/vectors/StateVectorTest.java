@@ -71,11 +71,11 @@ class StateVectorTest {
     void testGetStateVector() {
         Vector vector1 = new Vector(new double[]{1, 2, 3});
         Vector vector2 = new Vector(new double[]{-1, -2, -3});
-        Vector[] expected = new Vector[]{vector1, vector2};
-        Vector[] output = u.getStateVector();
-        for (int i = 0; i < u.getNumberOfVectors(); i++) {
-            for (int j = 0; j < u.getNumberOfDimensions(); j++) {
-                assertEquals(expected[i].get(j), output[i].get(j));
+        StateVector expected = new StateVector(new Vector[]{vector1, vector2});
+        StateVector output = u;
+        for (int i = 0; i < expected.getNumberOfVectors(); i++) {
+            for (int j = 0; j < expected.getVector(i).getDimension(); j++) {
+                assertEquals(expected.getVector(i).get(j), output.getVector(i).get(j));
             }
         }
     }
@@ -83,10 +83,10 @@ class StateVectorTest {
     @Test
     //covers getVector for index < stateVector.length
     void testGetVectorWithIndexInBounds() {
-        double[] expected = {-1, -2, -3};
+        double expected = -1;
         Vector output = u.getVector(1);
         for (int i = 0; i < output.getDimension(); i++) {
-            assertEquals(expected[i], output.get(i));
+            assertEquals(expected, output.get(i));
         }
     }
 
@@ -127,13 +127,13 @@ class StateVectorTest {
     void testAddStateVectorWithSameVectorNumber() {
         Vector vector1 = new Vector(new double[]{1, 3, 5});
         Vector vector2 = new Vector(new double[]{-0.5, -1, -1});
-        Vector[] expected = {vector1, vector2};
+        StateVector expected = new StateVector(new Vector[]{vector1, vector2});
         StateVector output1 = u.add(v);
         StateVector output2 = v.add(u);
-        for (int i = 0; i < expected.length; i++) {
-            for (int j = 0; j < expected[0].getDimension(); j++) {
-                assertEquals(expected[i].get(j), output1.getVector(i).get(j));
-                assertEquals(expected[i].get(j), output2.getVector(i).get(j));
+        for (int i = 0; i < expected.getNumberOfVectors(); i++) {
+            for (int j = 0; j < expected.getVector(i).getDimension(); j++) {
+                assertEquals(expected.getVector(i).get(j), output1.getVector(i).get(j));
+                assertEquals(expected.getVector(i).get(j), output2.getVector(i).get(j));
             }
         }
     }
@@ -150,13 +150,13 @@ class StateVectorTest {
     void testSubtractStateVectorWithSameVectorNumber() {
         Vector vector1 = new Vector(new double[]{1, 1, 1});
         Vector vector2 = new Vector(new double[]{-1.5, -3, -5});
-        Vector[] expected = {vector1, vector2};
+        StateVector expected = new StateVector(new Vector[]{vector1, vector2});
         StateVector output1 = u.subtract(v);
         StateVector output2 = v.subtract(u);
-        for (int i = 0; i < expected.length; i++) {
-            for (int j = 0; j < expected[i].getDimension(); j++) {
-                assertEquals(expected[i].get(j), output1.getVector(i).get(j));
-                assertEquals(-1*expected[i].get(j), output2.getVector(i).get(j));
+        for (int i = 0; i < expected.getNumberOfVectors(); i++) {
+            for (int j = 0; j < expected.getVector(i).getDimension(); j++) {
+                assertEquals(expected.getVector(i).get(j), output1.getVector(i).get(j));
+                assertEquals(-1*expected.getVector(i).get(j), output2.getVector(i).get(j));
             }
         }
     }
@@ -173,11 +173,11 @@ class StateVectorTest {
     void testMultiplyWithNonNullScalar() {
         Vector vector1 = new Vector(new double[]{-2, -4, -6});
         Vector vector2 = new Vector(new double[]{2, 4, 6});
-        Vector[] expected = {vector1, vector2};
+        StateVector expected = new StateVector(new Vector[]{vector1, vector2});
         StateVector output = u.multiply(-2);
-        for (int i = 0; i < expected.length; i++) {
-            for (int j = 0; j < expected[i].getDimension(); j++) {
-                assertEquals(expected[i].get(j), output.getVector(i).get(j));
+        for (int i = 0; i < expected.getNumberOfVectors(); i++) {
+            for (int j = 0; j < expected.getVector(i).getDimension(); j++) {
+                assertEquals(expected.getVector(i).get(j), output.getVector(i).get(j));
             }
         }
     }
@@ -185,11 +185,12 @@ class StateVectorTest {
     @Test
     //covers multiply for scalar = 0
     void testMultiplyWithNullScalar() {
-        Vector[] expected = {new Vector(new double[]{0, -0.0})};
+        Vector vector = new Vector(new double[]{0, -0.0});
+        StateVector expected =new StateVector(new Vector[]{vector});
         StateVector output = w.multiply(0);
-        for (int i = 0; i < expected.length; i++) {
-            for (int j = 0; j < expected[i].getDimension(); j++) {
-                assertEquals(expected[i].get(j), output.getVector(i).get(j));
+        for (int i = 0; i < expected.getNumberOfVectors(); i++) {
+            for (int j = 0; j < expected.getVector(i).getDimension(); j++) {
+                assertEquals(expected.getVector(i).get(j), output.getVector(i).get(j));
             }
         }
     }

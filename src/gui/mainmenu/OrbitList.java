@@ -16,18 +16,13 @@ import java.util.List;
 public class OrbitList {
     private static final int SCREEN_WIDTH = 1536;
     private static final int SCREEN_HEIGHT = 801;
-    private static SolarSystemPhysicsSimulation simulation = new SolarSystemPhysicsSimulation(PlanetaryData.getCelestialBodiesStateVector(),PlanetaryData.getCelestialBodiesMasses(),PlanetaryData.getCelestialBodyNames());
+    private static SolarSystemPhysicsSimulation simulation = new SolarSystemPhysicsSimulation(PlanetaryData.getCelestialBodiesStateVector(),PlanetaryData.getCelestialBodiesMasses(),PlanetaryData.getCelestialBodyNames(),StartScreen.finalSolver);
     private static List<List<StateVector>> planetPaths = simulation.simulateOrbitsWithProbe(InitialConditions.getProbeInitialState(),StartScreen.simulationEndTime,StartScreen.h);
 
 
     private static double saturnMaxDistance = getDistanceFromSun(1253801723.95465, -760453007.810989);
     final private static double scale = Math.min(SCREEN_WIDTH, SCREEN_HEIGHT) / (1.5 * saturnMaxDistance);
-
-    public static Solver solver = StartScreen.finalSolver;
-
-    public OrbitList(Solver solver) {
-        this.solver = solver;
-    }
+    
 
     /**
      * Gets the path of the planet with

@@ -1,6 +1,6 @@
 package physics.optimalization;
 
-import celestial_bodies.SolarSystemPhysicsSimulation;
+import physics.simulation.SolarSystemPhysicsSimulation;
 import physics.vectors.StateVector;
 import physics.vectors.Vector;
 import solar_system_data.PlanetaryData;

@@ -1,6 +1,6 @@
 package gui.mainmenu;
 
-import celestial_bodies.SolarSystemPhysicsSimulation;
+import physics.simulation.SolarSystemPhysicsSimulation;
 import physics.solvers.*;
 import physics.vectors.StateVector;
 import physics.vectors.Vector;

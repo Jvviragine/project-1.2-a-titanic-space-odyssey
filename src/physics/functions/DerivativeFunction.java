@@ -1,6 +1,6 @@
 package physics.functions;
 
-import celestial_bodies.SolarSystemPhysicsSimulation;
+import physics.simulation.SolarSystemPhysicsSimulation;
 import physics.vectors.Vector;
 import physics.vectors.StateVector;
 import solar_system_data.InitialConditions;

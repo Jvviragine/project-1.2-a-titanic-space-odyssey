@@ -1,4 +1,4 @@
-package celestial_bodies;
+package physics.simulation;
 
 import physics.functions.DerivativeFunction;
 import physics.solvers.*;
@@ -41,6 +41,16 @@ public class SolarSystemPhysicsSimulation {
         this.names = names;
         this.df = new DerivativeFunction(this);
         this.solver = new RK4Solver();
+        t = 0;
+        initialiseStates();
+    }
+
+    public SolarSystemPhysicsSimulation(StateVector[] stateVectors, double[] masses, String[] names,Solver solver){
+        this.stateVectors = stateVectors;
+        this.masses = masses;
+        this.names = names;
+        this.df = new DerivativeFunction(this);
+        this.solver = solver;
         t = 0;
         initialiseStates();
     }

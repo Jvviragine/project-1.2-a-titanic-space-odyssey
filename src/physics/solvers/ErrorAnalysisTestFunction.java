@@ -21,8 +21,8 @@ public class ErrorAnalysisTestFunction {
         StateVector initialValue = new StateVector(new Vector[]{initialValueVector});
 
         // Choosing the Input Values
-        double tf = 5;
-        double h = 0.00390625;
+        double tf = 6.0;
+        double h = 0.1;
 
         // Exact Result of the Differential Equation
         StateVector exactStateVector = ft.applyFunction(initialValue, tf);

@@ -88,7 +88,7 @@ public class DerivativeFunction implements Function{
         double mass;
 
         //If probe is being evaluated, set mass to probe mass.
-        if(index == system.totalBodies()) mass = InitialConditions.getProbeMass();
+        if(index == system.totalBodies() - 1) mass = InitialConditions.getProbeMass();
         else mass = system.getMasses()[index];
 
         //Get position of current object

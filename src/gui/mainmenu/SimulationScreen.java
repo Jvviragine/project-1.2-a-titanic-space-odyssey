@@ -1,9 +1,12 @@
 package gui.mainmenu;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 
 public class SimulationScreen extends JPanel {
     private JFrame frame;
@@ -12,10 +15,12 @@ public class SimulationScreen extends JPanel {
     private final int XCENTER = SCREEN_WIDTH/2;
     private final int YCENTER = SCREEN_HEIGHT/2;
 
+    private Image normandy;
+
     private int currentIndex = 0;
     private Timer timer;
 
-    private OrbitList orbitList = new OrbitList(StartScreen.finalSolver);
+    private OrbitList orbitList = new OrbitList();
     private int[][] sunPath = orbitList.getPath(0);
     private int[][] venusPath = orbitList.getPath(2);
     private int[][] earthPath = orbitList.getPath(3);
@@ -28,8 +33,11 @@ public class SimulationScreen extends JPanel {
     private int[][][] allPaths = {sunPath, venusPath, earthPath, moonPath, marsPath, jupiterPath, saturnPath, titanPath, probePath};
 
     public SimulationScreen() {
-        for(int[][] paths : allPaths) {
-            System.out.println(paths.length);
+        try {
+            File pathToFile = new File("src/gui/mainmenu/images/Normandy.png");
+            normandy = ImageIO.read(pathToFile);
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
 
         frame = new JFrame("Simulation Screen");
@@ -105,8 +113,8 @@ public class SimulationScreen extends JPanel {
 
         //Probe
         g2d.setColor(Color.RED);
-        g2d.fillRect(XCENTER + probePath[currentIndex][0] - 10, YCENTER + probePath[currentIndex][1] - 10, 12, 12);
-        g2d.drawString("Probe", XCENTER + probePath[currentIndex][0] - 20, YCENTER + probePath[currentIndex][1] + 10);
+        g2d.drawImage(normandy, XCENTER + probePath[currentIndex][0] - 20, YCENTER + probePath[currentIndex][1] - 20, 25, 25, null);
+        g2d.drawString("Probe", XCENTER + probePath[currentIndex][0] - 22, YCENTER + probePath[currentIndex][1] + 7);
     }
 
     public void iterateThroughOrbit() {
@@ -120,6 +128,5 @@ public class SimulationScreen extends JPanel {
 
             repaint();
         }
-
     }
 }

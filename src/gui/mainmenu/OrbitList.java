@@ -1,7 +1,6 @@
 package gui.mainmenu;
 
 import physics.simulation.SolarSystemPhysicsSimulation;
-import physics.solvers.Solver;
 import physics.vectors.StateVector;
 import solar_system_data.InitialConditions;
 import solar_system_data.PlanetaryData;
@@ -9,8 +8,8 @@ import solar_system_data.PlanetaryData;
 import java.util.List;
 
 /**
- * Separates and assigns all orbits to the different planets
- * These will then be passed on to the simulationScreen class
+ * Separates, scales and assigns all orbits to the different planets
+ * These will then be called in the simulationScreen class
  * They can then be displayed without calculating anything more.
  */
 public class OrbitList {
@@ -19,10 +18,8 @@ public class OrbitList {
     private static SolarSystemPhysicsSimulation simulation = new SolarSystemPhysicsSimulation(PlanetaryData.getCelestialBodiesStateVector(),PlanetaryData.getCelestialBodiesMasses(),PlanetaryData.getCelestialBodyNames(),StartScreen.finalSolver);
     private static List<List<StateVector>> planetPaths = simulation.simulateOrbitsWithProbe(InitialConditions.getProbeInitialState(),StartScreen.simulationEndTime,StartScreen.h);
 
-
     private static double saturnMaxDistance = getDistanceFromSun(1253801723.95465, -760453007.810989);
     final private static double scale = Math.min(SCREEN_WIDTH, SCREEN_HEIGHT) / (1.5 * saturnMaxDistance);
-    
 
     /**
      * Gets the path of the planet with
@@ -44,7 +41,7 @@ public class OrbitList {
      * Gets the distance from the sun for given coordinates
      * @param x: inputted x coordinate
      * @param y: inputted y coordinate
-     * @return the distance from the sun to the inputted coordinates
+     * @return the distance from the sun to the inputted (x,y) coordinates
      */
     public static double getDistanceFromSun(double x, double y) {
         double maxDistance = Math.hypot(x, y);

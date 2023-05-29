@@ -9,9 +9,9 @@ import java.util.List;
 
 public class InitialConditions {
 
-    //static Vector pos = new Vector(new double[]{-1.48e08,-2.78e07,40070});
-    static Vector pos = findPosOnSurface(PlanetaryData.getCelestialBodiesStateVector()[3].getVector(0), new Vector(new double[]{1.25450162495946E9, -7.61340299067828E8, -3.63096138378104E7}), 6400);
-    static Vector current = new Vector(new double[]{0,0,0});
+    static Vector pos = new Vector(new double[]{-1.48e08,-2.78e07,40070});
+    //static Vector pos = findPosOnSurface(PlanetaryData.getCelestialBodiesStateVector()[3].getVector(0), new Vector(new double[]{1.25450162495946E9, -7.61340299067828E8, -3.63096138378104E7}), 6400);
+    static Vector current = new Vector(new double[]{41.34028414773549, -43.37264101885947, -3.0976158701845753});
 
     static Vector velocity = new Vector(new double[]{0,0,0});
 
@@ -46,7 +46,7 @@ public class InitialConditions {
      * @return Vector representing the new velocity
      */
     public static Vector findVel(Vector current){
-        int iter = 100;
+        int iter = 500;
         StateVector iniState = new StateVector(new Vector[]{pos, current});
         SolarSystemPhysicsSimulation system = new SolarSystemPhysicsSimulation(PlanetaryData.getCelestialBodiesStateVector(),PlanetaryData.getCelestialBodiesMasses(),PlanetaryData.getCelestialBodyNames());
         List<List<StateVector>> paths = system.simulateOrbitsWithProbe(iniState,31536000,23200);
@@ -89,7 +89,11 @@ public class InitialConditions {
     public static Vector[] generateNeighbours(Vector current){
         Vector[] neighbours = new Vector[20];
         for(int i = 0; i<neighbours.length;i++){
-            Vector n = current.add(randomVector(5));
+            Vector r = randomVector(0.4);
+            Vector n = current.add(r);
+            while(n.getMagnitude()>60) {
+                n = current.add(randomVector(0.4));
+            }
             neighbours[i] = n;
         }
         return neighbours;
@@ -130,6 +134,7 @@ public class InitialConditions {
         }
         return dist;
     }
+
 
     public static void main(String[] args) {
 

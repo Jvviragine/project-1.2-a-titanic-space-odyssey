@@ -20,12 +20,12 @@ public class StartScreen extends JFrame implements ActionListener {
     private JLabel solverText, xText, yText, zText, v1Text, v2Text, v3Text, simulationSpeedText1, simulationSpeedText2, stepSizeText, simulationEndTimeText, topText01, topText02, errorText;
     private JTextField xInput, yInput, zInput, v1Input, v2Input, v3Input, simulationSpeedInput, stepSizeInput, simulationEndTimeInput;
     private JComboBox solverChooser;
+    private String[] solverOptions = {"Euler", "RK2", "RK3", "RK4"};
     private JButton startButton;
 
     private double x, y, z, v1, v2, v3, simSpeed;
     //TODO: remove this defaultConditions variable and replace it with getDefaultConditions function from another class
     private double[] defaultConditions = {-148458048.395164, -27524868.1841142, 70233.6499287411, 42.42270135156, -43.62738201925, -3.1328169170, 2, 3600, 78892315};
-    private String[] solverOptions = {"Euler", "RK2", "RK3", "RK4"};
     private final int FRAME_WIDTH = 600;
     private final int FRAME_HEIGHT = 590;
 

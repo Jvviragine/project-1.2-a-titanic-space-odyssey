@@ -15,9 +15,8 @@ public class SimulationScreen extends JPanel {
     private int currentIndex = 0;
     private Timer timer;
 
-    private OrbitList orbitList = new OrbitList();
+    private OrbitList orbitList = new OrbitList(StartScreen.finalSolver);
     private int[][] sunPath = orbitList.getPath(0);
-    private int[][] mercuryPath = orbitList.getPath(1);
     private int[][] venusPath = orbitList.getPath(2);
     private int[][] earthPath = orbitList.getPath(3);
     private int[][] moonPath = orbitList.getPath(4);
@@ -25,11 +24,14 @@ public class SimulationScreen extends JPanel {
     private int[][] jupiterPath = orbitList.getPath(6);
     private int[][] saturnPath = orbitList.getPath(7);
     private int[][] titanPath = orbitList.getPath(8);
-    private int[][] uranusPath = orbitList.getPath(9);
-    private int[][] neptunePath = orbitList.getPath(10);
-    private int[][][] allPaths = {sunPath, mercuryPath, venusPath, earthPath, moonPath, marsPath, jupiterPath, saturnPath, titanPath, uranusPath, neptunePath};
+    private int[][] probePath = orbitList.getPath(11);
+    private int[][][] allPaths = {sunPath, venusPath, earthPath, moonPath, marsPath, jupiterPath, saturnPath, titanPath, probePath};
 
     public SimulationScreen() {
+        for(int[][] paths : allPaths) {
+            System.out.println(paths.length);
+        }
+
         frame = new JFrame("Simulation Screen");
 
         this.setLayout(null);
@@ -66,11 +68,6 @@ public class SimulationScreen extends JPanel {
         g2d.fillOval(XCENTER + sunPath[currentIndex][0] - 20, YCENTER + sunPath[currentIndex][1] - 20, 40, 40);
         g2d.drawString("Sun", XCENTER + sunPath[currentIndex][0] - 10, YCENTER + sunPath[currentIndex][1] + 30);
 
-        //Mercury
-        g2d.setColor(Color.GRAY);
-        g2d.fillOval(XCENTER + mercuryPath[currentIndex][0] - 10,  YCENTER + mercuryPath[currentIndex][1] - 10, 12, 12);
-        g2d.drawString("Mercury", XCENTER + mercuryPath[currentIndex][0] - 25, YCENTER + mercuryPath[currentIndex][1] + 11);
-
         //Venus
         g2d.setColor(Color.ORANGE);
         g2d.fillOval(XCENTER + venusPath[currentIndex][0] - 10,  YCENTER + venusPath[currentIndex][1] - 10, 13, 13);
@@ -106,15 +103,10 @@ public class SimulationScreen extends JPanel {
         g2d.fillOval(XCENTER + titanPath[currentIndex][0] - 10,  YCENTER + titanPath[currentIndex][1] - 10, 10, 10);
         g2d.drawString("Titan", XCENTER + titanPath[currentIndex][0] - 20, YCENTER + titanPath[currentIndex][1] + 10);
 
-        //Uranus (doesn't show up because the GUI was scaled to Saturn's max distance)
-        g2d.setColor(Color.LIGHT_GRAY);
-        g2d.fillOval(XCENTER + uranusPath[currentIndex][0] - 10,  YCENTER + uranusPath[currentIndex][1] - 10, 20, 20);
-        g2d.drawString("Uranus", XCENTER + uranusPath[currentIndex][0] - 13, YCENTER + uranusPath[currentIndex][1] + 20);
-
-        //Neptune (doesn't show up because the GUI was scaled to Saturn's max distance)
-        g2d.setColor(Color.BLUE);
-        g2d.fillOval(XCENTER + neptunePath[currentIndex][0] - 10,  YCENTER + neptunePath[currentIndex][1] - 10, 20, 20);
-        g2d.drawString("Neptune", XCENTER + neptunePath[currentIndex][0] - 13, YCENTER + neptunePath[currentIndex][1] + 20);
+        //Probe
+        g2d.setColor(Color.RED);
+        g2d.fillRect(XCENTER + probePath[currentIndex][0] - 10, YCENTER + probePath[currentIndex][1] - 10, 12, 12);
+        g2d.drawString("Probe", XCENTER + probePath[currentIndex][0] - 20, YCENTER + probePath[currentIndex][1] + 10);
     }
 
     public void iterateThroughOrbit() {
@@ -122,8 +114,8 @@ public class SimulationScreen extends JPanel {
 
         for(int i = 0; i < allPaths.length; i++) {
 
-            if (currentIndex >= mercuryPath.length) {
-                currentIndex = 0;
+            if (currentIndex >= earthPath.length - 1) {
+                timer.stop();
             }
 
             repaint();

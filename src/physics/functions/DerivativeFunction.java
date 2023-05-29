@@ -69,16 +69,18 @@ public class DerivativeFunction implements Function{
     }
 
     public Vector getAcceleration(int index){
-
+        //Initialise force vector and mass
         Vector force = new Vector(new double[3]);
-
         double mass;
+
+        //If it is the probe, set the mass to probe mass.
         if(index == system.totalBodies()) mass = InitialConditions.getProbeMass();
         else mass = system.getMasses()[index];
 
+        //Get position of current object
         Vector position = system.getStateVectors()[index].getVector(0).copyOf();
-        //needs to get updated statevectors
 
+        //Find sum of all forces, Fi
         for(int i = 0; i < system.totalBodies(); i++) {
             if(i != index){
                 Vector thisVector = system.getStateVectors()[i].getVector(0).copyOf();
@@ -99,8 +101,10 @@ public class DerivativeFunction implements Function{
                 force = force.add(div.multiply(weight));
             }
         }
+
         force = force.multiply(-1);
 
+        // a = F/m
         Vector acceleration = force.multiply(1/mass);
 
         return acceleration;

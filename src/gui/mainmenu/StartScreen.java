@@ -1,8 +1,10 @@
 package gui.mainmenu;
 
+import celestial_bodies.SolarSystemPhysicsSimulation;
 import physics.solvers.*;
 import physics.vectors.StateVector;
 import physics.vectors.Vector;
+import solar_system_data.PlanetaryData;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -181,8 +183,7 @@ public class StartScreen extends JFrame implements ActionListener {
          */
         for (int i = 0; i < userInputs.length; i++) {
             if (userInputs[i].getText().isEmpty()) {
-                //TODO: implement code to use default value for the empty textField
-                userInputs[i].setText(String.valueOf(defaultConditions[i]));
+                userInputs[i].setText(String.valueOf(defaultConditions[i]));        //uses default values if the box is left empty
             }
             else {
                 try {
@@ -254,6 +255,8 @@ public class StartScreen extends JFrame implements ActionListener {
             //Sets the simulation end time
             simulationEndTime = (int) Math.ceil(Math.abs(Double.parseDouble(userInputs[8].getText())));
             System.out.println(simulationEndTime);
+
+            SolarSystemPhysicsSimulation system = new SolarSystemPhysicsSimulation(PlanetaryData.getCelestialBodiesStateVector(),PlanetaryData.getCelestialBodiesMasses(),PlanetaryData.getCelestialBodyNames());
 
             errorText.setText("");      //removes error message
             frame.dispose();        //closes the start screen

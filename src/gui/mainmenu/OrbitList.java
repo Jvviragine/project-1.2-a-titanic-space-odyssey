@@ -1,6 +1,7 @@
 package gui.mainmenu;
 
 import celestial_bodies.SolarSystemPhysicsSimulation;
+import physics.solvers.Solver;
 import physics.vectors.StateVector;
 import solar_system_data.InitialConditions;
 import solar_system_data.PlanetaryData;
@@ -21,6 +22,12 @@ public class OrbitList {
 
     private static double saturnMaxDistance = getMaxDistanceFromSun(1253801723.95465, -760453007.810989);
     final private static double scale = Math.min(SCREEN_WIDTH, SCREEN_HEIGHT) / (1.5 * saturnMaxDistance);
+
+    public static Solver solver = StartScreen.finalSolver;
+
+    public OrbitList(Solver solver) {
+        this.solver = solver;
+    }
 
     /**
      * Gets the path of the planet with

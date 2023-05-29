@@ -45,7 +45,7 @@ public class SimulationScreen extends JPanel {
         frame.setVisible(true);
 
         // Create a timer with a delay of 1 millisecond
-        timer = new Timer(StartScreen.timerInterval, new ActionListener() {
+        timer = new Timer(1, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(!StartScreen.freezeSimulation) {

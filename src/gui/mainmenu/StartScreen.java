@@ -4,6 +4,7 @@ import physics.simulation.SolarSystemPhysicsSimulation;
 import physics.solvers.*;
 import physics.vectors.StateVector;
 import physics.vectors.Vector;
+import solar_system_data.InitialConditions;
 import solar_system_data.PlanetaryData;
 
 import java.awt.*;
@@ -17,25 +18,25 @@ import javax.swing.*;
 //Also gives the option to freeze the simulation at the inputted time.
 public class StartScreen extends JFrame implements ActionListener {
     private JFrame frame = new JFrame();
-    private JLabel solverText, xText, yText, zText, v1Text, v2Text, v3Text, simulationSpeedText1, simulationSpeedText2, stepSizeText, simulationEndTimeText, topText01, topText02, errorText;
-    private JTextField xInput, yInput, zInput, v1Input, v2Input, v3Input, simulationSpeedInput, stepSizeInput, simulationEndTimeInput;
+    private JLabel solverText, xText, yText, zText, v1Text, v2Text, v3Text, stepSizeText, simulationEndTimeText, topText01, topText02, errorText;
+    private JTextField xInput, yInput, zInput, v1Input, v2Input, v3Input, stepSizeInput, simulationEndTimeInput;
     private JComboBox solverChooser;
     private String[] solverOptions = {"Euler", "RK2", "RK3", "RK4"};
     private JButton startButton;
 
     private double x, y, z, v1, v2, v3, simSpeed;
     //TODO: remove this defaultConditions variable and replace it with getDefaultConditions function from another class
-    private double[] defaultConditions = {-148458048.395164, -27524868.1841142, 70233.6499287411, 42.42270135156, -43.62738201925, -3.1328169170, 2, 3600, 78892315};
+    private StateVector probeInitialConditions = InitialConditions.getProbeInitialState();
+    private double[] defaultConditions = {-148458048.395164, -27524868.1841142, 70233.6499287411, 42.42270135156, -43.62738201925, -3.1328169170, 1800, 78892315};
     private final int FRAME_WIDTH = 600;
-    private final int FRAME_HEIGHT = 590;
+    private final int FRAME_HEIGHT = 550;
 
     //Values to be passed on and used in other functions
     public static boolean freezeSimulation = false;         //boolean that determines if the simulation should go
-    public static int timerInterval;                    //amount of time between each timer step (speed of the simulation)
     public static StateVector initialProbeConditions;       //initial conditions for the probe, inputted by the user
     public static Solver finalSolver;                       //solver chosen by the user
-    public static double h;                          //step size in seconds
-    public static int simulationEndTime;
+    public static double h;                                 //step size in seconds
+    public static int simulationEndTime;                    //end time in seconds
 
     //The start screen, where the user can input custom values
     public StartScreen() {
@@ -119,36 +120,24 @@ public class StartScreen extends JFrame implements ActionListener {
         v3Input.setBounds(200, 320, 165, 25);
         panel.add(v3Input);
 
-        simulationSpeedText1 = new JLabel("Simulation speed: ");
-        simulationSpeedText1.setBounds(96, 360, 160, 25);
-        panel.add(simulationSpeedText1);
-
-        simulationSpeedText2 = new JLabel("Default is 2 (higher = slower).");
-        simulationSpeedText2.setBounds(370, 360, 200, 25);
-        panel.add(simulationSpeedText2);
-
-        simulationSpeedInput = new JTextField(30);
-        simulationSpeedInput.setBounds(200, 360, 165, 25);
-        panel.add(simulationSpeedInput);
-
         stepSizeText = new JLabel("Step size (s): ");
-        stepSizeText.setBounds(123, 400, 160, 25);
+        stepSizeText.setBounds(123, 360, 160, 25);
         panel.add(stepSizeText);
 
         stepSizeInput = new JTextField(30);
-        stepSizeInput.setBounds(200, 400, 165, 25);
+        stepSizeInput.setBounds(200, 360, 165, 25);
         panel.add(stepSizeInput);
 
         simulationEndTimeText = new JLabel("Simulation end time (s): ");
-        simulationEndTimeText.setBounds(65, 440, 160, 25);
+        simulationEndTimeText.setBounds(65, 400, 160, 25);
         panel.add(simulationEndTimeText);
 
         simulationEndTimeInput = new JTextField(30);
-        simulationEndTimeInput.setBounds(200, 440, 165, 25);
+        simulationEndTimeInput.setBounds(200, 400, 165, 25);
         panel.add(simulationEndTimeInput);
 
         startButton = new JButton("Launch!");
-        startButton.setBounds(200, 490, 165, 25);
+        startButton.setBounds(200, 450, 165, 25);
         startButton.addActionListener(this);
         panel.add(startButton);
 
@@ -171,7 +160,7 @@ public class StartScreen extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent event) {
-        JTextField[] userInputs = {xInput, yInput, zInput, v1Input, v2Input, v3Input, simulationSpeedInput, stepSizeInput, simulationEndTimeInput};
+        JTextField[] userInputs = {xInput, yInput, zInput, v1Input, v2Input, v3Input, stepSizeInput, simulationEndTimeInput};
         double[] finalPositions = {x, y, z};
         double[] finalVelocities = {v1, v2, v3};
         boolean allInputsValid = true;
@@ -225,9 +214,6 @@ public class StartScreen extends JFrame implements ActionListener {
 //                }
 //            }
 
-            //Sets the timer interval
-            timerInterval = (int) Double.parseDouble(userInputs[6].getText());
-
             //Sets the solver
             int selectedSolverOption = solverChooser.getSelectedIndex();
             switch(selectedSolverOption) {
@@ -250,10 +236,10 @@ public class StartScreen extends JFrame implements ActionListener {
             }
 
             //Sets the step size
-            h = Math.ceil(Math.abs(Double.parseDouble(userInputs[7].getText())));
+            h = Math.ceil(Math.abs(Double.parseDouble(userInputs[6].getText())));
 
             //Sets the simulation end time
-            simulationEndTime = (int) Math.ceil(Math.abs(Double.parseDouble(userInputs[8].getText())));
+            simulationEndTime = (int) Math.ceil(Math.abs(Double.parseDouble(userInputs[7].getText())));
             System.out.println(simulationEndTime);
 
             SolarSystemPhysicsSimulation system = new SolarSystemPhysicsSimulation(PlanetaryData.getCelestialBodiesStateVector(),PlanetaryData.getCelestialBodiesMasses(),PlanetaryData.getCelestialBodyNames());

@@ -9,9 +9,10 @@ import physics.vectors.StateVector;
  */
 public class InitialConditions {
 
-    // Instance Fields - By default the probe will start at the Initial Conditions found on Phase 1
-    private static Vector initialProbePosition = new Vector(new double[]{-148458048.395164+6370, -27524868.1841142, 70233.6499287411});
-    private static Vector initialProbeVelocity = new Vector(new double[]{42.42270135156, -43.62738201925, -3.1328169170});
+    // Instance Fields - By default the probe will start at the Initial Conditions
+    private static Vector initialProbePosition = new Vector(new double[]{-1.48e08,-2.78e07,40070});
+    //velocity obtained from optimalization
+    private static Vector initialProbeVelocity = new Vector((new double[]{47.0945602687186, -44.872362874476096, -2.9670368003932692}));
 
     private static final double mass = 50000;
     // Getter Methods

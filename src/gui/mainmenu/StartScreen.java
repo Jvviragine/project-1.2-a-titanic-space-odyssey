@@ -25,9 +25,14 @@ public class StartScreen extends JFrame implements ActionListener {
     private JButton startButton;
 
     private double x, y, z, v1, v2, v3, simSpeed;
-    //TODO: remove this defaultConditions variable and replace it with getDefaultConditions function from another class
     private StateVector probeInitialConditions = InitialConditions.getProbeInitialState();
-    private double[] defaultConditions = {-148458048.395164, -27524868.1841142, 70233.6499287411, 42.42270135156, -43.62738201925, -3.1328169170, 1800, 78892315};
+    private double[] defaultConditions = {probeInitialConditions.getVector(0).get(0),       //x
+                                          probeInitialConditions.getVector(0).get(1),       //y
+                                          probeInitialConditions.getVector(0).get(2),       //z
+                                          probeInitialConditions.getVector(1).get(0),       //v1
+                                          probeInitialConditions.getVector(1).get(1),       //v2
+                                          probeInitialConditions.getVector(1).get(2),       //v3
+                                          1800, 78892315};                                       //step size and end time
     private final int FRAME_WIDTH = 600;
     private final int FRAME_HEIGHT = 550;
 

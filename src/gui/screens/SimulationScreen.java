@@ -1,4 +1,6 @@
-package gui.mainmenu;
+package gui.screens;
+
+import gui.data.OrbitList;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;

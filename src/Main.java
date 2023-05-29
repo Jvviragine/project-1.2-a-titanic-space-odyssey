@@ -1,5 +1,5 @@
 import physics.simulation.SolarSystemPhysicsSimulation;
-import gui.mainmenu.StartScreen;
+import gui.screens.StartScreen;
 import solar_system_data.PlanetaryData;
 
 // Press ⇧ twice to open the Search Everywhere dialog and type `show whitespaces`,

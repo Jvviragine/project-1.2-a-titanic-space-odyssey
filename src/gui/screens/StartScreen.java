@@ -1,4 +1,4 @@
-package gui.mainmenu;
+package gui.screens;
 
 import physics.simulation.SolarSystemPhysicsSimulation;
 import physics.solvers.*;

@@ -25,9 +25,8 @@ public class SimulationScreen extends JPanel {
     private int[][] jupiterPath = orbitList.getPath(6);
     private int[][] saturnPath = orbitList.getPath(7);
     private int[][] titanPath = orbitList.getPath(8);
-    private int[][] uranusPath = orbitList.getPath(9);
-    private int[][] neptunePath = orbitList.getPath(10);
-    private int[][][] allPaths = {sunPath, mercuryPath, venusPath, earthPath, moonPath, marsPath, jupiterPath, saturnPath, titanPath, uranusPath, neptunePath};
+    private int[][] probePath = orbitList.getPath(11);
+    private int[][][] allPaths = {sunPath, mercuryPath, venusPath, earthPath, moonPath, marsPath, jupiterPath, saturnPath, titanPath, probePath};
 
     public SimulationScreen() {
         frame = new JFrame("Simulation Screen");
@@ -106,15 +105,9 @@ public class SimulationScreen extends JPanel {
         g2d.fillOval(XCENTER + titanPath[currentIndex][0] - 10,  YCENTER + titanPath[currentIndex][1] - 10, 10, 10);
         g2d.drawString("Titan", XCENTER + titanPath[currentIndex][0] - 20, YCENTER + titanPath[currentIndex][1] + 10);
 
-        //Uranus (doesn't show up because the GUI was scaled to Saturn's max distance)
-        g2d.setColor(Color.LIGHT_GRAY);
-        g2d.fillOval(XCENTER + uranusPath[currentIndex][0] - 10,  YCENTER + uranusPath[currentIndex][1] - 10, 20, 20);
-        g2d.drawString("Uranus", XCENTER + uranusPath[currentIndex][0] - 13, YCENTER + uranusPath[currentIndex][1] + 20);
+        //Probe
+        g2d.setColor(Color.RED);
 
-        //Neptune (doesn't show up because the GUI was scaled to Saturn's max distance)
-        g2d.setColor(Color.BLUE);
-        g2d.fillOval(XCENTER + neptunePath[currentIndex][0] - 10,  YCENTER + neptunePath[currentIndex][1] - 10, 20, 20);
-        g2d.drawString("Neptune", XCENTER + neptunePath[currentIndex][0] - 13, YCENTER + neptunePath[currentIndex][1] + 20);
     }
 
     public void iterateThroughOrbit() {
@@ -122,8 +115,8 @@ public class SimulationScreen extends JPanel {
 
         for(int i = 0; i < allPaths.length; i++) {
 
-            if (currentIndex >= mercuryPath.length) {
-                currentIndex = 0;
+            if (currentIndex >= earthPath.length) {
+                StartScreen.timerInterval=0;
             }
 
             repaint();

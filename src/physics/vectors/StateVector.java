@@ -131,6 +131,11 @@ public class StateVector {
         return new StateVector(arrayOfVectors);
     }
 
+    /**
+     * Checks whether two StateVectors are equivalent
+     * @param v StateVector to make comparison with
+     * @return true if all elements are equivalent, otherwise false
+     */
     public boolean isEqual(StateVector v){
         for(int i=0; i<v.getNumberOfVectors();i++){
             if(!(v.getVector(i).isEqual(this.getVector(i)))) return false;

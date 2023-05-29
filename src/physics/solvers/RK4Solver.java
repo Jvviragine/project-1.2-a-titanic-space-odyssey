@@ -12,6 +12,15 @@ public class RK4Solver implements Solver{
 
     List<List<StateVector>> allPlanetStates;
 
+    /**
+     * Classical (Fourth-order Runge-Kutta)
+     * @param function the derivative function of the equation
+     * @param initialCondition the position and velocity at t0
+     * @param t0 the time from which the Ralston's steps are calculated
+     * @param tf the time until which the Ralston's steps are calculated
+     * @param stepSize the time interval at which evaluations of the derivative are made
+     * @return the state vector at the end of the time period tf - t0
+     */
     public StateVector solve(Function function, StateVector initialCondition, double t0, double tf, double stepSize) {
 
         StateVector currentState = initialCondition; // y(0) - Exact Value
@@ -61,6 +70,15 @@ public class RK4Solver implements Solver{
         return currentState;
     }
 
+    /**
+     * Solves Classical RK4 for an array of StateVectors
+     * @param function the derivative function to be applied to each y
+     * @param initialConditions array of all initial conditions for the system
+     * @param t0 initial time
+     * @param tf final time
+     * @param stepSize interval between each evaluation of the gradient
+     * @return StateVector array with states at the end of the time period
+     */
     public StateVector[] solve(Function function, StateVector[] initialConditions, double t0, double tf, double stepSize) {
 
         //List of states at each step
@@ -129,16 +147,25 @@ public class RK4Solver implements Solver{
 
     }
 
-    public ArrayList<StateVector> getAllStates(){
-        return allStates;
-    }
-
+    /**
+     * Returns all states of a particular body
+     * @param index the index of the body
+     * @return Arraylist of all states in the solve period
+     */
     public ArrayList<StateVector> getAllStates(int index){
         ArrayList<StateVector> states = new ArrayList<>();
         for(int i=0; i<allPlanetStates.get(index).size();i++){
             states.add(allPlanetStates.get(index).get(i));
         }
         return states;
+    }
+
+    /**
+     * Gets state in case only one StateVector is passed into the function
+     * @return
+     */
+    public ArrayList<StateVector> getAllStates(){
+        return allStates;
     }
 
 }

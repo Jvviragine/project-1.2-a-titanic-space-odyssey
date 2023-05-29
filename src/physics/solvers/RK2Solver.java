@@ -61,10 +61,21 @@ public class RK2Solver implements Solver {
         return currentState;
     }
 
+    /**
+     * Solves Ralston's RK2 for an array of StateVectors
+     * @param function the derivative function to be applied to each y
+     * @param initialConditions array of all initial conditions for the system
+     * @param t0 initial time
+     * @param tf final time
+     * @param stepSize interval between each evaluation of the gradient
+     * @return StateVector array with states at the end of the time period
+     */
     public StateVector[] solve(Function function, StateVector[] initialConditions, double t0, double tf, double stepSize){
         //List of states at each step
         ArrayList<StateVector> stateVectors = new ArrayList<>();
         List<List<StateVector>> allPlanetStateVectors = new ArrayList<>(initialConditions.length);
+
+        //Initialise state lists
         for(int i=0; i< initialConditions.length;i++){
             ArrayList<StateVector> planetStates = new ArrayList<>();
             planetStates.add(initialConditions[i]);
@@ -74,7 +85,7 @@ public class RK2Solver implements Solver {
         StateVector currentStates[] = initialConditions;
         StateVector nextStates[] = new StateVector[initialConditions.length];
 
-        //Solve Euler for the time period tf-t0
+        //Solve Ralston for the time period tf-t0
         for(double t=t0; t<tf; t+=stepSize){
 
             for(int i = 0; i < initialConditions.length; i++){
@@ -118,16 +129,25 @@ public class RK2Solver implements Solver {
         return currentStates;
     }
 
-    public ArrayList<StateVector> getAllStates(){
-        return allStates;
-    }
-
+    /**
+     * Returns all states of a particular body
+     * @param index the index of the body
+     * @return Arraylist of all states in the solve period
+     */
     public ArrayList<StateVector> getAllStates(int index){
         ArrayList<StateVector> states = new ArrayList<>();
         for(int i=0; i<allPlanetStates.get(index).size();i++){
             states.add(allPlanetStates.get(index).get(i));
         }
         return states;
+    }
+
+    /**
+     * Gets state in case only one StateVector is passed into the function
+     * @return Arraylist of all states in the period
+     */
+    public ArrayList<StateVector> getAllStates(){
+        return allStates;
     }
 
 }

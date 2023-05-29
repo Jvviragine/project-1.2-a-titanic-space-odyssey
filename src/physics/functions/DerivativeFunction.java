@@ -48,13 +48,22 @@ public class DerivativeFunction implements Function{
         }
     }
 
+    /**
+     * Applies the derivative function on StateVectors from the Solar System
+     * @param y the StateVector for which to get the derivative
+     * @param t not used as this is an evaluation with respect to y
+     * @return derivative StateVector of the StateVector y
+     */
     @Override
     public StateVector applyFunction(StateVector y, double t) {
+        //Get index of StateVector in CelestialBodies
         int possibleIndex= system.getIndex(y);
         if(possibleIndex!=-1) index = possibleIndex;
+
+        //Initialise new derivative state array
         Vector[] vectors = new Vector[y.getNumberOfVectors()];
 
-        //Place new position vector (old velocity vector) in derivative state array
+        //Place position vector (velocity vector from current state) in derivative state array
         Vector vector1 = y.getVector(1).copyOf();
         vectors[0] = vector1;
 
@@ -64,23 +73,28 @@ public class DerivativeFunction implements Function{
         return new StateVector(vectors);
     }
 
+    /**
+     * Updates state of system with current state
+     * @param stateVectors current StateVectors of the system
+     */
     public void resetState(StateVector[] stateVectors){
         system.setStateVectors(stateVectors);
     }
 
     public Vector getAcceleration(int index){
+
         //Initialise force vector and mass
         Vector force = new Vector(new double[3]);
         double mass;
 
-        //If it is the probe, set the mass to probe mass.
+        //If probe is being evaluated, set mass to probe mass.
         if(index == system.totalBodies()) mass = InitialConditions.getProbeMass();
         else mass = system.getMasses()[index];
 
         //Get position of current object
         Vector position = system.getStateVectors()[index].getVector(0).copyOf();
 
-        //Find sum of all forces, Fi
+        //Find sum of all forces, -F
         for(int i = 0; i < system.totalBodies(); i++) {
             if(i != index){
                 Vector thisVector = system.getStateVectors()[i].getVector(0).copyOf();
@@ -102,6 +116,7 @@ public class DerivativeFunction implements Function{
             }
         }
 
+        //Get F
         force = force.multiply(-1);
 
         // a = F/m

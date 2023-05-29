@@ -29,7 +29,6 @@ public class EulerSolver implements Solver{
      * @param stepSize the time interval at which evaluations of the derivative are made
      * @return the state vector at the end of the time period tf - t0
      */
-    //change to have array of initial conditions fo all states
     public StateVector solve(Function function, StateVector initialCondition, double t0, double tf, double stepSize) {
 
         //List of states at each step
@@ -64,11 +63,22 @@ public class EulerSolver implements Solver{
 
     }
 
+    /**
+     * Solves Euler for an array of StateVectors
+     * @param function the derivative function to be applied to each y
+     * @param initialConditions array of all initial conditions for the system
+     * @param t0 initial time
+     * @param tf final time
+     * @param stepSize interval between each evaluation of the gradient
+     * @return StateVector array with states at the end of the time period
+     */
     public StateVector[] solve(Function function, StateVector[] initialConditions, double t0, double tf, double stepSize) {
 
         //List of states at each step
         ArrayList<StateVector> stateVectors = new ArrayList<>();
         List<List<StateVector>> allPlanetStateVectors = new ArrayList<>(initialConditions.length);
+
+        //Initialise state lists
         for(int i=0; i< initialConditions.length;i++){
             ArrayList<StateVector> planetStates = new ArrayList<>();
             planetStates.add(initialConditions[i]);
@@ -111,6 +121,11 @@ public class EulerSolver implements Solver{
         return currentStates;
     }
 
+    /**
+     * Returns all states of a particular body
+     * @param index the index of the body
+     * @return Arraylist of all states in the solve period
+     */
     public ArrayList<StateVector> getAllStates(int index){
         ArrayList<StateVector> states = new ArrayList<>();
         for(int i=0; i<allPlanetStates.get(index).size();i++){
@@ -119,6 +134,10 @@ public class EulerSolver implements Solver{
         return states;
     }
 
+    /**
+     * Gets state in case only one StateVector is passed into the function
+     * @return
+     */
     public ArrayList<StateVector> getAllStates(){
         ArrayList<StateVector> states = new ArrayList<>();
 

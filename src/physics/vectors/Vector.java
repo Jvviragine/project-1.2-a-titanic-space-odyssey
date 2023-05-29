@@ -20,6 +20,10 @@ public class Vector {
         }
     }
 
+    /**
+     * Constructor
+     * @param initialState (double) number entries in the vector
+     */
     public Vector(double[] initialState){
         if (initialState.length > 0) {
             this.state = initialState;
@@ -81,9 +85,10 @@ public class Vector {
         return new Vector(sumOfValues);
 
         }
+        else{
+            throw new IllegalArgumentException("Vectors must have the same dimensions to be added.");
 
-        else throw new IllegalArgumentException("Vectors must have the same dimensions to be added.");
-
+        }
     }
 
     /**
@@ -104,7 +109,9 @@ public class Vector {
 
             return new Vector(differenceOfValues);
         }
-        else throw new IllegalArgumentException("Vectors must have the same dimensions to be subtracted.");
+        else{
+            throw new IllegalArgumentException("Vectors must have the same dimensions to be subtracted.");
+        }
     }
 
     /**
@@ -149,6 +156,10 @@ public class Vector {
         return Math.sqrt(diffsquared);
     }
 
+    /**
+     * Makes a copy of a vector
+     * @return vector copy
+     */
     public Vector copyOf(){
         int dimension = this.getDimension();
         double[] u = new double[dimension];
@@ -158,6 +169,11 @@ public class Vector {
         return new Vector(u);
     }
 
+    /**
+     * Checks whether two Vectors are equivalent
+     * @param v Vector to make comparison with
+     * @return true if all elements are equivalent, otherwise false
+     */
     public boolean isEqual(Vector v){
         for(int i = 0; i < v.getDimension(); i++){
             if(!(v.get(i) == this.get(i)))return false;

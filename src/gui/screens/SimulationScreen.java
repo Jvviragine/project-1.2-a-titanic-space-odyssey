@@ -36,7 +36,7 @@ public class SimulationScreen extends JPanel {
 
     public SimulationScreen() {
         try {
-            File pathToFile = new File("src/gui/mainmenu/images/Normandy.png");
+            File pathToFile = new File("src/gui/images/Normandy.png");
             normandy = ImageIO.read(pathToFile);
         } catch (IOException ex) {
             ex.printStackTrace();

@@ -15,7 +15,7 @@ public class SimulationScreen extends JPanel {
     private int currentIndex = 0;
     private Timer timer;
 
-    private OrbitList orbitList = new OrbitList();
+    private OrbitList orbitList = new OrbitList(StartScreen.finalSolver);
     private int[][] sunPath = orbitList.getPath(0);
     private int[][] mercuryPath = orbitList.getPath(1);
     private int[][] venusPath = orbitList.getPath(2);

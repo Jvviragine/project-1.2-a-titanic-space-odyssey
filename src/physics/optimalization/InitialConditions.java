@@ -9,10 +9,34 @@ import java.util.List;
 
 public class InitialConditions {
 
-    static Vector pos = new Vector(new double[]{-1.48e08,-2.78e07,40070});
-    static Vector current = new Vector(new double[]{0.07019906402937609, 1.942998691375609, 0.06026274884923538});
+    //static Vector pos = new Vector(new double[]{-1.48e08,-2.78e07,40070});
+    static Vector pos = findPosOnSurface(PlanetaryData.getCelestialBodiesStateVector()[3].getVector(0), new Vector(new double[]{1.25450162495946E9, -7.61340299067828E8, -3.63096138378104E7}), 6400);
+    static Vector current = new Vector(new double[]{0,0,0});
 
     static Vector velocity = new Vector(new double[]{0,0,0});
+
+
+        /**
+     * Finds point on the surface of a planet that is the closest to the desired target,
+     * if we want to find the point on the orbit we increase the radius
+     * https://math.stackexchange.com/questions/1784106/how-do-i-compute-the-closest-points-on-a-sphere-given-a-point-outside-the-sphere
+     * @param target target point
+     * @param center center of a planet
+     * @param radius radius of the planet
+     * @return point on the surface closest to the target
+     */
+    public static Vector findPosOnSurface(Vector target, Vector center, double radius){
+        double dist = center.distance(target);
+        Vector unit = new Vector(new double[3]);
+        for(int i = 0; i<unit.getDimension(); i++){
+            unit.set(i,target.get(i)-center.get(i)/dist);
+        }
+        Vector point = new Vector(new double[3]);
+        for(int i = 0; i<point.getDimension(); i++){
+            point.set(i,center.get(i) + radius*unit.get(i));
+        }
+        return point;
+    }
 
     /**
      * Method that finds the best initial velocity by generating neighbours for the initial guess
@@ -65,7 +89,7 @@ public class InitialConditions {
     public static Vector[] generateNeighbours(Vector current){
         Vector[] neighbours = new Vector[20];
         for(int i = 0; i<neighbours.length;i++){
-            Vector n = current.add(randomVector(0.8));
+            Vector n = current.add(randomVector(5));
             neighbours[i] = n;
         }
         return neighbours;

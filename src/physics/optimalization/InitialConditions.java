@@ -11,7 +11,7 @@ public class InitialConditions {
 
     static Vector pos = new Vector(new double[]{-1.48e08,-2.78e07,40070});
     //static Vector pos = findPosOnSurface(PlanetaryData.getCelestialBodiesStateVector()[3].getVector(0), new Vector(new double[]{1.25450162495946E9, -7.61340299067828E8, -3.63096138378104E7}), 6400);
-    static Vector current = new Vector(new double[]{41.34028414773549, -43.37264101885947, -3.0976158701845753});
+    static Vector current = new Vector(new double[]{46.18781669742928, -44.638735761874045, -2.9953741584880706});
 
     static Vector velocity = new Vector(new double[]{0,0,0});
 
@@ -49,7 +49,7 @@ public class InitialConditions {
         int iter = 500;
         StateVector iniState = new StateVector(new Vector[]{pos, current});
         SolarSystemPhysicsSimulation system = new SolarSystemPhysicsSimulation(PlanetaryData.getCelestialBodiesStateVector(),PlanetaryData.getCelestialBodiesMasses(),PlanetaryData.getCelestialBodyNames());
-        List<List<StateVector>> paths = system.simulateOrbitsWithProbe(iniState,31536000,23200);
+        List<List<StateVector>> paths = system.simulateOrbitsWithProbe(iniState,31536000,360);
         List<StateVector> probePath = paths.get(11);
         List<StateVector> titanPath = paths.get(8);
         double bestDistance = closest(probePath, titanPath);

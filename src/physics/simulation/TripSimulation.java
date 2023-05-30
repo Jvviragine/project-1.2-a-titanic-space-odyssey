@@ -81,7 +81,7 @@ public class TripSimulation {
          double sub = FuelUsage.fuelTakeoffLanding(InitialConditions.getInitialProbeVelocity().getMagnitude(), velF.getMagnitude(), sec);
          usedFuel = usedFuel + sub;
 
-         //InitialConditions.setProbeInitialVelocity(velF);
+         InitialConditions.setProbeInitialVelocity(velF);
 
          //start of the simulation
          SolarSystemPhysicsSimulation simulation = new SolarSystemPhysicsSimulation(PlanetaryData.getCelestialBodiesStateVector(),PlanetaryData.getCelestialBodiesMasses(),PlanetaryData.getCelestialBodyNames());
@@ -95,13 +95,13 @@ public class TripSimulation {
             //distance from the probe to titan
             double dist = orbits.get(11).get(i).getVector(0).distance(orbits.get(8).get(i).getVector(0));
             //checinkg if got to titan if so than setting up the simulation to get back, we never do??;(((((
-            if(dist<300){
+            if(dist<3000000){
                 sec = i*360;
                 System.out.println(sec);
                 //making new state vectors for new simulation
                 StateVector[] newStateVectors = new StateVector[simulation.getStateVectors().length];
-                for(int j = 0; j<newStateVectors.length;i++){
-                    newStateVectors[i] = simulation.getPath().get(j).get(i);
+                for(int j = 0; j<newStateVectors.length;j++){
+                    newStateVectors[j] = orbits.get(j).get(i);
                 }
 
                 //stopping the probe, calculating fuel

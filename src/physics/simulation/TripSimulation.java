@@ -134,18 +134,24 @@ public class TripSimulation {
                 List<List<StateVector>> adjustedOrbits = new ArrayList<>();
                 adjustedOrbits = adjustedSimulation.simulateOrbitsWithProbe(newProbeState,tf,h);
                 System.out.println(adjustedOrbits.get(0).size());
-
+                System.out.println(i);
+                
                 //creating the final orbits list
                 for(int j=0; j<orbits.size();j++){
                     finalOrbits.add(new ArrayList<>());
-                    for(int k=0; k<orbits.get(j).size()*2;k++){
+                    for(int k=0; k<i+(tf/h);k++){
                         Vector v = new Vector(new double[]{0,0,0});
                         StateVector sv = new StateVector(new Vector[]{v,v});
-                        if(k<orbits.get(j).size()) {
+                        if(k<i) {
                             sv = orbits.get(j).get(k);
                         }
                         else{
-                            sv = adjustedOrbits.get(j).get(k-orbits.get(j).size());
+                            if(j==11){
+                                sv = correct.adjust(adjustedOrbits.get(j).get(k-i), adjustedOrbits.get(4).get(k-i), k*h, tf*2);
+                            }else {
+                                sv = adjustedOrbits.get(j).get(k - i);
+                            }
+                            //sv = adjustedOrbits.get(j).get(k - orbits.get(j).size());
                         }
                         finalOrbits.get(j).add(sv);
 
@@ -156,6 +162,7 @@ public class TripSimulation {
             }
          }
          System.out.println(usedFuel);
+         System.out.println(finalOrbits.get(2).size());
          return finalOrbits;
      }
 

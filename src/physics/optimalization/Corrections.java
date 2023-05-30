@@ -27,9 +27,25 @@ public class Corrections {
         double timeLeft = eta - timePassed;
 
         for(int i = 0; i < 3; i++){
-            probeVec.getStateVector()[i+3] = probeVec.getStateVector()[i].subtract(destinationVec.getStateVector()[i]).multiply(1/timeLeft);
+            probeVec.getVector(1).set(i,(probeVec.getVector(0).get(i) - destinationVec.getVector(0).get(i)) * (1/timeLeft));
             //vectorChanges += FuelUsage.Takeoff(probeTraj.getVector(i).getMagnitude(), diff.getVector(i).getMagnitude(), 6.6743*Math.pow(10, -20));
         }
+        return probeVec;
+    }
+    public StateVector orbitEntry(StateVector probeVec, StateVector destinationVec, double timePassed, double eta, double goalVelocity){
+        double timeLeft = eta - timePassed;
+        double[] allV = new double[3];
+        double totalV = 0;
+        int count = 0;
+            do{
+                for(int i = 0; i < 3; i++){
+                    probeVec.getVector(1).set(i,(probeVec.getVector(0).get(i) - destinationVec.getVector(0).get(i)) * (1/timeLeft) - count);
+                    allV[i] = probeVec.getVector(1).get(i);
+                }
+                count++;
+                totalV = Math.sqrt(Math.pow(allV[0], 2) + Math.pow(allV[1], 2) + Math.pow(allV[2], 2));
+            }
+            while (totalV > goalVelocity);
         return probeVec;
     }
 }

@@ -89,11 +89,14 @@ public class TripSimulation {
          SolarSystemPhysicsSimulation simulation = new SolarSystemPhysicsSimulation(PlanetaryData.getCelestialBodiesStateVector(),PlanetaryData.getCelestialBodiesMasses(),PlanetaryData.getCelestialBodyNames());
          orbits = simulation.simulateOrbitsWithProbe(InitialConditions.getProbeInitialState(), tf,h);
 
+         double leftOverTime = 0;
+
          for(int i = 0;i<orbits.get(0).size();i++){
             //distance from the probe to titan
             double dist = orbits.get(11).get(i).getVector(0).distance(orbits.get(8).get(i).getVector(0));
             //checking if got to titan if so than setting up the simulation to get back, we never do??;(((((
             if(dist<3000000){
+                leftOverTime = (orbits.get(0).size() - i)*h;
 
                 int length = orbits.get(0).size()-1;
                 for(int j = 0; j < orbits.size(); j++){
@@ -132,7 +135,7 @@ public class TripSimulation {
                 //setting up new simulation and running it with new State for probe (on titan)
                 SolarSystemPhysicsSimulation adjustedSimulation = new SolarSystemPhysicsSimulation(newStateVectors,PlanetaryData.getCelestialBodiesMasses(),PlanetaryData.getCelestialBodyNames());
                 List<List<StateVector>> adjustedOrbits = new ArrayList<>();
-                adjustedOrbits = adjustedSimulation.simulateOrbitsWithProbe(newProbeState,tf,h);
+                adjustedOrbits = adjustedSimulation.simulateOrbitsWithProbe(newProbeState,tf+leftOverTime,h);
                 System.out.println(adjustedOrbits.get(0).size());
                 System.out.println(i);
                 

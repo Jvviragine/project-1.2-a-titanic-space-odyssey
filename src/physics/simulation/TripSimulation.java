@@ -44,7 +44,7 @@ public class TripSimulation {
                 Corrections correct = new Corrections();
 
                 //Adjust new coordinates
-                StateVector newProbeState = correct.adjust(probeState,titanState,i*StartScreen.h);
+                StateVector newProbeState = correct.adjust(probeState,titanState,i*StartScreen.h, 31536000);
 
                 //Recalculate second part of path using current probe velocities
                 simulation.adjustPath(newProbeState,i*StartScreen.h, StartScreen.simulationEndTime,StartScreen.h);

@@ -24,7 +24,7 @@
 <p align="justify"> 
    <ol>
     <li> ➤ Open the folder <strong>phase_2</strong> or change your directory if opening on terminal
-    <li> ➤ Compile and Run the Class  <strong>RunMe.java</strong>
+    <li> ➤ Compile and Run the Main
     <li> ➤ On the start screen either enter your custom starting conditions, or simply click enter to simulate with a set of standard values
     <li> ➤ Enjoy your journey!
   </ol>

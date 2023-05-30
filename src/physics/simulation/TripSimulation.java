@@ -95,7 +95,7 @@ public class TripSimulation {
             //distance from the probe to titan
             double dist = orbits.get(11).get(i).getVector(0).distance(orbits.get(8).get(i).getVector(0));
             //checinkg if got to titan if so than setting up the simulation to get back, we never do??;(((((
-            if(dist<300000){
+            if(dist<300){
                 sec = i*360;
                 System.out.println(sec);
                 //making new state vectors for new simulation
@@ -113,7 +113,7 @@ public class TripSimulation {
                 Corrections correct = new Corrections();
 
                 //Adjust new coordinates
-                StateVector newProbeState = correct.adjust(simulation.getPath().get(11).get(i),simulation.getPath().get(8).get(i),sec);
+                StateVector newProbeState = correct.adjust(simulation.getPath().get(11).get(i),simulation.getPath().get(8).get(i),sec,31536000);
 
                 //setting up new simulation and running it with new State for probe (on titan)
                 double newSimulationTime = 31536000-sec;

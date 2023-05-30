@@ -11,7 +11,8 @@ public class Corrections {
      * @param timePassed How much time has passed in journey
      * @return a new velocity vector for the probe that targets Titan
      */
-    public StateVector adjust(StateVector probeVec, StateVector titanVec, int timePassed){
+
+    public StateVector Adjust(StateVector probeVec, StateVector titanVec, double timePassed){
         //double vectorChanges = 0;
         int year = 31536000;
         double timeLeft;

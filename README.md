@@ -1,7 +1,7 @@
 # Project 1.2 - Group 3 - Manned flight mission to Titan and back 🚀
 
 <!-- TABLE OF CONTENTS -->
-<h2 id="table-of-contents"> :open book: Table of Contents</h2>
+<h2 id="table-of-contents"> 📖 Table of Contents</h2>
 
 <details open="open">
   <summary>Table of Contents</summary>

@@ -46,10 +46,10 @@ public class InitialConditions {
      * @return Vector representing the new velocity
      */
     public static Vector findVel(Vector current){
-        int iter = 500;
+        int iter = 100;
         StateVector iniState = new StateVector(new Vector[]{pos, current});
         SolarSystemPhysicsSimulation system = new SolarSystemPhysicsSimulation(PlanetaryData.getCelestialBodiesStateVector(),PlanetaryData.getCelestialBodiesMasses(),PlanetaryData.getCelestialBodyNames());
-        List<List<StateVector>> paths = system.simulateOrbitsWithProbe(iniState,31536000,360);
+        List<List<StateVector>> paths = system.simulateOrbitsWithProbe(iniState,31536000,1800);
         List<StateVector> probePath = paths.get(11);
         List<StateVector> titanPath = paths.get(8);
         double bestDistance = closest(probePath, titanPath);
@@ -63,7 +63,7 @@ public class InitialConditions {
                 iniState.getStateVector()[1] = neighbour;
                 //System.out.println(bestDistance);
                 system = new SolarSystemPhysicsSimulation(PlanetaryData.getCelestialBodiesStateVector(),PlanetaryData.getCelestialBodiesMasses(),PlanetaryData.getCelestialBodyNames());
-                paths = system.simulateOrbitsWithProbe(iniState,31536000,23200);
+                paths = system.simulateOrbitsWithProbe(iniState,31536000,1800);
                 probePath = paths.get(11);
                 titanPath = paths.get(8);
                 double distance = closest(probePath,titanPath);
@@ -91,9 +91,6 @@ public class InitialConditions {
         for(int i = 0; i<neighbours.length;i++){
             Vector r = randomVector(0.4);
             Vector n = current.add(r);
-            while(n.getMagnitude()>60) {
-                n = current.add(randomVector(0.4));
-            }
             neighbours[i] = n;
         }
         return neighbours;

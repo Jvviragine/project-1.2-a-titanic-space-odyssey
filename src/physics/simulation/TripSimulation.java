@@ -113,7 +113,11 @@ public class TripSimulation {
                 Corrections correct = new Corrections();
 
                 //Adjust new coordinates
-                StateVector newProbeState = correct.adjust(simulation.getPath().get(11).get(i),simulation.getPath().get(8).get(i),sec,31536000);
+                StateVector newProbeState = correct.adjust(simulation.getPath().get(11).get(i),simulation.getPath().get(4).get(i),sec,31536000*2);
+
+                System.out.print(newProbeState.getVector(1).get(0)+ " ");
+                System.out.print(newProbeState.getVector(1).get(1)+ " ");
+                System.out.println(newProbeState.getVector(1).get(2)+ " ");
 
                 //setting up new simulation and running it with new State for probe (on titan)
                 //double newSimulationTime = 31536000-sec;
@@ -133,8 +137,14 @@ public class TripSimulation {
                         }
                         else{
                             sv = adjustedOrbits.get(j).get(k-orbits.get(j).size());
+//                            if(j==11){
+//                                System.out.print(sv.getVector(0).get(0) + " ");
+//                                System.out.print(sv.getVector(0).get(1) + " ");
+//                                System.out.println(sv.getVector(0).get(2));
+//                            }
                         }
                         finalOrbits.get(j).add(sv);
+
                     }
                 }
                 System.out.println(finalOrbits.get(0).size());

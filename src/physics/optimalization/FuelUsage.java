@@ -12,40 +12,69 @@ public class FuelUsage {
      * @param endVelocity velocity in m/s when deactivating thrusters
      * @param gravity gravitational force of the planet in m/s^2
      * @param timeframe time in seconds it takes from start to end of the maneuver
-     * @param distance the distance between entering a planet's orbit and reaching its surface in km
      * @return point on the surface closest to the target
      */
-    public static double CalculateFuel(double startVelocity, double endVelocity, double gravity, double timeframe){
+    public static double calculateFuel(double startVelocity, double endVelocity, double gravity, double timeframe){
         double momentum = MASS * Math.abs(endVelocity - startVelocity);
         double thrust = (momentum / timeframe) - (gravity * MASS);
         return (thrust / (gravity * ISP)) * timeframe;
     }
-    public static double Takeoff(double startVelocity, double endVelocity, double gravity){
+    public static double takeoff(double startVelocity, double endVelocity, double gravity){
         double e = 2.718;
         double wetMass = MASS * Math.pow (e, Math.abs(startVelocity - endVelocity) / (ISP * gravity));
         return wetMass - MASS;
     }
 
-    public static double Landing(double startVelocity, double endVelocity, double gravity, double distance){
+    public static double landing(double startVelocity, double endVelocity, double gravity, double distance){
         double acc = (Math.pow(startVelocity, 2) - Math.pow(endVelocity, 2)) / (2* distance);
         //double thrust = MASS * (acc + gravity);
         double time = (startVelocity - endVelocity) / acc;
-        return CalculateFuel(startVelocity, endVelocity, gravity, time);
+        return calculateFuel(startVelocity, endVelocity, gravity, time);
     }
 
-    public double Fuel(double startVelocity, double endVelocity, double timeframe){
-        return Math.abs(Impulse(startVelocity, endVelocity, timeframe)) * 0.001; //1m/s is 0.001km/s, fuel consumption is proportional to impulse
+    public double fuel(double startVelocity, double endVelocity, double timeframe){
+        return Math.abs(impulse(startVelocity, endVelocity, timeframe)) * 0.001; //1m/s is 0.001km/s, fuel consumption is proportional to impulse
+    }
+    public double fuelTakeoffLanding(double startVelocity, double endVelocity, double timeframe){
+        return Math.abs(impulseTakeoffLanding(startVelocity, endVelocity, timeframe)) * 0.001;
     }
 
-    public double Impulse(double startVelocity, double endVelocity, double timeframe){
-        return Force(startVelocity, endVelocity, timeframe) * timeframe; //For a constant force over time, one can choose to solve the integral graphically (form of a rectangle)
+    public double impulse(double startVelocity, double endVelocity, double timeframe){
+        return force(startVelocity, endVelocity, timeframe) * timeframe; //For a constant force over time, one can choose to solve the integral graphically (form of a rectangle)
+    }
+    public double impulseTakeoffLanding(double startVelocity, double endVelocity, double timeframe){
+        return forceTakeoffLanding(startVelocity, endVelocity, timeframe) * timeframe;
     }
 
-    public double Force(double startVelocity, double endVelocity, double timeframe){
-        return MASS * Acceleration(startVelocity, endVelocity, timeframe); //F=m*a
+    public double force(double startVelocity, double endVelocity, double timeframe){
+        return MASS * acceleration(startVelocity, endVelocity, timeframe); //F=m*a
+    }
+    public double forceTakeoffLanding(double startVelocity, double endVelocity, double timeframe){
+        return MASS * acceleration(startVelocity, endVelocity, timeframe) + 9.81; //F=m*a+g
     }
 
-    public double Acceleration(double startVelocity, double endVelocity, double timeframe){
+    public double acceleration(double startVelocity, double endVelocity, double timeframe){
         return Math.abs(startVelocity - endVelocity) / timeframe; //Change in speed over a timeframe; assumes a constant acceleration
+    }
+
+    public double trap(double a, double b, int n, double h, double startVelocity, double endVelocity, double timeframe){
+        double result;
+        double x;
+        int i;
+
+        result = (f(a, startVelocity, endVelocity, timeframe) + f(b, startVelocity, endVelocity, timeframe))/2.0;
+        for (i = 1; i <= n-1; i++) {
+            x = a + i*h;
+            result = result + f(x, startVelocity, endVelocity, timeframe);
+        }
+        result = result*h;
+
+        return result;
+    }
+    public double f(double x, double startVelocity, double endVelocity, double timeframe) {
+        double result;
+
+        result = force(startVelocity, endVelocity, timeframe);
+        return result;
     }
 }

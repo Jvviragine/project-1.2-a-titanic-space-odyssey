@@ -32,4 +32,20 @@ public class FuelUsage {
         double time = (startVelocity - endVelocity) / acc;
         return CalculateFuel(startVelocity, endVelocity, gravity, time);
     }
+
+    public double Fuel(double startVelocity, double endVelocity, double timeframe){
+        return Math.abs(Impulse(startVelocity, endVelocity, timeframe)) * 0.001; //1m/s is 0.001km/s, fuel consumption is proportional to impulse
+    }
+
+    public double Impulse(double startVelocity, double endVelocity, double timeframe){
+        return Force(startVelocity, endVelocity, timeframe) * timeframe; //For a constant force over time, one can choose to solve the integral graphically (form of a rectangle)
+    }
+
+    public double Force(double startVelocity, double endVelocity, double timeframe){
+        return MASS * Acceleration(startVelocity, endVelocity, timeframe); //F=m*a
+    }
+
+    public double Acceleration(double startVelocity, double endVelocity, double timeframe){
+        return Math.abs(startVelocity - endVelocity) / timeframe; //Change in speed over a timeframe; assumes a constant acceleration
+    }
 }

@@ -5,8 +5,8 @@ import physics.vectors.Vector;
 
 public class Corrections {
     /**
-     * Using the coordinates of the probe and titan and the trajectory of the probe,
-     * we calculate the vector that would connect the two and adjust the probe's velocity vector accordingly* @param probeVec StateVector of the probe
+     * Using the coordinates of the probe, our destination and the trajectory of the probe,
+     * we calculate the vector that would connect the two and adjust the probe's velocity vector accordingly
      * @param probeVec StateVector of the probe
      * @param destinationVec StateVector of Titan/Earth
      * @param timePassed How much time has passed in the journey in seconds
@@ -27,11 +27,23 @@ public class Corrections {
         double timeLeft = eta - timePassed;
 
         for(int i = 0; i < 3; i++){
-            probeVec.getVector(1).set(i,(probeVec.getVector(0).get(i) - destinationVec.getVector(0).get(i)) * (1/timeLeft));
+            probeVec.getVector(1).set(i,(destinationVec.getVector(0).get(i) - probeVec.getVector(0).get(i)) * (1/timeLeft));
             //vectorChanges += FuelUsage.Takeoff(probeTraj.getVector(i).getMagnitude(), diff.getVector(i).getMagnitude(), 6.6743*Math.pow(10, -20));
         }
         return probeVec;
     }
+
+    /**
+     * Using the coordinates of the probe, the orbit entry point and the trajectory of the probe,
+     * we calculate the vector that would connect the two and adjust the probe's velocity vector accordingly.
+     * Additionally, we reduce the speed bit by bit until we reach the desired velocity to successfully orbit
+     * @param probeVec StateVector of the probe
+     * @param destinationVec StateVector of Titan/Earth
+     * @param timePassed How much time has passed in the journey in seconds
+     * @param eta Estimated time of arrival
+     * @param goalVelocity speed required to orbit around the given planet
+     * @return StateVector of the probe with updated velocity values that aim it towards Titan
+     */
     public StateVector orbitEntry(StateVector probeVec, StateVector destinationVec, double timePassed, double eta, double goalVelocity){
         double timeLeft = eta - timePassed;
         double[] allV = new double[3];
@@ -39,7 +51,7 @@ public class Corrections {
         int count = 0;
             do{
                 for(int i = 0; i < 3; i++){
-                    probeVec.getVector(1).set(i,(probeVec.getVector(0).get(i) - destinationVec.getVector(0).get(i)) * (1/timeLeft) - count);
+                    probeVec.getVector(1).set(i,(destinationVec.getVector(0).get(i) - probeVec.getVector(0).get(i)) * (1/timeLeft) - count);
                     allV[i] = probeVec.getVector(1).get(i);
                 }
                 count++;

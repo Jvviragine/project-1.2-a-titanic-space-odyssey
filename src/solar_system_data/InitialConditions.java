@@ -12,7 +12,7 @@ public class InitialConditions {
     // Instance Fields - By default the probe will start at the Initial Conditions
     private static Vector initialProbePosition = new Vector(new double[]{-1.48e08,-2.78e07,40070});
     //velocity obtained from optimization
-    private static Vector initialProbeVelocity = new Vector((new double[]{44.51165027941231, -44.06386148177975, -3.180851149434365}));
+    private static Vector initialProbeVelocity = new Vector((new double[]{43.51165027941231, -44.06386148177975, -3.180851149434365}));
     private static final double mass = 50000;
     // Getter Methods
     public static Vector getInitialProbePosition() {

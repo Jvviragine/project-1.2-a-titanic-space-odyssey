@@ -11,7 +11,7 @@ public class InitialConditions {
 
     static Vector pos = new Vector(new double[]{-1.48e08,-2.78e07,40070});
     //static Vector pos = findPosOnSurface(PlanetaryData.getCelestialBodiesStateVector()[3].getVector(0), new Vector(new double[]{1.25450162495946E9, -7.61340299067828E8, -3.63096138378104E7}), 6400);
-    static Vector current = new Vector(new double[]{46.18781669742928, -44.638735761874045, -2.9953741584880706});
+    static Vector current = new Vector(new double[]{43.70346586, -44.30558291, -1.3464296});
 
     static Vector velocity = new Vector(new double[]{0,0,0});
 
@@ -53,28 +53,19 @@ public class InitialConditions {
         List<StateVector> probePath = paths.get(11);
         List<StateVector> titanPath = paths.get(8);
         double bestDistance = closest(probePath, titanPath);
-        //System.out.println(probePath.get(probePath.size()-1).getVector(0).distance(titanPath.get(titanPath.size()-1).getVector(0)));
-        System.out.println(bestDistance);
         while(iter>0){
             iter--;
-            System.out.println(iter);
             Vector[] neighbours = generateNeighbours(current);
             for (Vector neighbour : neighbours) {
                 iniState.getStateVector()[1] = neighbour;
-                //System.out.println(bestDistance);
                 system = new SolarSystemPhysicsSimulation(PlanetaryData.getCelestialBodiesStateVector(),PlanetaryData.getCelestialBodiesMasses(),PlanetaryData.getCelestialBodyNames());
                 paths = system.simulateOrbitsWithProbe(iniState,31536000,1800);
                 probePath = paths.get(11);
                 titanPath = paths.get(8);
                 double distance = closest(probePath,titanPath);
-                //System.out.println(distance);
                 if (distance < bestDistance) {
                     bestDistance = distance;
                     current = neighbour;
-                    System.out.println(distance);
-                    System.out.print(current.get(0)+ " ");
-                    System.out.print(current.get(1)+ " ");
-                    System.out.println(current.get(2));
                 }
             }
         }
@@ -108,7 +99,6 @@ public class InitialConditions {
         for(int i = 0; i<3;i++) {
             double r = Math.random() * (max - min + 1) + min;
             rand.set(i, r);
-            //System.out.println(r);
         }
         return rand;
     }
@@ -126,7 +116,6 @@ public class InitialConditions {
             double ndist = pathProbe.get(i).getVector(0).distance(pathTitan.get(i).getVector(0));
             if(ndist<dist){
                 dist = ndist;
-                //System.out.println(dist);
             }
         }
         return dist;

@@ -20,49 +20,15 @@ public class TripSimulation {
 
     }
     double usedFuel = 0;
-    public void simulate(){
-        //Create a new simulation
-        SolarSystemPhysicsSimulation simulation = new SolarSystemPhysicsSimulation(PlanetaryData.getCelestialBodiesStateVector(),PlanetaryData.getCelestialBodiesMasses(),PlanetaryData.getCelestialBodyNames());
-        simulation.simulateOrbitsWithProbe(InitialConditions.getProbeInitialState(), StartScreen.simulationEndTime,StartScreen.h);
-
-        //Go through path and find the point at which the probe and titan are < 300km away from one another
-        //  Maybe make a greater distance and when it gets there start adjusting velocity ?
-        for(int i = 0; i < simulation.getPath().get(0).size(); i++){
-
-            //Get distance between probe and titan
-            double distance = (simulation.getPath().get(PlanetaryData.indexOf("Titan")).get(i).getVector(0)).distance(simulation.getPath().get(simulation.getPath().size()-1).get(i).getVector(0));
-
-            //Check if close enough to enter orbit
-            if(distance <= 300) {
-
-                //Use titan and probe states when they are <=300km apart to adjust the velocity to get into orbit
-                StateVector titanState = simulation.getPath().get(PlanetaryData.indexOf("Titan")).get(i);
-                StateVector probeState = simulation.getPath().get(simulation.getPath().size()-1).get(i);
-
-                //Initialise velocity correction
-                Corrections correct = new Corrections();
-
-                //Adjust new coordinates
-                StateVector newProbeState = correct.adjust(probeState,titanState,i*StartScreen.h, 31536000);
-
-                //Recalculate second part of path using current probe velocities
-                simulation.adjustPath(newProbeState,i*StartScreen.h, StartScreen.simulationEndTime,StartScreen.h);
-
-                //Have to have some condition to keep evaluating and changing direction (adjusting path)
-                
-                break;
-            }
-        }
-    }
 
      public List<List<StateVector>> simulateTrip(){
 
          List<List<StateVector>> orbits;
          List<List<StateVector>> finalOrbits = new ArrayList<>();
-//         int tf = StartScreen.simulationEndTime;
-//         double h = StartScreen.h;
-         double h = 1800;
-         int tf = 31536000;
+         int tf = StartScreen.simulationEndTime;
+         double h = StartScreen.h;
+//         double h = 1800;
+//         int tf = 31536000;
 
          //simulation used to calculate the fuel for exiting earth and also to get earths position after two years
          SolarSystemPhysicsSimulation simulationForSec = new SolarSystemPhysicsSimulation(PlanetaryData.getCelestialBodiesStateVector(),PlanetaryData.getCelestialBodiesMasses(),PlanetaryData.getCelestialBodyNames());
@@ -136,8 +102,7 @@ public class TripSimulation {
                 SolarSystemPhysicsSimulation adjustedSimulation = new SolarSystemPhysicsSimulation(newStateVectors,PlanetaryData.getCelestialBodiesMasses(),PlanetaryData.getCelestialBodyNames());
                 List<List<StateVector>> adjustedOrbits = new ArrayList<>();
                 adjustedOrbits = adjustedSimulation.simulateOrbitsWithProbe(newProbeState,tf+leftOverTime,h);
-                System.out.println(adjustedOrbits.get(0).size());
-                System.out.println(i);
+
                 
                 //creating the final orbits list
                 for(int j=0; j<orbits.size();j++){
@@ -160,12 +125,10 @@ public class TripSimulation {
 
                     }
                 }
-                System.out.println(finalOrbits.get(0).size());
                 break;
             }
          }
          System.out.println(usedFuel);
-         System.out.println(finalOrbits.get(2).size());
          return finalOrbits;
      }
 

@@ -7,9 +7,10 @@ public class Corrections {
     /**
      * Using the coordinates of the probe and titan and the trajectory of the probe,
      * we calculate the vector that would connect the two and adjust the probe's velocity vector accordingly* @param probeVec StateVector of the probe
+     * @param probeVec StateVector of the probe
      * @param titanVec StateVector of Titan
-     * @param timePassed How much time has passed in journey
-     * @return a new velocity vector for the probe that targets Titan
+     * @param timePassed How much time has passed in the journey in seconds
+     * @return StateVector of the probe with updated velocity values that aim it towards Titan
      */
 
     public StateVector Adjust(StateVector probeVec, StateVector titanVec, double timePassed){

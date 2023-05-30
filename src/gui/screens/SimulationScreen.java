@@ -9,6 +9,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class SimulationScreen extends JPanel {
     private JFrame frame;
@@ -54,18 +57,14 @@ public class SimulationScreen extends JPanel {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
 
-        // Create a timer with a delay of 1 millisecond
-        timer = new Timer(1, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(!StartScreen.freezeSimulation) {
-                    iterateThroughOrbit();
-                }
+        // Schedule a task with a fixed delay of 1 millisecond
+        ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+        executor.scheduleAtFixedRate(() -> {
+            if (!StartScreen.freezeSimulation) {
+                iterateThroughOrbit();
             }
-        });
-
-        // Start the timer
-        timer.start();
+            repaint();
+        }, 0, StartScreen.simulationSpeed, TimeUnit.MICROSECONDS);
     }
 
     @Override
@@ -122,13 +121,10 @@ public class SimulationScreen extends JPanel {
     public void iterateThroughOrbit() {
         currentIndex++;
 
-        for(int i = 0; i < allPaths.length; i++) {
-
-            if (currentIndex >= earthPath.length - 1) {
-                timer.stop();
-            }
-
-            repaint();
+        if (currentIndex >= earthPath.length - 1) {
+            timer.stop();
         }
+
+        repaint();
     }
 }

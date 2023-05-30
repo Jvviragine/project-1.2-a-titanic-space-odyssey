@@ -1,4 +1,4 @@
-# Project 1.2 - Group 3 - Probe mission to Titan 🚀
+# Project 1.2 - Group 3 - Manned flight mission to Titan and back 🚀
 
 <!-- TABLE OF CONTENTS -->
 <h2 id="table-of-contents"> :book: Table of Contents</h2>

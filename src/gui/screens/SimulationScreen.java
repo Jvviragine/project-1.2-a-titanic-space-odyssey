@@ -5,8 +5,6 @@ import gui.data.OrbitList;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.Executors;
@@ -22,8 +20,9 @@ public class SimulationScreen extends JPanel {
 
     private Image normandy;
 
+    private ScheduledExecutorService executor;
+
     private int currentIndex = 0;
-    private Timer timer;
 
     private OrbitList orbitList = new OrbitList();
     private int[][] sunPath = orbitList.getPath(0);
@@ -35,7 +34,6 @@ public class SimulationScreen extends JPanel {
     private int[][] saturnPath = orbitList.getPath(7);
     private int[][] titanPath = orbitList.getPath(8);
     private int[][] probePath = orbitList.getPath(11);
-    private int[][][] allPaths = {sunPath, venusPath, earthPath, moonPath, marsPath, jupiterPath, saturnPath, titanPath, probePath};
 
     public SimulationScreen() {
         try {
@@ -89,7 +87,7 @@ public class SimulationScreen extends JPanel {
 
         //Moon
         g2d.setColor(Color.WHITE);
-        g2d.fillOval(XCENTER + moonPath[currentIndex][0] - 10,  YCENTER + moonPath[currentIndex][1] - 10, 10, 10);
+        g2d.fillOval(XCENTER + moonPath[currentIndex][0] - 8,  YCENTER + moonPath[currentIndex][1] - 8, 10, 10);
         g2d.drawString("Moon", XCENTER + moonPath[currentIndex][0] - 20, YCENTER + moonPath[currentIndex][1] + 10);
 
         //Mars
@@ -109,7 +107,7 @@ public class SimulationScreen extends JPanel {
 
         //Titan
         g2d.setColor(Color.WHITE);
-        g2d.fillOval(XCENTER + titanPath[currentIndex][0] - 10,  YCENTER + titanPath[currentIndex][1] - 10, 10, 10);
+        g2d.fillOval(XCENTER + titanPath[currentIndex][0] - 5,  YCENTER + titanPath[currentIndex][1] - 5, 10, 10);
         g2d.drawString("Titan", XCENTER + titanPath[currentIndex][0] - 20, YCENTER + titanPath[currentIndex][1] + 10);
 
         //Probe
@@ -122,7 +120,7 @@ public class SimulationScreen extends JPanel {
         currentIndex++;
 
         if (currentIndex >= earthPath.length - 1) {
-            timer.stop();
+            executor.shutdown();
         }
 
         repaint();

@@ -86,10 +86,6 @@ public class SolarSystemPhysicsSimulation {
         return statesOfProbeAndTitan;
     }
 
-    public void addState(int index, StateVector stateVector){
-        allStates.get(index).add(stateVector);
-    }
-
     /**
      * (Re)Sets new state vectors
      * @param stateVectors
@@ -164,6 +160,49 @@ public class SolarSystemPhysicsSimulation {
 
         return orbits;
 
+    }
+
+    public List<StateVector> adjustPath(StateVector initialProbeState,double t0, double tf, double h){
+        StateVector [] vectorsWithProbe = new StateVector[stateVectors.length+1];
+
+        for(int i = 0; i < stateVectors.length; i++){
+            vectorsWithProbe[i] = initialStates[i];
+        }
+        vectorsWithProbe[vectorsWithProbe.length -1] = initialProbeState;
+
+        stateVectors = vectorsWithProbe;
+
+        //List containing all orbits of all planets
+        List<List<StateVector>> orbits = new ArrayList<>();
+
+        solver.solve(df,stateVectors,0,tf-t0,h);
+
+        StateVector[] updatedVectors = new StateVector[stateVectors.length];
+
+        for(int i = 0; i < updatedVectors.length; i++){
+            updatedVectors[i] = solver.getAllStates(i).get(orbits.get(i).size()-1);
+        }
+
+        stateVectors = updatedVectors;
+
+        solver.solve(df,stateVectors,t0,tf,h);
+
+        for(int i = 0; i < stateVectors.length; i++){
+            //for(int j = 0; j < solver.getAllStates(i).size();)
+                //orbits.get(i).add(solver.getAllStates(i).get(j));
+                orbits.add(solver.getAllStates(i));
+        }
+
+        StateVector [] restoreStateVectors = new StateVector[vectorsWithProbe.length-1];
+
+        for(int i = 0; i < restoreStateVectors.length;i++){
+            restoreStateVectors[i] = stateVectors[i];
+        }
+
+        stateVectors = restoreStateVectors;
+
+        //Only returns probe states for the specified time of the trip
+        return orbits.get(orbits.size()-1);
     }
 
     /**

@@ -211,6 +211,8 @@ public class StartScreen extends JFrame implements ActionListener {
 
             //Initiate probe path calculations with the inputted values
             initialProbeConditions = new StateVector(new Vector[]{initialPosition, initialSpeed});
+            InitialConditions.setProbeInitialPosition(initialPosition);
+            InitialConditions.setProbeInitialVelocity(initialSpeed);
 
             //Sets the solver
             int selectedSolverOption = solverChooser.getSelectedIndex();

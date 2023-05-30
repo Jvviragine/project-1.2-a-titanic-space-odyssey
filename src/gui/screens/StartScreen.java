@@ -207,36 +207,25 @@ public class StartScreen extends JFrame implements ActionListener {
             }
 
             Vector initialPosition = new Vector(finalPositions);     //defines the initial positions vector
-            Vector initialSpeed = new Vector(finalVelocities);    //defines the initial velocities vector
+            Vector initialSpeed = new Vector(finalVelocities);       //defines the initial velocities vector
 
             //Initiate probe path calculations with the inputted values
             initialProbeConditions = new StateVector(new Vector[]{initialPosition, initialSpeed});
-
-//            //Test to see if the vector is working (it is!) (as far as i know)
-//            for(int i = 0; i<2; i++) {
-//                for(int j = 0; j<3; j++) {
-//                    System.out.println(initialConditions.getVector(i).get(j));
-//                }
-//            }
 
             //Sets the solver
             int selectedSolverOption = solverChooser.getSelectedIndex();
             switch(selectedSolverOption) {
                 case 0:
                     finalSolver = new EulerSolver();
-                    //System.out.println("Euler");
                     break;
                 case 1:
                     finalSolver = new RK2Solver();
-                    //System.out.println("RK2");
                     break;
                 case 2:
                     finalSolver = new RK3Solver();
-                    //System.out.println("RK3");
                     break;
                 case 3:
                     finalSolver = new RK4Solver();
-                    //System.out.println("RK4");
                     break;
             }
 
@@ -245,7 +234,6 @@ public class StartScreen extends JFrame implements ActionListener {
 
             //Sets the simulation end time
             simulationEndTime = (int) Math.ceil(Math.abs(Double.parseDouble(userInputs[7].getText())));
-            System.out.println(simulationEndTime);
 
             SolarSystemPhysicsSimulation system = new SolarSystemPhysicsSimulation(PlanetaryData.getCelestialBodiesStateVector(),PlanetaryData.getCelestialBodiesMasses(),PlanetaryData.getCelestialBodyNames());
 

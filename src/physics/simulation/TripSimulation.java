@@ -95,12 +95,15 @@ public class TripSimulation {
             //checking if got to titan if so than setting up the simulation to get back, we never do??;(((((
             if(dist<3000000){
 
-
                 int length = orbits.get(0).size()-1;
-                for(int j = length; j > i; j--){
-                    orbits.get(orbits.size()-1).remove(length);
-                    length--;
+                for(int j = 0; j < orbits.size(); j++){
+                    for(int k = length; k > i; k--){
+                        orbits.get(j).remove(length);
+                        length--;
+                    }
+                    length = orbits.get(orbits.size()-1).size()-1;
                 }
+
                 System.out.println(sec);
                 sec = i*h;
 

@@ -128,12 +128,13 @@ public class TripSimulation {
                     int diff = orbits.size()-adjustedOrbits.size();
                     for(int k=0; k<orbits.get(j).size();k++){
                         StateVector sv = orbits.get(j).get(k);
-                        if(k>=diff){
-                            sv = adjustedOrbits.get(j).get(k - diff);
+                        if(k>=diff && k-diff<adjustedOrbits.size()){
+                            sv = adjustedOrbits.get(j).get(k-diff);
                         }
                         finalOrbits.get(j).add(sv);
                     }
                 }
+                break;
             }
          }
          return finalOrbits;
@@ -142,6 +143,6 @@ public class TripSimulation {
     public static void main(String[] args) {
         TripSimulation sim = new TripSimulation();
         List<List<StateVector>> orb = sim.simulateTrip();
-        System.out.println(orb.size());
+        System.out.println(orb.get(11).get(orb.get(4).size()-1).getVector(0).get(0));
     }
 }

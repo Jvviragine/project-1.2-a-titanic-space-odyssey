@@ -88,7 +88,7 @@ public class TripSimulation {
          orbits = simulation.simulateOrbitsWithProbe(InitialConditions.getProbeInitialState(), 31536000,360);
          System.out.println(orbits.get(0).size());
 
-
+         System.out.println(closest(orbits.get(11),orbits.get(8)));
 
 
          for(int i = 0;i<orbits.get(0).size();i++){
@@ -113,7 +113,7 @@ public class TripSimulation {
                 Corrections correct = new Corrections();
 
                 //Adjust new coordinates
-                StateVector newProbeState = correct.adjust(simulation.getPath().get(11).get(i),simulation.getPath().get(8).get(i),sec);
+                StateVector newProbeState = correct.adjust(simulation.getPath().get(11).get(i),simulation.getPath().get(8).get(i),sec, 31536000);
 
                 //setting up new simulation and running it with new State for probe (on titan)
                 double newSimulationTime = 31536000-sec;
@@ -138,6 +138,19 @@ public class TripSimulation {
          }
          return finalOrbits;
      }
+
+    public static double closest(List<StateVector> pathProbe, List<StateVector> pathTitan){
+        //distance at the beggining
+        double dist = pathProbe.get(0).getVector(0).distance(pathTitan.get(0).getVector(0));
+        for(int i = 0;i<pathProbe.size();i++){
+            double ndist = pathProbe.get(i).getVector(0).distance(pathTitan.get(i).getVector(0));
+            if(ndist<dist){
+                dist = ndist;
+                //System.out.println(dist);
+            }
+        }
+        return dist;
+    }
 
     public static void main(String[] args) {
         TripSimulation sim = new TripSimulation();

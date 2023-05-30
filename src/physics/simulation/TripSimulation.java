@@ -97,6 +97,12 @@ public class TripSimulation {
             //checinkg if got to titan if so than setting up the simulation to get back, we never do??;(((((
             if(dist<3000000){
                 sec = i*1800;
+
+                int length = orbits.get(0).size()-1;
+                for(int j = length; j > i; j--){
+                    orbits.get(orbits.size()-1).remove(length);
+                    length--;
+                }
                 System.out.println(sec);
                 //making new state vectors for new simulation
                 StateVector[] newStateVectors = new StateVector[simulation.getStateVectors().length];

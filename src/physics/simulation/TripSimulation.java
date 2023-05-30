@@ -88,7 +88,7 @@ public class TripSimulation {
                 Corrections correct = new Corrections();
 
                 //Adjust new coordinates
-                StateVector newProbeState = correct.adjust(simulation.getPath().get(11).get(i),simulationForSec.getPath().get(4).get(simulationForSec.getPath().get(4).size()-1),sec,tf*2);
+                StateVector newProbeState = correct.adjust(simulation.getPath().get(11).get(i),simulationForSec.getPath().get(4).get(simulationForSec.getPath().get(4).size()-1),sec,tf*0.85);
 
                 //calculating fuel to adjust the new velocity
                 sub = FuelUsage.fuelTakeoffLanding(orbits.get(11).get(i).getVector(1).getMagnitude(), newProbeState.getVector(1).getMagnitude(), h);
@@ -115,7 +115,7 @@ public class TripSimulation {
                         }
                         else{
                             if(j==11){
-                                sv = correct.adjust(adjustedOrbits.get(j).get(k-i), adjustedOrbits.get(4).get(k-i), k*h, tf*2);
+                                sv = correct.adjust(adjustedOrbits.get(j).get(k-i), adjustedOrbits.get(4).get(k-i), k*h, tf);
                             }else {
                                 sv = adjustedOrbits.get(j).get(k - i);
                             }

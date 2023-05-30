@@ -64,7 +64,7 @@ public class TripSimulation {
          double h = StartScreen.h;
 
          SolarSystemPhysicsSimulation simulationForSec = new SolarSystemPhysicsSimulation(PlanetaryData.getCelestialBodiesStateVector(),PlanetaryData.getCelestialBodiesMasses(),PlanetaryData.getCelestialBodyNames());
-         simulationForSec.simulateOrbitsWithProbe(InitialConditions.getProbeInitialState(), 31536000,360);
+         simulationForSec.simulateOrbitsWithProbe(InitialConditions.getProbeInitialState(), 31536000,1800);
 
          //calculating the time needed to exit earth to know how much fuel we use
          double sec = 0;
@@ -85,7 +85,7 @@ public class TripSimulation {
 
          //start of the simulation
          SolarSystemPhysicsSimulation simulation = new SolarSystemPhysicsSimulation(PlanetaryData.getCelestialBodiesStateVector(),PlanetaryData.getCelestialBodiesMasses(),PlanetaryData.getCelestialBodyNames());
-         orbits = simulation.simulateOrbitsWithProbe(InitialConditions.getProbeInitialState(), 31536000,360);
+         orbits = simulation.simulateOrbitsWithProbe(InitialConditions.getProbeInitialState(), 31536000,1800);
          System.out.println(orbits.get(0).size());
 
 
@@ -96,7 +96,7 @@ public class TripSimulation {
             double dist = orbits.get(11).get(i).getVector(0).distance(orbits.get(8).get(i).getVector(0));
             //checinkg if got to titan if so than setting up the simulation to get back, we never do??;(((((
             if(dist<3000000){
-                sec = i*360;
+                sec = i*1800;
                 System.out.println(sec);
                 //making new state vectors for new simulation
                 StateVector[] newStateVectors = new StateVector[simulation.getStateVectors().length];
@@ -119,7 +119,7 @@ public class TripSimulation {
                 double newSimulationTime = 31536000-sec;
                 SolarSystemPhysicsSimulation adjustedSimulation = new SolarSystemPhysicsSimulation(newStateVectors,PlanetaryData.getCelestialBodiesMasses(),PlanetaryData.getCelestialBodyNames());
                 List<List<StateVector>> adjustedOrbits = new ArrayList<>();
-                adjustedOrbits = adjustedSimulation.simulateOrbitsWithProbe(newProbeState,newSimulationTime,360);
+                adjustedOrbits = adjustedSimulation.simulateOrbitsWithProbe(newProbeState,newSimulationTime,1800);
                 System.out.println(adjustedOrbits.size());
 
                 //creating the final orbits list
@@ -144,5 +144,11 @@ public class TripSimulation {
         TripSimulation sim = new TripSimulation();
         List<List<StateVector>> orb = sim.simulateTrip();
         System.out.println(orb.get(11).get(orb.get(4).size()-1).getVector(0).get(0));
+        System.out.println(orb.get(11).get(orb.get(4).size()-1).getVector(0).get(1));
+        System.out.println(orb.get(11).get(orb.get(4).size()-1).getVector(0).get(2));
+        System.out.println(orb.get(4).get(orb.get(4).size()-1).getVector(0).get(0));
+        System.out.println(orb.get(4).get(orb.get(4).size()-1).getVector(0).get(1));
+        System.out.println(orb.get(4).get(orb.get(4).size()-1).getVector(0).get(2));
+        System.out.println(orb.get(4).get(orb.get(4).size()-1).getVector(0).distance(orb.get(11).get(orb.get(4).size()-1).getVector(0)));
     }
 }

@@ -1,5 +1,6 @@
 package physics.optimalization;
 
+import gui.screens.StartScreen;
 import physics.simulation.SolarSystemPhysicsSimulation;
 import physics.vectors.StateVector;
 import physics.vectors.Vector;
@@ -48,7 +49,7 @@ public class InitialConditions {
     public static Vector findVel(Vector current){
         int iter = 100;
         StateVector iniState = new StateVector(new Vector[]{pos, current});
-        SolarSystemPhysicsSimulation system = new SolarSystemPhysicsSimulation(PlanetaryData.getCelestialBodiesStateVector(),PlanetaryData.getCelestialBodiesMasses(),PlanetaryData.getCelestialBodyNames());
+        SolarSystemPhysicsSimulation system = new SolarSystemPhysicsSimulation(PlanetaryData.getCelestialBodiesStateVector(),PlanetaryData.getCelestialBodiesMasses(),PlanetaryData.getCelestialBodyNames(), StartScreen.finalSolver);
         List<List<StateVector>> paths = system.simulateOrbitsWithProbe(iniState,31536000,1800);
         List<StateVector> probePath = paths.get(11);
         List<StateVector> titanPath = paths.get(8);
@@ -58,7 +59,7 @@ public class InitialConditions {
             Vector[] neighbours = generateNeighbours(current);
             for (Vector neighbour : neighbours) {
                 iniState.getStateVector()[1] = neighbour;
-                system = new SolarSystemPhysicsSimulation(PlanetaryData.getCelestialBodiesStateVector(),PlanetaryData.getCelestialBodiesMasses(),PlanetaryData.getCelestialBodyNames());
+                system = new SolarSystemPhysicsSimulation(PlanetaryData.getCelestialBodiesStateVector(),PlanetaryData.getCelestialBodiesMasses(),PlanetaryData.getCelestialBodyNames(),StartScreen.finalSolver);
                 paths = system.simulateOrbitsWithProbe(iniState,31536000,1800);
                 probePath = paths.get(11);
                 titanPath = paths.get(8);

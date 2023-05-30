@@ -281,7 +281,7 @@ public class StartScreen extends JFrame implements ActionListener {
             simulationSpeed = (int) Math.ceil(Double.parseDouble(userInputs[8].getText()));
 
             //Initialise the physics simulation with the user inputted vectors
-            SolarSystemPhysicsSimulation system = new SolarSystemPhysicsSimulation(PlanetaryData.getCelestialBodiesStateVector(),PlanetaryData.getCelestialBodiesMasses(),PlanetaryData.getCelestialBodyNames());
+            SolarSystemPhysicsSimulation system = new SolarSystemPhysicsSimulation(PlanetaryData.getCelestialBodiesStateVector(),PlanetaryData.getCelestialBodiesMasses(),PlanetaryData.getCelestialBodyNames(),finalSolver);
 
             errorText1.setText("");      //removes error message
             errorText2.setText("");

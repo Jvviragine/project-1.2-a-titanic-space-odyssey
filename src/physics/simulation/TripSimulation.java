@@ -31,7 +31,7 @@ public class TripSimulation {
 //         int tf = 31536000;
 
          //simulation used to calculate the fuel for exiting earth and also to get earths position after two years
-         SolarSystemPhysicsSimulation simulationForSec = new SolarSystemPhysicsSimulation(PlanetaryData.getCelestialBodiesStateVector(),PlanetaryData.getCelestialBodiesMasses(),PlanetaryData.getCelestialBodyNames());
+         SolarSystemPhysicsSimulation simulationForSec = new SolarSystemPhysicsSimulation(PlanetaryData.getCelestialBodiesStateVector(),PlanetaryData.getCelestialBodiesMasses(),PlanetaryData.getCelestialBodyNames(),StartScreen.finalSolver);
          simulationForSec.simulateOrbitsWithProbe(InitialConditions.getProbeInitialState(), tf*2,h);
 
          //calculating the time needed to exit earth to know how much fuel we use
@@ -52,7 +52,7 @@ public class TripSimulation {
          InitialConditions.setProbeInitialVelocity(velF);
 
          //start of the simulation to get to titan
-         SolarSystemPhysicsSimulation simulation = new SolarSystemPhysicsSimulation(PlanetaryData.getCelestialBodiesStateVector(),PlanetaryData.getCelestialBodiesMasses(),PlanetaryData.getCelestialBodyNames());
+         SolarSystemPhysicsSimulation simulation = new SolarSystemPhysicsSimulation(PlanetaryData.getCelestialBodiesStateVector(),PlanetaryData.getCelestialBodiesMasses(),PlanetaryData.getCelestialBodyNames(),StartScreen.finalSolver);
          orbits = simulation.simulateOrbitsWithProbe(InitialConditions.getProbeInitialState(), tf,h);
 
          double leftOverTime = 0;
@@ -99,7 +99,7 @@ public class TripSimulation {
                 System.out.println(newProbeState.getVector(1).get(2)+ " ");
 
                 //setting up new simulation and running it with new State for probe (on titan)
-                SolarSystemPhysicsSimulation adjustedSimulation = new SolarSystemPhysicsSimulation(newStateVectors,PlanetaryData.getCelestialBodiesMasses(),PlanetaryData.getCelestialBodyNames());
+                SolarSystemPhysicsSimulation adjustedSimulation = new SolarSystemPhysicsSimulation(newStateVectors,PlanetaryData.getCelestialBodiesMasses(),PlanetaryData.getCelestialBodyNames(),StartScreen.finalSolver);
                 List<List<StateVector>> adjustedOrbits = new ArrayList<>();
                 adjustedOrbits = adjustedSimulation.simulateOrbitsWithProbe(newProbeState,tf+leftOverTime,h);
 

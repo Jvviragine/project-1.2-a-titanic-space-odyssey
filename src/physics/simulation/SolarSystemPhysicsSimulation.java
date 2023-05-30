@@ -4,6 +4,7 @@ import physics.functions.DerivativeFunction;
 import physics.solvers.*;
 import physics.vectors.StateVector;
 import physics.vectors.Vector;
+import solar_system_data.InitialConditions;
 import solar_system_data.PlanetaryData;
 
 import java.util.ArrayList;
@@ -73,19 +74,6 @@ public class SolarSystemPhysicsSimulation {
         }
     }
 
-    public StateVector[] getStatesOfProbeAndTitan(double time){
-        int indexOfState;
-        StateVector[] statesOfProbeAndTitan;
-        if(time < t){
-            indexOfState = (int)(time/h);
-            statesOfProbeAndTitan = new StateVector[2];
-            statesOfProbeAndTitan[0] = allStates.get(allStates.size()-1).get(indexOfState);
-            statesOfProbeAndTitan[1] = allStates.get(PlanetaryData.indexOf("Titan")).get(indexOfState);
-        }
-        else throw new IllegalArgumentException("Time must be within simulation time frame. Try simulating again with a longer time.");
-        return statesOfProbeAndTitan;
-    }
-
     /**
      * (Re)Sets new state vectors
      * @param stateVectors
@@ -103,7 +91,7 @@ public class SolarSystemPhysicsSimulation {
     }
 
     /**
-     * Updates the state of the system given a final time, and step size,h
+     * Updates the state of the system (only celestial bodies) given a final time, and step size,h
      * @param tf the final time after all updates
      * @param h the time difference between each update
      * @return
@@ -162,48 +150,6 @@ public class SolarSystemPhysicsSimulation {
 
     }
 
-    public List<StateVector> adjustPath(StateVector initialProbeState,double t0, double tf, double h){
-        StateVector [] vectorsWithProbe = new StateVector[stateVectors.length+1];
-
-        for(int i = 0; i < stateVectors.length; i++){
-            vectorsWithProbe[i] = initialStates[i];
-        }
-        vectorsWithProbe[vectorsWithProbe.length -1] = initialProbeState;
-
-        stateVectors = vectorsWithProbe;
-
-        //List containing all orbits of all planets
-        List<List<StateVector>> orbits = new ArrayList<>();
-
-        solver.solve(df,stateVectors,0,tf-t0,h);
-
-        StateVector[] updatedVectors = new StateVector[stateVectors.length];
-
-        for(int i = 0; i < updatedVectors.length; i++){
-            updatedVectors[i] = solver.getAllStates(i).get(orbits.get(i).size()-1);
-        }
-
-        stateVectors = updatedVectors;
-
-        solver.solve(df,stateVectors,t0,tf,h);
-
-        for(int i = 0; i < stateVectors.length; i++){
-            //for(int j = 0; j < solver.getAllStates(i).size();)
-                //orbits.get(i).add(solver.getAllStates(i).get(j));
-                orbits.add(solver.getAllStates(i));
-        }
-
-        StateVector [] restoreStateVectors = new StateVector[vectorsWithProbe.length-1];
-
-        for(int i = 0; i < restoreStateVectors.length;i++){
-            restoreStateVectors[i] = stateVectors[i];
-        }
-
-        stateVectors = restoreStateVectors;
-
-        //Only returns probe states for the specified time of the trip
-        return orbits.get(orbits.size()-1);
-    }
 
     /**
      * List containing the List of StateVectors for each of the bodies in the system

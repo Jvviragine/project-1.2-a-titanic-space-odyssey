@@ -45,7 +45,7 @@ class CorrectionsTest {
         }
         StateVector expected = stateVector1;
 
-        StateVector output = corrections.adjust(stateVector1, stateVector2, timePassed);
+        StateVector output = corrections.adjust(stateVector1, stateVector2, timePassed,3153600);
 
         for (int i = 0; i < expected.getNumberOfVectors(); i++) {
             for (int j = 0; j < expected.getVector(i).getDimension(); j++) {
@@ -75,7 +75,7 @@ class CorrectionsTest {
         }
         StateVector expected = stateVector1;
 
-        StateVector output = corrections.adjust(stateVector1, stateVector2, timePassed);
+        StateVector output = corrections.adjust(stateVector1, stateVector2, timePassed,3153600);
 
         for (int i = 0; i < expected.getNumberOfVectors(); i++) {
             for (int j = 0; j < expected.getVector(i).getDimension(); j++) {

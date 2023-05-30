@@ -2,6 +2,7 @@ package gui.data;
 
 import gui.screens.StartScreen;
 import physics.simulation.SolarSystemPhysicsSimulation;
+import physics.simulation.TripSimulation;
 import physics.vectors.StateVector;
 import solar_system_data.InitialConditions;
 import solar_system_data.PlanetaryData;
@@ -16,9 +17,10 @@ import java.util.List;
 public class OrbitList {
     private static final int SCREEN_WIDTH = 1536;
     private static final int SCREEN_HEIGHT = 801;
-    private static SolarSystemPhysicsSimulation simulation = new SolarSystemPhysicsSimulation(PlanetaryData.getCelestialBodiesStateVector(),PlanetaryData.getCelestialBodiesMasses(),PlanetaryData.getCelestialBodyNames(), StartScreen.finalSolver);
-    private static List<List<StateVector>> planetPaths = simulation.simulateOrbitsWithProbe(InitialConditions.getProbeInitialState(),StartScreen.simulationEndTime,StartScreen.h);
-
+    //private static SolarSystemPhysicsSimulation simulation = new SolarSystemPhysicsSimulation(PlanetaryData.getCelestialBodiesStateVector(),PlanetaryData.getCelestialBodiesMasses(),PlanetaryData.getCelestialBodyNames(), StartScreen.finalSolver);
+    private static TripSimulation sim = new TripSimulation();
+    //private static List<List<StateVector>> planetPaths = simulation.simulateOrbitsWithProbe(InitialConditions.getProbeInitialState(),StartScreen.simulationEndTime,StartScreen.h);
+    private static List<List<StateVector>> planetPaths = sim.simulateTrip();
     private static double saturnMaxDistance = getDistanceFromSun(1253801723.95465, -760453007.810989);
     final private static double scale = Math.min(SCREEN_WIDTH, SCREEN_HEIGHT) / (1.5 * saturnMaxDistance);
 

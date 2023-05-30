@@ -17,9 +17,9 @@ public class TripSimulation {
 
 //    SolarSystemPhysicsSimulation system;
 //
-//    public TripSimulation(SolarSystemPhysicsSimulation system){
-//        this.system = system;
-//    }
+    public TripSimulation(){
+
+    }
     double usedFuel = 0;
     public void simulate(){
         //Create a new simulation
@@ -116,24 +116,28 @@ public class TripSimulation {
                 StateVector newProbeState = correct.adjust(simulation.getPath().get(11).get(i),simulation.getPath().get(8).get(i),sec,31536000);
 
                 //setting up new simulation and running it with new State for probe (on titan)
-                double newSimulationTime = 31536000-sec;
+                //double newSimulationTime = 31536000-sec;
                 SolarSystemPhysicsSimulation adjustedSimulation = new SolarSystemPhysicsSimulation(newStateVectors,PlanetaryData.getCelestialBodiesMasses(),PlanetaryData.getCelestialBodyNames());
                 List<List<StateVector>> adjustedOrbits = new ArrayList<>();
-                adjustedOrbits = adjustedSimulation.simulateOrbitsWithProbe(newProbeState,newSimulationTime,1800);
-                System.out.println(adjustedOrbits.size());
+                adjustedOrbits = adjustedSimulation.simulateOrbitsWithProbe(newProbeState,31536000,1800);
+                System.out.println(adjustedOrbits.get(0).size());
 
                 //creating the final orbits list
                 for(int j=0; j<orbits.size();j++){
                     finalOrbits.add(new ArrayList<>());
-                    int diff = orbits.size()-adjustedOrbits.size();
-                    for(int k=0; k<orbits.get(j).size();k++){
-                        StateVector sv = orbits.get(j).get(k);
-                        if(k>=diff && k-diff<adjustedOrbits.size()){
-                            sv = adjustedOrbits.get(j).get(k-diff);
+                    for(int k=0; k<orbits.get(j).size()*2;k++){
+                        Vector v = new Vector(new double[]{0,0,0});
+                        StateVector sv = new StateVector(new Vector[]{v,v});
+                        if(k<orbits.get(j).size()) {
+                            sv = orbits.get(j).get(k);
+                        }
+                        else{
+                            sv = adjustedOrbits.get(j).get(k-orbits.get(j).size());
                         }
                         finalOrbits.get(j).add(sv);
                     }
                 }
+                System.out.println(finalOrbits.get(0).size());
                 break;
             }
          }

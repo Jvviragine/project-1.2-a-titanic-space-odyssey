@@ -50,12 +50,10 @@ class DerivativeFunctionTest {
         Vector vector1 = new Vector(new double[]{1,20,300});
         Vector vector2 = new Vector(new double[]{4,50,600});
         StateVector stateVector = new StateVector(new Vector[]{vector1, vector2});
+        StateVector expected = new StateVector(new Vector[]{vector2, derivativeFunction.getAcceleration(system.getIndex(stateVector))});
 
         double time = 0.0;
-
         StateVector output = derivativeFunction.applyFunction(stateVector, time);
-
-        StateVector expected = new StateVector(new Vector[]{vector2, derivativeFunction.getAcceleration(system.getIndex(stateVector))});
 
         for (int i = 0; i < expected.getNumberOfVectors(); i++) {
             for (int j = 0; j < expected.getVector(i).getDimension(); j++) {

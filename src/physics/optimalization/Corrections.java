@@ -13,7 +13,7 @@ public class Corrections {
      * @return StateVector of the probe with updated velocity values that aim it towards Titan
      */
 
-    public StateVector Adjust(StateVector probeVec, StateVector titanVec, double timePassed){
+    public StateVector adjust(StateVector probeVec, StateVector titanVec, double timePassed){
         //double vectorChanges = 0;
         int year = 31536000;
         double timeLeft;

@@ -18,8 +18,8 @@ import javax.swing.*;
 //Also gives the option to freeze the simulation at the inputted time.
 public class StartScreen extends JFrame implements ActionListener {
     private JFrame frame = new JFrame();
-    private JLabel solverText, xText, yText, zText, v1Text, v2Text, v3Text, stepSizeText, simulationEndTimeText, topText01, topText02, errorText;
-    private JTextField xInput, yInput, zInput, v1Input, v2Input, v3Input, stepSizeInput, simulationEndTimeInput;
+    private JLabel solverText, xText, yText, zText, v1Text, v2Text, v3Text, stepSizeText, simulationEndTimeText, simulationSpeedText1, simulationSpeedText2, topText01, topText02, errorText1, errorText2;
+    private JTextField xInput, yInput, zInput, v1Input, v2Input, v3Input, stepSizeInput, simulationEndTimeInput, simulationSpeedInput;
     private JComboBox solverChooser;
     private String[] solverOptions = {"Euler", "RK2", "RK3", "RK4"};
     private JButton startButton;
@@ -32,9 +32,9 @@ public class StartScreen extends JFrame implements ActionListener {
                                           probeInitialConditions.getVector(1).get(0),       //v1
                                           probeInitialConditions.getVector(1).get(1),       //v2
                                           probeInitialConditions.getVector(1).get(2),       //v3
-                                          1800, 78892315};                                       //step size and end time
+                                          1800, 78892315, 500};                                   //step size, end time and time interval
     private final int FRAME_WIDTH = 600;
-    private final int FRAME_HEIGHT = 550;
+    private final int FRAME_HEIGHT = 600;
 
     //Values to be passed on and used in other functions
     public static boolean freezeSimulation = false;         //boolean that determines if the simulation should go
@@ -42,6 +42,7 @@ public class StartScreen extends JFrame implements ActionListener {
     public static Solver finalSolver;                       //solver chosen by the user
     public static double h;                                 //step size in seconds
     public static int simulationEndTime;                    //end time in seconds
+    public static int simulationSpeed;                      //simulation speed in interval (microseconds)
 
     //The start screen, where the user can input custom values
     public StartScreen() {
@@ -61,11 +62,18 @@ public class StartScreen extends JFrame implements ActionListener {
         panel.add(topText02);
 
         //Error message to be printed when an invalid value inputted.
-        errorText = new JLabel("");
-        errorText.setBounds(30, 505, 500, 25);
-        errorText.setForeground(Color.RED);
-        errorText.setHorizontalAlignment(JLabel.CENTER);
-        panel.add(errorText);
+        errorText1 = new JLabel("");
+        errorText1.setBounds(30, 510, 500, 25);
+        errorText1.setForeground(Color.RED);
+        errorText1.setHorizontalAlignment(JLabel.CENTER);
+        panel.add(errorText1);
+
+        //Error message to be printed when an invalid value inputted.
+        errorText2 = new JLabel("");
+        errorText2.setBounds(30, 530, 500, 25);
+        errorText2.setForeground(Color.RED);
+        errorText2.setHorizontalAlignment(JLabel.CENTER);
+        panel.add(errorText2);
 
         //Solver text
         solverText = new JLabel("Solver: ");
@@ -141,8 +149,20 @@ public class StartScreen extends JFrame implements ActionListener {
         simulationEndTimeInput.setBounds(200, 400, 165, 25);
         panel.add(simulationEndTimeInput);
 
+        simulationSpeedText1 = new JLabel("Interval between frames: ");
+        simulationSpeedText1.setBounds(57, 440, 160, 25);
+        panel.add(simulationSpeedText1);
+
+        simulationSpeedText2 = new JLabel("(microseconds)");
+        simulationSpeedText2.setBounds(370, 440, 160, 25);
+        panel.add(simulationSpeedText2);
+
+        simulationSpeedInput = new JTextField(30);
+        simulationSpeedInput.setBounds(200, 440, 165, 25);
+        panel.add(simulationSpeedInput);
+
         startButton = new JButton("Launch!");
-        startButton.setBounds(200, 450, 165, 25);
+        startButton.setBounds(200, 480, 165, 25);
         startButton.addActionListener(this);
         panel.add(startButton);
 
@@ -165,30 +185,50 @@ public class StartScreen extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent event) {
-        JTextField[] userInputs = {xInput, yInput, zInput, v1Input, v2Input, v3Input, stepSizeInput, simulationEndTimeInput};
+        JTextField[] userInputs = {xInput, yInput, zInput, v1Input, v2Input, v3Input, stepSizeInput, simulationEndTimeInput, simulationSpeedInput};
         double[] finalPositions = {x, y, z};
         double[] finalVelocities = {v1, v2, v3};
         boolean allInputsValid = true;
 
         /**
-         * Goes through each textField and checks if it is empty.
+         * Goes through each coordinate and velocity textField and checks if it is empty.
          * If it is not, tries to convert the text in the textField to double.
          * If not successful, shows the error message and clears the value, else it proceeds.
          */
-        for (int i = 0; i < userInputs.length; i++) {
+        for (int i = 0; i < userInputs.length - 3; i++) {
             if (userInputs[i].getText().isEmpty()) {
                 userInputs[i].setText(String.valueOf(defaultConditions[i]));        //uses default values if the box is left empty
             }
             else {
                 try {
                     Double.parseDouble(userInputs[i].getText());
+                    errorText1.setText("");
                 } catch (NumberFormatException exception) {
-                    errorText.setText("Please only use numbers, \".\" and \"-\" as inputs.");
+                    errorText1.setText("Please only use numbers, \".\" and \"-\" as inputs for coordinates and velocities.");
                     userInputs[i].setText("");
                     allInputsValid = false;
                 }
             }
         }
+
+        //Separate check for the step size, end time and simulation speed, as they can only be positive integers
+        for (int i = 6; i < userInputs.length; i++) {
+            if(userInputs[i].getText().isEmpty()) {
+                userInputs[i].setText(String.valueOf((int) defaultConditions[i]));        //uses default values if the box is left empty
+            }
+            try {
+                Integer.parseInt(userInputs[i].getText());
+                if(Integer.parseInt(userInputs[i].getText()) <= 0) {
+                    throw new NumberFormatException();
+                }
+                errorText2.setText("");
+            } catch(NumberFormatException exception) {
+                errorText2.setText("Please only use positive integers for the step size, end time and simulation speed.");
+                userInputs[i].setText("");
+                allInputsValid = false;
+            }
+        }
+
 
         /**
          * If all input values are valid:
@@ -232,16 +272,21 @@ public class StartScreen extends JFrame implements ActionListener {
             }
 
             //Sets the step size
-            h = Math.ceil(Math.abs(Double.parseDouble(userInputs[6].getText())));
+            h = Math.ceil(Double.parseDouble(userInputs[6].getText()));
 
             //Sets the simulation end time
-            simulationEndTime = (int) Math.ceil(Math.abs(Double.parseDouble(userInputs[7].getText())));
+            simulationEndTime = (int) Math.ceil(Double.parseDouble(userInputs[7].getText()));
 
+            //Sets the simulation speed interval
+            simulationSpeed = (int) Math.ceil(Double.parseDouble(userInputs[8].getText()));
+
+            //Initialise the physics simulation with the user inputted vectors
             SolarSystemPhysicsSimulation system = new SolarSystemPhysicsSimulation(PlanetaryData.getCelestialBodiesStateVector(),PlanetaryData.getCelestialBodiesMasses(),PlanetaryData.getCelestialBodyNames());
 
-            errorText.setText("");      //removes error message
+            errorText1.setText("");      //removes error message
+            errorText2.setText("");
             frame.dispose();        //closes the start screen
-            SimulationScreen simulationScreen = new SimulationScreen();
+            SimulationScreen simulationScreen = new SimulationScreen();     //starts the simulation screen
         }
     }
 }

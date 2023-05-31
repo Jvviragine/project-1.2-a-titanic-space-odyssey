@@ -10,6 +10,7 @@ import physics.optimalization.FuelUsage;
 
 import javax.swing.plaf.nimbus.State;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -88,10 +89,11 @@ public class TripSimulation {
                 Corrections correct = new Corrections();
 
                 //Adjust new coordinates
-                StateVector newProbeState = correct.adjust(simulation.getPath().get(11).get(i),simulationForSec.getPath().get(4).get(simulationForSec.getPath().get(4).size()-1),sec,tf*0.85);
+                Object arr[] = correct.adjust(simulation.getPath().get(11).get(i),simulationForSec.getPath().get(4).get(simulationForSec.getPath().get(4).size()-1),sec,tf*0.85);
+                StateVector newProbeState = (StateVector)arr[0];
 
                 //calculating fuel to adjust the new velocity
-                sub = FuelUsage.fuelTakeoffLanding(orbits.get(11).get(i).getVector(1).getMagnitude(), newProbeState.getVector(1).getMagnitude(), h);
+                sub = (double)arr[1];
                 usedFuel = usedFuel + sub;
 
                 System.out.print(newProbeState.getVector(1).get(0)+ " ");
@@ -115,7 +117,7 @@ public class TripSimulation {
                         }
                         else{
                             if(j==11){
-                                sv = correct.adjust(adjustedOrbits.get(j).get(k-i), adjustedOrbits.get(4).get(k-i), k*h, tf);
+                                sv = (StateVector)correct.adjust(adjustedOrbits.get(j).get(k-i), adjustedOrbits.get(4).get(k-i), k*h, tf)[0];
                             }else {
                                 sv = adjustedOrbits.get(j).get(k - i);
                             }
@@ -128,7 +130,7 @@ public class TripSimulation {
                 break;
             }
          }
-         System.out.println(usedFuel);
+         System.out.println("Total fuel consumed is: " + usedFuel + "kg");
          return finalOrbits;
      }
 

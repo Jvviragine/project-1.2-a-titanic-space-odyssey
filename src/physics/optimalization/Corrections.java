@@ -3,6 +3,8 @@ package physics.optimalization;
 import physics.vectors.StateVector;
 import physics.vectors.Vector;
 
+import java.util.Arrays;
+
 public class Corrections {
     /**
      * Using the coordinates of the probe, our destination and the trajectory of the probe,
@@ -14,8 +16,10 @@ public class Corrections {
      * @return StateVector of the probe with updated velocity values that aim it towards Titan
      */
 
-    public StateVector adjust(StateVector probeVec, StateVector destinationVec, double timePassed, double eta){
-        //double vectorChanges = 0;
+    public Object[] adjust(StateVector probeVec, StateVector destinationVec, double timePassed, double eta){
+        double vectorChanges = 0;
+        Object arr[] = new Object[2];
+        double temp = 0;
 //        int year = 31536000;
 //        double timeLeft;
 //        if(timePassed < year){
@@ -27,10 +31,13 @@ public class Corrections {
         double timeLeft = eta - timePassed;
 
         for(int i = 0; i < 3; i++){
+            temp = probeVec.getVector(1).get(i);
             probeVec.getVector(1).set(i,(destinationVec.getVector(0).get(i) - probeVec.getVector(0).get(i)) * (1/timeLeft));
-            //vectorChanges += FuelUsage.Takeoff(probeTraj.getVector(i).getMagnitude(), diff.getVector(i).getMagnitude(), 6.6743*Math.pow(10, -20));
+            vectorChanges += FuelUsage.fuel(probeVec.getVector(1).get(i), temp, 1);
         }
-        return probeVec;
+        arr[0] = probeVec;
+        arr[1] = vectorChanges;
+        return arr;
     }
 
     /**

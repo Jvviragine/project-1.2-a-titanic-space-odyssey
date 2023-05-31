@@ -29,7 +29,7 @@ public class FuelUsage {
      * @param timeframe time in seconds it takes from start to end of the maneuver
      * @return consumed fuel
      */
-    public double fuel(double startVelocity, double endVelocity, double timeframe){
+    public static double fuel(double startVelocity, double endVelocity, double timeframe){
         return Math.abs(impulse(startVelocity, endVelocity, timeframe)) * 0.001; //1m/s is 0.001km/s, fuel consumption is proportional to impulse
     }
     public static double fuelTakeoffLanding(double startVelocity, double endVelocity, double timeframe){
@@ -43,7 +43,7 @@ public class FuelUsage {
      * @param timeframe time in seconds it takes from start to end of the maneuver
      * @return impulse of the maneuver
      */
-    public double impulse(double startVelocity, double endVelocity, double timeframe){
+    public static double impulse(double startVelocity, double endVelocity, double timeframe){
         return force(startVelocity, endVelocity, timeframe) * timeframe; //For a constant force over time, one can choose to solve the integral graphically (form of a rectangle)
     }
     public static double impulseTakeoffLanding(double startVelocity, double endVelocity, double timeframe){
@@ -57,7 +57,7 @@ public class FuelUsage {
      * @param timeframe time in seconds it takes from start to end of the maneuver
      * @return force required from the thrusters
      */
-    public double force(double startVelocity, double endVelocity, double timeframe){
+    public static double force(double startVelocity, double endVelocity, double timeframe){
         return MASS * acceleration(startVelocity, endVelocity, timeframe); //F=m*a
     }
     public static double forceTakeoffLanding(double startVelocity, double endVelocity, double timeframe){

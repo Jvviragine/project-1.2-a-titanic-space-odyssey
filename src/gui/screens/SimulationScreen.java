@@ -61,7 +61,6 @@ public class SimulationScreen extends JPanel {
             if (!StartScreen.freezeSimulation) {
                 iterateThroughOrbit();
             }
-            repaint();
         }, 0, StartScreen.simulationSpeed, TimeUnit.MICROSECONDS);
     }
 
@@ -111,7 +110,6 @@ public class SimulationScreen extends JPanel {
         g2d.drawString("Titan", XCENTER + titanPath[currentIndex][0] - 20, YCENTER + titanPath[currentIndex][1] + 10);
 
         //Probe
-        g2d.setColor(Color.RED);
         g2d.drawImage(normandy, XCENTER + probePath[currentIndex][0] - 20, YCENTER + probePath[currentIndex][1] - 20, 25, 25, null);
         g2d.drawString("Probe", XCENTER + probePath[currentIndex][0] - 22, YCENTER + probePath[currentIndex][1] + 7);
     }
@@ -119,8 +117,10 @@ public class SimulationScreen extends JPanel {
     public void iterateThroughOrbit() {
         currentIndex++;
 
-        if (currentIndex >= earthPath.length - 1) {
-            executor.shutdown();
+        if (currentIndex >= (earthPath.length - 1)) {
+            OrbitScreen orbitScreen = new OrbitScreen();
+            frame.dispose();
+            executor.shutdown();        //keep this as last, stops the simulationScreen from doing anything
         }
 
         repaint();

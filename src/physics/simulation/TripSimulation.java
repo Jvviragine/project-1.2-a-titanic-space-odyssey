@@ -133,16 +133,4 @@ public class TripSimulation {
          System.out.println("Total fuel consumed is: " + usedFuel + "kg");
          return finalOrbits;
      }
-
-    public static void main(String[] args) {
-        TripSimulation sim = new TripSimulation();
-        List<List<StateVector>> orb = sim.simulateTrip();
-        System.out.println(orb.get(11).get(orb.get(4).size()-1).getVector(0).get(0));
-        System.out.println(orb.get(11).get(orb.get(4).size()-1).getVector(0).get(1));
-        System.out.println(orb.get(11).get(orb.get(4).size()-1).getVector(0).get(2));
-        System.out.println(orb.get(4).get(orb.get(4).size()-1).getVector(0).get(0));
-        System.out.println(orb.get(4).get(orb.get(4).size()-1).getVector(0).get(1));
-        System.out.println(orb.get(4).get(orb.get(4).size()-1).getVector(0).get(2));
-        System.out.println(orb.get(4).get(orb.get(4).size()-1).getVector(0).distance(orb.get(11).get(orb.get(4).size()-1).getVector(0)));
-    }
 }

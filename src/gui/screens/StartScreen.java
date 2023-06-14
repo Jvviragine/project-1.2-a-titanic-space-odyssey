@@ -1,6 +1,7 @@
 package gui.screens;
 
 import physics.simulation.SolarSystemPhysicsSimulation;
+import physics.simulation.TripSimulation;
 import physics.solvers.*;
 import physics.vectors.StateVector;
 import physics.vectors.Vector;
@@ -283,6 +284,7 @@ public class StartScreen extends JFrame implements ActionListener {
             //Initialise the physics simulation with the user inputted vectors
             SolarSystemPhysicsSimulation system = new SolarSystemPhysicsSimulation(PlanetaryData.getCelestialBodiesStateVector(),PlanetaryData.getCelestialBodiesMasses(),PlanetaryData.getCelestialBodyNames(),finalSolver);
 
+            TripSimulation tripSimulation = new TripSimulation();
             errorText1.setText("");      //removes error message
             errorText2.setText("");
             frame.dispose();        //closes the start screen

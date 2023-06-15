@@ -1,5 +1,82 @@
 package gui.screens;
 
-public class LandingScreen {
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
+public class LandingScreen extends JPanel {
+    private JFrame frame;
+    private final int SCREEN_WIDTH = 1540;
+    private final int SCREEN_HEIGHT = 845;
+    private final int XCENTER = SCREEN_WIDTH/2;
+    private final int YCENTER = SCREEN_HEIGHT/2;
+    private Image normandy;
+    private int currentIndex = 0;
+    private ScheduledExecutorService executor;
+    private int[][] testPath = {{0, -400}, {0, -350}, {0, -300}, {0, -250}, {0, -200}, {0, -150}, {0, -100}, {0, -50},
+                                {0,0}, {0, 50}, {0, 100}, {0, 150}, {0, 200}, {0, 250}};
+
+    public LandingScreen() {
+        //Assign the images to the variables titan and normandy
+        try {
+            File pathToFileProbe = new File("src/gui/images/Normandy.png");
+            normandy = ImageIO.read(pathToFileProbe);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        frame = new JFrame("Orbit Screen");
+
+        this.setLayout(null);
+        this.setBackground(Color.BLACK);
+
+        frame.add(this);
+        frame.setSize(SCREEN_WIDTH,SCREEN_HEIGHT);
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        frame.setLocationRelativeTo(null);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+
+        System.out.println(XCENTER);
+        System.out.println(YCENTER);
+        System.out.println(getWidth());
+        System.out.println(getHeight());
+
+        // Schedule a task with a fixed delay of 1 millisecond
+        ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+        executor.scheduleAtFixedRate(() -> {
+            if (!StartScreen.freezeSimulation) {
+                showOrbit();
+            }
+            repaint();
+        }, 0, StartScreen.simulationSpeed * 30000, TimeUnit.MICROSECONDS);
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Graphics2D g2d = (Graphics2D) g;
+
+        //Titan
+        g2d.setColor(Color.GRAY);
+        g2d.fillRect(0, YCENTER + 250, SCREEN_WIDTH, SCREEN_HEIGHT);
+
+        //Probe
+        g2d.drawImage(normandy, XCENTER + testPath[currentIndex][0] - 20, YCENTER + testPath[currentIndex][1] - 20, 25, 25, null);
+    }
+
+    public void showOrbit() {
+        currentIndex++;
+
+        if(currentIndex > testPath.length - 1) {
+            currentIndex = 0;
+        }
+
+        repaint();
+    }
 }

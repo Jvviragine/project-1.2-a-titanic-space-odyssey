@@ -7,7 +7,7 @@ import physics.vectors.Vector;
 import static org.junit.jupiter.api.Assertions.*;
 
 /*
-This class saves the initial condition state vectors in static attributes.
+This class tests the InitialConditions class which has static attributes to test.
 To test the methods that apply changes on those static fields, this test class
 will recover each static values and will save them to recover any changes made
 

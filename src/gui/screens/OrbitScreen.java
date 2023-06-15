@@ -51,7 +51,7 @@ public class OrbitScreen extends JPanel {
         System.out.println(getHeight());
 
         // Schedule a task with a fixed delay of 1 millisecond
-        ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+        executor = Executors.newSingleThreadScheduledExecutor();
         executor.scheduleAtFixedRate(() -> {
             if (!StartScreen.freezeSimulation) {
                 showOrbit();

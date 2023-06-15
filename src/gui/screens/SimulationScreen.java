@@ -56,7 +56,7 @@ public class SimulationScreen extends JPanel {
         frame.setVisible(true);
 
         // Schedule a task with a fixed delay of 1 millisecond
-        ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+        executor = Executors.newSingleThreadScheduledExecutor();
         executor.scheduleAtFixedRate(() -> {
             if (!StartScreen.freezeSimulation) {
                 iterateThroughOrbit();

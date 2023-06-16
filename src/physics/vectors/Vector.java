@@ -157,6 +157,19 @@ public class Vector {
     }
 
     /**
+     * Computes the dot product of two vectors
+     * @param v the vector with which to do the dot product
+     * @return dot product of this and v
+     */
+    public double dotProduct(Vector v){
+        double product = 0;
+        for(int i = 0; i < this.getDimension(); i++){
+            product += this.get(i) * v.get(i);
+        }
+        return product;
+    }
+
+    /**
      * Makes a copy of a vector
      * @return vector copy
      */

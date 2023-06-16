@@ -1,37 +1,34 @@
 package gui.screens;
 
-import javax.imageio.ImageIO;
+import gui.helper_classes.ImageLoader;
+
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
-import java.io.IOException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import static gui.screens.SimulationScreen.*;
+
 public class OrbitScreen extends JPanel {
+
     private JFrame frame;
-    private final int SCREEN_WIDTH = 1540;
-    private final int SCREEN_HEIGHT = 845;
-    private final int XCENTER = SCREEN_WIDTH/2;
-    private final int YCENTER = SCREEN_HEIGHT/2;
+
+    private ImageLoader imageLoader = new ImageLoader();
     private Image normandy;
     private Image titan;
-    private int currentIndex = 0;
-    private int testCounter = 0;
+
+    private int pathIndex = 0;
+    private int tempCounter = 0;
+
     private ScheduledExecutorService executor;
+
     private int[][] testPath = {{0, -200}, {-200, 0}, {0, 200}, {200, 0}};
 
     public OrbitScreen() {
-        //Assign the images to the variables titan and normandy
-        try {
-            File pathToFileProbe = new File("src/gui/images/Normandy.png");
-            normandy = ImageIO.read(pathToFileProbe);
-            File pathToFileTitan = new File("src/gui/images/Titan.png");
-            titan = ImageIO.read(pathToFileTitan);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+        //Assign the probe and titan image to normandy and titan respectively
+        normandy = imageLoader.getImage("normandy");
+        titan = imageLoader.getImage("titan");
 
         frame = new JFrame("Orbit Screen");
 
@@ -50,7 +47,7 @@ public class OrbitScreen extends JPanel {
         System.out.println(getWidth());
         System.out.println(getHeight());
 
-        // Schedule a task with a fixed delay of 1 millisecond
+        // Schedule a task with a custom delay in microseconds
         executor = Executors.newSingleThreadScheduledExecutor();
         executor.scheduleAtFixedRate(() -> {
             if (!StartScreen.freezeSimulation) {
@@ -69,19 +66,20 @@ public class OrbitScreen extends JPanel {
         g2d.drawImage(titan, XCENTER - 100, YCENTER - 100, 200, 200, null);
 
         //Probe
-        g2d.drawImage(normandy, XCENTER + testPath[currentIndex][0] - 20, YCENTER + testPath[currentIndex][1] - 20, 25, 25, null);
+        g2d.drawImage(normandy, XCENTER + testPath[pathIndex][0] - 20, YCENTER + testPath[pathIndex][1] - 20, 25, 25, null);
     }
 
     public void showOrbit() {
-        currentIndex++;
+        pathIndex++;
 
-        if (currentIndex >= testPath.length) {
-            testCounter++;
-            currentIndex = 0;
+        //Stopping condition (loops for now)
+        if (pathIndex >= testPath.length) {
+            tempCounter++;
+            pathIndex = 0;
 //            executor.shutdown();        //keep this as last, stops the orbitScreen from doing anything
         }
 
-        if(testCounter > 5) {
+        if(tempCounter > 5) {
             LandingScreen landingScreen = new LandingScreen();
             frame.dispose();
             executor.shutdown();

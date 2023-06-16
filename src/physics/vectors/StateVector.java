@@ -143,6 +143,27 @@ public class StateVector {
         return true;
     }
 
+    public String toString(StateVector sv){
+        String re = "";
+        for(int i = 0; i<sv.numberOfVectors;i++){
+            for(int j = 0; j<sv.numberOfDimensions;j++){
+                re += sv.getVector(i).get(j);
+                re += ", ";
+            }
+            re += "\n";
+        }
+        return re;
+    }
+
+    public StateVector setStateVector(StateVector sv){
+        Vector[] v = new Vector[sv.getNumberOfVectors()];
+        for(int i =0; i< sv.getNumberOfVectors();i++) {
+            v[i] = sv.getVector(i);
+        }
+        StateVector n = new StateVector(v);
+        return n;
+    }
+
     // Testing the Functionalities of the StateVector
     public static void main(String[] args) {
 

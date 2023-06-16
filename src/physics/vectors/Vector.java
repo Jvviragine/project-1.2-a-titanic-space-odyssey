@@ -181,6 +181,14 @@ public class Vector {
         return true;
     }
 
+    public String toString(){
+        String r = "";
+        for(int i = 0;i<state.length;i++){
+            r += state[i] +", ";
+        }
+        return r;
+    }
+
 
 }
 

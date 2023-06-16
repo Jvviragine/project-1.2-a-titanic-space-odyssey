@@ -7,6 +7,9 @@ import javax.swing.plaf.nimbus.State;
 
 public class LandingFunction {
 
+    //Gravitational pull on Titan in m and km. If using km remember to convert at the begging if using meter convert at the end!!!
+
+    //private double G = -1.352 * Math.pow(10,-3); // km/s² = N/kg
     private double G = -1.352; // m/s² = N/kg
 
 
@@ -44,10 +47,10 @@ public class LandingFunction {
 
     public static void main(String[] args) {
         LandingFunction f = new LandingFunction();
-        StateVector s = new StateVector(new Vector[]{new Vector(new double[]{10,7}), new Vector(new double[]{0,0})});
+        StateVector s = new StateVector(new Vector[]{new Vector(new double[]{0.01,0.015}), new Vector(new double[]{0,0})});
         LanderState l = new LanderState(s, 0, 0);
         for(int i = 0;i<10;i++){
-            l = f.LanderStep(l, 1);
+            l = f.LanderStep(l, 0.5);
             System.out.println(l.getTotalState());
         }
     }

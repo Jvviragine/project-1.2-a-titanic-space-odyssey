@@ -48,6 +48,7 @@ distance(Vector v) :
 isEqual(Vector v)
     - this == v
     - this != v
+    - this.getDimension != v.getDimension()
  */
 
 class VectorTest {

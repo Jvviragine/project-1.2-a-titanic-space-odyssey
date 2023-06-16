@@ -9,6 +9,48 @@ import javax.swing.plaf.nimbus.State;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/*
+This class is responsible for testing the StateVector class.
+Four test state vectors u, v, w and z are initialized before each test.
+Those state vectors can have different number of vectors.
+Those vectors can have different lengths and different type of values (positive, negative, null, decimal).
+
+Find below the input partitioning for each method :
+
+StateVector(Vector[] vectors) :
+    - vectors.length == 0
+    - vectors.length > 0
+
+getVector(int index) :
+    - index < stateVector.length
+    - index >= stateVector.length
+
+getNumberOfDimensions() :
+    - all vectors inside this (stateVector) have the same dimension
+    - vectors inside this (stateVector) have different dimensions
+
+add(StateVector v) :
+    - this.getNumberOfVectors() == v.getNumberOfVectors()
+    - this.getNumberOfVectors() != v.getNumberOfVectors()
+
+subtract(StateVector v) :
+    - this.getNumberOfVectors() == v.getNumberOfVectors()
+    - this.getNumberOfVectors() != v.getNumberOfVectors()
+
+multiply(double scalar) :
+    - scalar > 0
+    - scalar < 0
+    - scalar == 0
+
+isEqual(StateVector v) :
+    - this == v
+    - this != v
+
+setStateVector(StateVector sv) :
+    - this (stateVector) has the same number of vectors as sv
+    - this (stateVector) has different number of vectors as sv
+ */
+
 class StateVectorTest {
 
     private StateVector u;
@@ -91,7 +133,7 @@ class StateVectorTest {
     }
 
     @Test
-    //covers getVector for index > stateVector.length
+    //covers getVector for index >= stateVector.length
     void testGetVectorWithIndexOutOfBounds() {
         int index = u.getNumberOfVectors();
         assertThrows(IndexOutOfBoundsException.class, () -> u.getVector(index));
@@ -169,8 +211,21 @@ class StateVectorTest {
     }
 
     @Test
-    //covers multiply for scalar != 0
-    void testMultiplyWithNonNullScalar() {
+    //covers multiply for scalar < 0
+    void testMultiplyWithPositiveScalar() {
+        Vector vector1 = new Vector(new double[]{2, 4, 6});
+        Vector vector2 = new Vector(new double[]{-2, -4, -6});
+        StateVector expected = new StateVector(new Vector[]{vector1, vector2});
+        StateVector output = u.multiply(2);
+        for (int i = 0; i < expected.getNumberOfVectors(); i++) {
+            for (int j = 0; j < expected.getVector(i).getDimension(); j++) {
+                assertEquals(expected.getVector(i).get(j), output.getVector(i).get(j));
+            }
+        }
+    }
+    @Test
+    //covers multiply for scalar < 0
+    void testMultiplyWithNegativeScalar() {
         Vector vector1 = new Vector(new double[]{-2, -4, -6});
         Vector vector2 = new Vector(new double[]{2, 4, 6});
         StateVector expected = new StateVector(new Vector[]{vector1, vector2});
@@ -183,7 +238,7 @@ class StateVectorTest {
     }
 
     @Test
-    //covers multiply for scalar = 0
+    //covers multiply for scalar == 0
     void testMultiplyWithNullScalar() {
         Vector vector = new Vector(new double[]{0, -0.0});
         StateVector expected =new StateVector(new Vector[]{vector});
@@ -212,4 +267,34 @@ class StateVectorTest {
         assertFalse(v.isEqual(u));
     }
 
+    @Test
+    //covers toString
+    void testToString() {
+        String expected = "1.0, 2.0, 3.0\n-1.0, -2.0, -3.0";
+        assertEquals(expected, u.toString());
+    }
+
+    @Test
+    //covers setStateVector to a vector with same number of vectors
+    void testSetStateVectorWithSameNumberOfVectors() {
+        StateVector expected = v;
+        StateVector output = u.setStateVector(v);
+        for (int i = 0; i < expected.getNumberOfVectors(); i++) {
+            for (int j = 0; j < expected.getVector(i).getDimension(); j++) {
+                assertEquals(expected.getVector(i).get(j), output.getVector(i).get(j));
+            }
+        }
+    }
+
+    @Test
+    //covers setStateVector to a vector with different number of vectors
+    void testSetStateVectorWithDifferentNumberOfVectors() {
+        StateVector expected = w;
+        StateVector output = u.setStateVector(w);
+        for (int i = 0; i < expected.getNumberOfVectors(); i++) {
+            for (int j = 0; j < expected.getVector(i).getDimension(); j++) {
+                assertEquals(expected.getVector(i).get(j), output.getVector(i).get(j));
+            }
+        }
+    }
 }

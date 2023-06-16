@@ -6,6 +6,50 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/*
+This class is responsible for testing the Vector class.
+Three test vectors u, v and w are initialized before each test.
+Those vectors can have different lengths and different type of values (positive, negative, null, decimal).
+
+Find below the input partitioning for each method :
+
+Vector(double[] initialState) :
+    - initialState.length > 0
+    - initialState.length == 0
+
+get(int index) :
+    - index < state.length
+    - index >= state.length
+
+set(int index, double value) :
+    - index < state.length
+    - index >= state.length
+
+setAll(double value) :
+    - value == 0
+
+add(Vector v) :
+    - this.getDimension() == v.getDimension()
+    - this.getDimension() != v.getDimension()
+
+subtract(Vector v) :
+    - this.getDimension() == v.getDimension()
+    - this.getDimension() != v.getDimension()
+
+multiply(double scalar) :
+    - scalar > 0
+    - scalar < 0
+    - scalar == 0
+
+distance(Vector v) :
+    - this == v
+    - this != v
+
+isEqual(Vector v)
+    - this == v
+    - this != v
+ */
+
 class VectorTest {
 
     private Vector u;
@@ -28,7 +72,7 @@ class VectorTest {
 
     @Test
     //covers Vector for initialState.length > 0
-    void testVectorWithNonEmptyInitialState(){
+    void testVectorWithNonEmptyInitialState() {
         double[] initialState = {1, 2, 3};
         Vector output = new Vector(initialState);
         for (int i = 0; i < initialState.length; i++) {
@@ -126,8 +170,17 @@ class VectorTest {
     }
 
     @Test
-    //covers multiply for scalar != 0
-    void testMultiplyWithNonNullScalar() {
+    //covers multiply for scalar > 0
+    void testMultiplyWithPositiveScalar() {
+        double[] expected = {-2, 1, 0.0};  //double zero at index 2
+        Vector output = u.multiply(2);
+        for (int i = 0; i < expected.length; i++) {
+            assertEquals(expected[i], output.get(i));
+        }
+    }
+    @Test
+    //covers multiply for scalar < 0
+    void testMultiplyWithNegativeScalar() {
         double[] expected = {2, -1, -0.0};  //negative zero at index 2
         Vector output = u.multiply(-2);
         for (int i = 0; i < expected.length; i++) {
@@ -194,9 +247,16 @@ class VectorTest {
     }
 
     @Test
-    //cover isEqual fo a Vector with a different dimension
+    //covers isEqual for a Vector with a different dimension
     void testIsEqualWithDifferentDimension() {
         assertThrows(IllegalArgumentException.class, () -> u.isEqual(w));
         assertThrows(IllegalArgumentException.class, () -> w.isEqual(u));
+    }
+
+    @Test
+    //covers toString
+    void testToString() {
+        String expected = "-1.0, 0.5, 0.0";
+        assertEquals(expected, u.toString());
     }
 }

@@ -1,28 +1,29 @@
 package gui.screens;
 
 import gui.data.OrbitList;
+import gui.helper_classes.ImageLoader;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
-import java.io.IOException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class SimulationScreen extends JPanel {
-    private JFrame frame;
-    private final int SCREEN_WIDTH = 1536;
-    private final int SCREEN_HEIGHT = 801;
-    private final int XCENTER = SCREEN_WIDTH/2;
-    private final int YCENTER = SCREEN_HEIGHT/2;
 
+    public static final int SCREEN_WIDTH = 1536;
+    public static final int SCREEN_HEIGHT = 801;
+    public static final int XCENTER = SCREEN_WIDTH/2;
+    public static final int YCENTER = SCREEN_HEIGHT/2;
+
+    private JFrame frame;
+
+    private ImageLoader imageLoader = new ImageLoader();
     private Image normandy;
 
     private ScheduledExecutorService executor;
 
-    private int currentIndex = 0;
+    private int pathIndex = 0;
 
     private OrbitList orbitList = new OrbitList();
     private int[][] sunPath = orbitList.getPath(0);
@@ -36,12 +37,8 @@ public class SimulationScreen extends JPanel {
     private int[][] probePath = orbitList.getPath(11);
 
     public SimulationScreen() {
-        try {
-            File pathToFile = new File("src/gui/images/Normandy.png");
-            normandy = ImageIO.read(pathToFile);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+        //Assign the probe image to normandy
+        normandy = imageLoader.getImage("normandy");
 
         frame = new JFrame("Simulation Screen");
 
@@ -55,7 +52,7 @@ public class SimulationScreen extends JPanel {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
 
-        // Schedule a task with a fixed delay of 1 millisecond
+        // Schedule a task with a custom delay in microseconds
         executor = Executors.newSingleThreadScheduledExecutor();
         executor.scheduleAtFixedRate(() -> {
             if (!StartScreen.freezeSimulation) {
@@ -71,53 +68,53 @@ public class SimulationScreen extends JPanel {
 
         //Sun
         g2d.setColor(Color.YELLOW);
-        g2d.fillOval(XCENTER + sunPath[currentIndex][0] - 20, YCENTER + sunPath[currentIndex][1] - 20, 40, 40);
-        g2d.drawString("Sun", XCENTER + sunPath[currentIndex][0] - 10, YCENTER + sunPath[currentIndex][1] + 30);
+        g2d.fillOval(XCENTER + sunPath[pathIndex][0] - 20, YCENTER + sunPath[pathIndex][1] - 20, 40, 40);
+        g2d.drawString("Sun", XCENTER + sunPath[pathIndex][0] - 10, YCENTER + sunPath[pathIndex][1] + 30);
 
         //Venus
         g2d.setColor(Color.ORANGE);
-        g2d.fillOval(XCENTER + venusPath[currentIndex][0] - 10,  YCENTER + venusPath[currentIndex][1] - 10, 13, 13);
-        g2d.drawString("Venus", XCENTER + venusPath[currentIndex][0] - 18, YCENTER + venusPath[currentIndex][1] + 13);
+        g2d.fillOval(XCENTER + venusPath[pathIndex][0] - 10,  YCENTER + venusPath[pathIndex][1] - 10, 13, 13);
+        g2d.drawString("Venus", XCENTER + venusPath[pathIndex][0] - 18, YCENTER + venusPath[pathIndex][1] + 13);
 
         //Earth
         g2d.setColor(Color.BLUE);
-        g2d.fillOval(XCENTER + earthPath[currentIndex][0] - 10,  YCENTER + earthPath[currentIndex][1] - 10, 15,15);
-        g2d.drawString("Earth", XCENTER + earthPath[currentIndex][0] - 16, YCENTER + earthPath[currentIndex][1] + 17);
+        g2d.fillOval(XCENTER + earthPath[pathIndex][0] - 10,  YCENTER + earthPath[pathIndex][1] - 10, 15,15);
+        g2d.drawString("Earth", XCENTER + earthPath[pathIndex][0] - 16, YCENTER + earthPath[pathIndex][1] + 17);
 
         //Moon
         g2d.setColor(Color.WHITE);
-        g2d.fillOval(XCENTER + moonPath[currentIndex][0] - 8,  YCENTER + moonPath[currentIndex][1] - 8, 10, 10);
-        g2d.drawString("Moon", XCENTER + moonPath[currentIndex][0] - 20, YCENTER + moonPath[currentIndex][1] + 10);
+        g2d.fillOval(XCENTER + moonPath[pathIndex][0] - 8,  YCENTER + moonPath[pathIndex][1] - 8, 10, 10);
+        g2d.drawString("Moon", XCENTER + moonPath[pathIndex][0] - 20, YCENTER + moonPath[pathIndex][1] + 10);
 
         //Mars
         g2d.setColor(Color.RED);
-        g2d.fillOval(XCENTER + marsPath[currentIndex][0] - 10,  YCENTER + marsPath[currentIndex][1] - 10, 14, 14);
-        g2d.drawString("Mars", XCENTER + marsPath[currentIndex][0] - 16, YCENTER + marsPath[currentIndex][1] + 15);
+        g2d.fillOval(XCENTER + marsPath[pathIndex][0] - 10,  YCENTER + marsPath[pathIndex][1] - 10, 14, 14);
+        g2d.drawString("Mars", XCENTER + marsPath[pathIndex][0] - 16, YCENTER + marsPath[pathIndex][1] + 15);
 
         //Jupiter
         g2d.setColor(Color.ORANGE);
-        g2d.fillOval(XCENTER + jupiterPath[currentIndex][0] - 10,  YCENTER + jupiterPath[currentIndex][1] - 10, 25, 25);
-        g2d.drawString("Jupiter", XCENTER + jupiterPath[currentIndex][0] - 14, YCENTER + jupiterPath[currentIndex][1] + 25);
+        g2d.fillOval(XCENTER + jupiterPath[pathIndex][0] - 10,  YCENTER + jupiterPath[pathIndex][1] - 10, 25, 25);
+        g2d.drawString("Jupiter", XCENTER + jupiterPath[pathIndex][0] - 14, YCENTER + jupiterPath[pathIndex][1] + 25);
 
         //Saturn
         g2d.setColor(Color.YELLOW);
-        g2d.fillOval(XCENTER + saturnPath[currentIndex][0] - 10,  YCENTER + saturnPath[currentIndex][1] - 10, 20, 20);
-        g2d.drawString("Saturn", XCENTER + saturnPath[currentIndex][0] - 15, YCENTER + saturnPath[currentIndex][1] + 22);
+        g2d.fillOval(XCENTER + saturnPath[pathIndex][0] - 10,  YCENTER + saturnPath[pathIndex][1] - 10, 20, 20);
+        g2d.drawString("Saturn", XCENTER + saturnPath[pathIndex][0] - 15, YCENTER + saturnPath[pathIndex][1] + 22);
 
         //Titan
         g2d.setColor(Color.WHITE);
-        g2d.fillOval(XCENTER + titanPath[currentIndex][0] - 5,  YCENTER + titanPath[currentIndex][1] - 5, 10, 10);
-        g2d.drawString("Titan", XCENTER + titanPath[currentIndex][0] - 20, YCENTER + titanPath[currentIndex][1] + 10);
+        g2d.fillOval(XCENTER + titanPath[pathIndex][0] - 5,  YCENTER + titanPath[pathIndex][1] - 5, 10, 10);
+        g2d.drawString("Titan", XCENTER + titanPath[pathIndex][0] - 20, YCENTER + titanPath[pathIndex][1] + 10);
 
         //Probe
-        g2d.drawImage(normandy, XCENTER + probePath[currentIndex][0] - 20, YCENTER + probePath[currentIndex][1] - 20, 25, 25, null);
-        g2d.drawString("Probe", XCENTER + probePath[currentIndex][0] - 22, YCENTER + probePath[currentIndex][1] + 7);
+        g2d.drawImage(normandy, XCENTER + probePath[pathIndex][0] - 20, YCENTER + probePath[pathIndex][1] - 20, 25, 25, null);
+        g2d.drawString("Probe", XCENTER + probePath[pathIndex][0] - 22, YCENTER + probePath[pathIndex][1] + 7);
     }
 
     public void iterateThroughOrbit() {
-        currentIndex++;
+        pathIndex++;
 
-        if (currentIndex >= (earthPath.length - 1)) {
+        if (pathIndex >= (earthPath.length - 1)) {
             OrbitScreen orbitScreen = new OrbitScreen();
             frame.dispose();
             executor.shutdown();        //keep this as last, stops the simulationScreen from doing anything

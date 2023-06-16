@@ -18,7 +18,7 @@ import javax.swing.*;
 //Opening screen, allowing user input of initial velocities, positions and simulation speed.
 //Also gives the option to freeze the simulation at the inputted time.
 public class StartScreen extends JFrame implements ActionListener {
-    private JFrame frame = new JFrame();
+    private JFrame frame;
     private JLabel solverText, xText, yText, zText, v1Text, v2Text, v3Text, stepSizeText, simulationEndTimeText, simulationSpeedText1, simulationSpeedText2, topText01, topText02, errorText1, errorText2;
     private JTextField xInput, yInput, zInput, v1Input, v2Input, v3Input, stepSizeInput, simulationEndTimeInput, simulationSpeedInput;
     private JComboBox solverChooser;

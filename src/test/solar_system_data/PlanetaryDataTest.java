@@ -9,6 +9,21 @@ import physics.vectors.StateVector;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/*
+This class tests getter methods on a static attribute.
+To do so, the static attribute of the PlanetaryData class is saved in a local variable
+
+
+This class also tests the indexOf method which returns the index of the given String
+representing the name of a celestialBody contained in the array of celestial bodies.
+Two input partitions can be identified :
+
+1- The given String is the name of a celestialBody : should return the correct index
+
+2- The given String is not the name of a celestialBody : should return an exception
+
+ */
+
 class PlanetaryDataTest {
 
     private static CelestialBody[] celestialBodies;

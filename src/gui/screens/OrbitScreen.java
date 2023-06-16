@@ -18,8 +18,9 @@ public class OrbitScreen extends JPanel {
     private Image normandy;
     private Image titan;
     private int currentIndex = 0;
+    private int testCounter = 0;
     private ScheduledExecutorService executor;
-    private int[][] testPath = {{XCENTER, YCENTER - 200}, {XCENTER - 200, YCENTER}, {XCENTER, YCENTER + 200}, {XCENTER + 200, YCENTER}};
+    private int[][] testPath = {{0, -200}, {-200, 0}, {0, 200}, {200, 0}};
 
     public OrbitScreen() {
         //Assign the images to the variables titan and normandy
@@ -50,7 +51,7 @@ public class OrbitScreen extends JPanel {
         System.out.println(getHeight());
 
         // Schedule a task with a fixed delay of 1 millisecond
-        ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+        executor = Executors.newSingleThreadScheduledExecutor();
         executor.scheduleAtFixedRate(() -> {
             if (!StartScreen.freezeSimulation) {
                 showOrbit();
@@ -65,20 +66,26 @@ public class OrbitScreen extends JPanel {
         Graphics2D g2d = (Graphics2D) g;
 
         //Titan
-        g2d.drawImage(titan, XCENTER - 50, YCENTER - 50, 100, 100, null);
+        g2d.drawImage(titan, XCENTER - 100, YCENTER - 100, 200, 200, null);
 
         //Probe
-        g2d.drawImage(normandy, testPath[currentIndex][0] - 20, testPath[currentIndex][1] - 20, 25, 25, null);
+        g2d.drawImage(normandy, XCENTER + testPath[currentIndex][0] - 20, YCENTER + testPath[currentIndex][1] - 20, 25, 25, null);
     }
 
     public void showOrbit() {
         currentIndex++;
 
         if (currentIndex >= testPath.length) {
+            testCounter++;
             currentIndex = 0;
-//            executor.shutdown();        //keep this as last, stops the simulationScreen from doing anything
+//            executor.shutdown();        //keep this as last, stops the orbitScreen from doing anything
         }
 
+        if(testCounter > 5) {
+            LandingScreen landingScreen = new LandingScreen();
+            frame.dispose();
+            executor.shutdown();
+        }
         repaint();
     }
 }

@@ -8,6 +8,14 @@ import physics.vectors.Vector;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/*
+This class tests the CelestialBody class by constructing a celestialBody instance before each test.
+This step happens with the setUp method where an arbitrary celestialBody is initiated.
+After each test is done the changes done on the testing instance are unmade.
+To do so, the instance is set to null after each test with the tearDown method before
+rebuilding it with the same constructor parameters using setUp.
+ */
+
 class CelestialBodyTest {
 
     private CelestialBody celestialBody;

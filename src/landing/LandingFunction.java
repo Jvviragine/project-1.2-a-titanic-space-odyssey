@@ -16,10 +16,8 @@ public class LandingFunction {
     public LanderState LanderStep(LanderState state, double h){
         Vector newPos = calculateNewPos(state, h);
         Vector newVel = calculateNewVel(state, h);
-        double newTheta = calculateNewTheta(newPos);
         StateVector newState = new StateVector(new Vector[]{newPos, newVel});
-        double u = 0;
-        return new LanderState(newState, newTheta, u);
+        return new LanderState(newState, state.getU(),state.getTorque());
     }
 
 
@@ -29,28 +27,37 @@ public class LandingFunction {
 
     public Vector calculateNewVel(LanderState state, double h){
         Vector acc = getAcceleration(state);
+        //System.out.println(acc.toString());
         return state.getVel().add(acc.multiply(h));
     }
 
     public Vector getAcceleration(LanderState state){
-        Vector acc = new Vector(new double[2]);
-        double x = state.getU()*Math.sin(state.getTheta());
-        double y = state.getU()*Math.cos(state.getTheta()) + G;
+        Vector acc = new Vector(new double[3]);
+        double x = state.getU()*Math.sin(state.getThetaPos());
+        double y = state.getU()*Math.cos(state.getThetaPos()) - G;
         acc.set(0, x);
         acc.set(1, y);
+        acc.set(2, state.getTorque());
         return acc;
     }
 
-    public double calculateNewTheta(Vector v){
-        return Math.atan(v.get(1)/v.get(0));
+    public double calculateTheta(LanderState state){
+        double theta = Math.atan((state.getPos().get(1)-G)/state.getPos().get(0));
+        return theta;
     }
+
+    public double calculateU(LanderState state, double theta){
+        double u = -state.getPos().get(0)/Math.sin(theta);
+        return u;
+    }
+
 
     public static void main(String[] args) {
         LandingFunction f = new LandingFunction();
-        StateVector s = new StateVector(new Vector[]{new Vector(new double[]{0.01,0.015}), new Vector(new double[]{0,0})});
-        LanderState l = new LanderState(s, 0, 0);
+        StateVector s = new StateVector(new Vector[]{new Vector(new double[]{1,15,0}), new Vector(new double[]{0,0,0})});
+        LanderState l = new LanderState(s,  1.4,1);
         for(int i = 0;i<10;i++){
-            l = f.LanderStep(l, 0.5);
+            l = f.LanderStep(l, 1);
             System.out.println(l.getTotalState());
         }
     }

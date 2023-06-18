@@ -51,7 +51,7 @@ public class LanderState {
     }
 
     public String getStateToString(){
-        return state.toString(state);
+        return state.toString();
     }
 
     public Vector getPos(){

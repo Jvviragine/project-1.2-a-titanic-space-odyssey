@@ -143,11 +143,11 @@ public class StateVector {
         return true;
     }
 
-    public String toString(StateVector sv){
+    public String toString(){
         String re = "";
-        for(int i = 0; i<sv.numberOfVectors;i++){
-            for(int j = 0; j<sv.numberOfDimensions;j++){
-                re += sv.getVector(i).get(j);
+        for(int i = 0; i<this.numberOfVectors;i++){
+            for(int j = 0; j<this.numberOfDimensions;j++){
+                re += this.getVector(i).get(j);
                 re += ", ";
             }
             re += "\n";

@@ -45,6 +45,10 @@ distance(Vector v) :
     - this == v
     - this != v
 
+dotProduct(Vector v) :
+    - this.getDimension() == v.getDimension()
+    - this.getDimension() != v.getDimension()
+
 isEqual(Vector v)
     - this == v
     - this != v
@@ -220,6 +224,23 @@ class VectorTest {
 
         output = v.distance(u);
         assertEquals(Math.sqrt(15.25), output);
+    }
+
+    @Test
+    //covers dotProduct for vectors of the same dimension
+    void dotProductWithSameDimension() {
+        double expected = 0.0;
+        double output1 = u.dotProduct(v);
+        double output2 = v.dotProduct(u);
+        assertEquals(expected, output1);
+        assertEquals(expected, output2);
+    }
+
+    @Test
+    //covers dotProduct for vectors with different dimensions
+    void dotProductWithDifferentDimension() {
+        assertThrows(IllegalArgumentException.class, () -> u.dotProduct(w));
+        assertThrows(IllegalArgumentException.class, () -> w.dotProduct(u));
     }
 
     @Test

@@ -35,6 +35,8 @@ public class FeedbackController {
 
                 theta = f.calculateTheta(landerState);
                 u = f.calculateU(landerState, theta);
+                if(Math.abs(u)>Math.abs(10*G)) u=10*G;
+                System.out.println(u);
                 LanderState current = landerState;
                 //check if we are already at zero for one of the coordinates
                 if (landerState.getPos().get(0) == 0) {
@@ -62,42 +64,32 @@ public class FeedbackController {
                 descents.add(landerState);
             }
 
-
-
         //calculate the vector pointing to the target to get theta and calculate acceleration
         return descents;
 
 
     }
 
-
-    public double dotProduct(Vector v1, Vector v2){
-        double sum = 0;
-        for(int i = 0; i<v1.getDimension();i++){
-            sum += v1.get(i)*v2.get(i);
+    public double[][] getPath(){
+        ArrayList<LanderState> states = getLanding();
+        double[][] path = new double[states.size()][2];
+        for(int i = 0;i<states.size();i++){
+            path[i][0] = states.get(i).getPos().get(0);
+            path[i][1] = states.get(i).getPos().get(1);
         }
-        return sum;
+        return path;
     }
 
 
-    public Vector getDirectionVector(Vector point, Vector target){
-        Vector r = point.subtract(target);
-        return r;
-    }
-
-    public Vector getNorm(Vector v, double norm){
-        double magnitude = v.getMagnitude();
-        for(int i=0; i<v.getDimension();i++){
-            v.set(i, v.get(i)/magnitude);
-        }
-        v = v.multiply(norm);
-        return v;
-    }
 
     public static void main(String[] args) {
         StateVector s = new StateVector(new Vector[]{new Vector(new double[]{55, 20,0}), new Vector(new double[]{0,0,0})});
         LanderState l = new LanderState(s, 10*G, 0);
         FeedbackController controller = new FeedbackController(l);
+//        double[][] path = controller.getPath();
+//        for(int i = 0; i<path.length;i++){
+//            System.out.println(path[i][0]+" "+ path[i][1]);
+//        }
         ArrayList<LanderState> descents = controller.getLanding();
         for(int i = 0; i<descents.size();i++){
             System.out.println(descents.get(i).getStateToString());

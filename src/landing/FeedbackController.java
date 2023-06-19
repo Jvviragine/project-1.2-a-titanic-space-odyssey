@@ -10,8 +10,9 @@ public class FeedbackController {
     //Gravitational pull on Titan in m and km. If using km remember to convert at the begging if using meter convert at the end!!!
 
     //private double G = -1.352 * Math.pow(10,-3); // km/s² = N/kg
-    private final double G = -1.352; // m/s² = N/kg
+    private static final double G = -1.352; // m/s² = N/kg
     private Vector target = new Vector(new double[]{0,0});
+    private double h = 0.2;
 
     private LanderState landerState;
 
@@ -26,24 +27,46 @@ public class FeedbackController {
         LandingFunction f = new LandingFunction();
         ArrayList<LanderState> descents = new ArrayList<>();
         descents.add(landerState);
+        double theta = landerState.getThetaPos();
+        double u = landerState.getU();
+
+
+            while (landerState.getPos().get(0) != 0 || landerState.getPos().get(1) != 0) {
+
+                theta = f.calculateTheta(landerState);
+                u = f.calculateU(landerState, theta);
+                LanderState current = landerState;
+                //check if we are already at zero for one of the coordinates
+                if (landerState.getPos().get(0) == 0) {
+                    current = new LanderState(current.getState(), u, current.getTorque());
+                    current.setVel(new Vector(new double[]{0, current.getVel().get(1), current.getThetaVel()}));
+                }if (landerState.getPos().get(1) == 0) {
+                    current = new LanderState(current.getState(), u, current.getTorque());
+                    current.setVel(new Vector(new double[]{current.getVel().get(0), 0, current.getThetaVel()}));
+                } else {
+                    current = new LanderState(current.getState(), u, current.getTorque());
+                }
+                landerState = current;
+                current = f.LanderStep(current, h);
+
+
+                //check if the next state gets us underground or over our desired x
+                if (Math.signum(current.getPos().get(0)) != Math.signum(landerState.getPos().get(0))) {
+                    landerState.setVel(new Vector(new double[]{-landerState.getPos().get(0)/h, landerState.getVel().get(1), landerState.getThetaVel()}));
+                }
+                if(current.getPos().get(1) < 0){
+                    landerState.setVel(new Vector(new double[]{landerState.getVel().get(0), -landerState.getPos().get(1)/h, landerState.getThetaVel()}));
+                }
+                landerState = f.LanderStep(landerState, h);
+
+                descents.add(landerState);
+            }
+
+
 
         //calculate the vector pointing to the target to get theta and calculate acceleration
-        double theta = f.calculateTheta(landerState);
-        double u = f.calculateU(landerState, theta);
-        landerState.setThetaPos(theta);
-        landerState = new LanderState(landerState.getState(),u,landerState.getTorque());
-        landerState = f.LanderStep(landerState,1);
-        descents.add(landerState);
-
-         theta = f.calculateTheta(landerState);
-         u = f.calculateU(landerState, theta);
-        landerState.setThetaPos(theta);
-        landerState = new LanderState(landerState.getState(),u,landerState.getTorque());
-        landerState = f.LanderStep(landerState,1);
-        descents.add(landerState);
-
-
         return descents;
+
 
     }
 
@@ -72,8 +95,8 @@ public class FeedbackController {
     }
 
     public static void main(String[] args) {
-        StateVector s = new StateVector(new Vector[]{new Vector(new double[]{10,15,0}), new Vector(new double[]{0,0,0})});
-        LanderState l = new LanderState(s, 0, 0);
+        StateVector s = new StateVector(new Vector[]{new Vector(new double[]{55, 20,0}), new Vector(new double[]{0,0,0})});
+        LanderState l = new LanderState(s, 10*G, 0);
         FeedbackController controller = new FeedbackController(l);
         ArrayList<LanderState> descents = controller.getLanding();
         for(int i = 0; i<descents.size();i++){

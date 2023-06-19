@@ -22,6 +22,8 @@ public class LandingFunction {
 
 
     public Vector calculateNewPos(LanderState state, double h){
+        double theta = calculateTheta(state);
+        state.setThetaPos(theta);
         return state.getPos().add(state.getVel().multiply(h));
     }
 

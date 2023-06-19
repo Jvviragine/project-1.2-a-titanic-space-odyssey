@@ -62,6 +62,12 @@ public class LanderState {
         return state.getVector(1);
     }
 
+    public void setVel(Vector newVel){
+        StateVector n = new StateVector(new Vector[]{getPos(),newVel});
+        setState(n);
+    }
+
+
     public String getTotalState(){
         return "Position: " + getPos().toString() + "\n" + "Velocity: " + getVel().toString();
     }

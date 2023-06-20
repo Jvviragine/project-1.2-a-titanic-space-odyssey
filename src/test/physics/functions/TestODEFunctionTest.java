@@ -78,7 +78,7 @@ class TestODEFunctionTest {
     }
 
     @Test
-        //covers applyFunction for several multidimensional stateVector
+    //covers applyFunction for several multidimensional stateVector
     void testApplyFunctionWithSeveralMultidimensionalVector() {
         double tf = 6.0;
         Vector initialValueVector1 = new Vector(new double[]{1, 3});

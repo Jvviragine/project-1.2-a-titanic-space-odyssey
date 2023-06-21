@@ -40,7 +40,7 @@ public class LandingScreen extends JPanel {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
 
-        // Schedule a task with a custom delay in microseconds
+        //Update the screen with a delay in microseconds
         executor = Executors.newSingleThreadScheduledExecutor();
         executor.scheduleAtFixedRate(() -> {
             if (!StartScreen.freezeSimulation) {

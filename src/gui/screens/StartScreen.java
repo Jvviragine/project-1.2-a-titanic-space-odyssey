@@ -45,8 +45,7 @@ public class StartScreen extends JFrame implements ActionListener {
     public static StateVector initialProbeConditions;       //initial conditions for the probe, inputted by the user
     public static Solver finalSolver;                       //solver chosen by the user
     public static double h;                                 //step size in seconds
-    public static int simulationEndTime;                    //end time in seconds
-    public static int simulationSpeed;                      //simulation speed in interval (microseconds)
+    public static int simulationEndTime, simulationSpeed;   //end time in seconds, simulation interval in microseconds
 
     //The start screen, where the user can input custom values
     public StartScreen() {
@@ -65,14 +64,14 @@ public class StartScreen extends JFrame implements ActionListener {
         topText02.setHorizontalAlignment(JLabel.CENTER);
         panel.add(topText02);
 
-        //Error message to be printed when an invalid value inputted.
+        //Error message to be printed when an invalid value is inputted for doubles
         errorText1 = new JLabel("");
         errorText1.setBounds(30, 510, 500, 25);
         errorText1.setForeground(Color.RED);
         errorText1.setHorizontalAlignment(JLabel.CENTER);
         panel.add(errorText1);
 
-        //Error message to be printed when an invalid value inputted.
+        //Error message to be printed when an invalid value is inputted for integers
         errorText2 = new JLabel("");
         errorText2.setBounds(30, 530, 500, 25);
         errorText2.setForeground(Color.RED);

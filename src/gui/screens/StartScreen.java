@@ -19,8 +19,11 @@ import javax.swing.*;
 //Also gives the option to freeze the simulation at the inputted time.
 public class StartScreen extends JFrame implements ActionListener {
     private JFrame frame;
-    private JLabel solverText, xText, yText, zText, v1Text, v2Text, v3Text, stepSizeText, simulationEndTimeText, simulationSpeedText1, simulationSpeedText2, topText01, topText02, errorText1, errorText2;
-    private JTextField xInput, yInput, zInput, v1Input, v2Input, v3Input, stepSizeInput, simulationEndTimeInput, simulationSpeedInput;
+    private JLabel solverText, xText, yText, zText, v1Text, v2Text, v3Text,
+                   stepSizeText, simulationEndTimeText, simulationSpeedText1, simulationSpeedText2,
+                   topText01, topText02, errorText1, errorText2;
+    private JTextField xInput, yInput, zInput, v1Input, v2Input, v3Input,
+                   stepSizeInput, simulationEndTimeInput, simulationSpeedInput;
     private JComboBox solverChooser;
     private String[] solverOptions = {"Euler", "RK2", "RK3", "RK4"};
     private JButton startButton;
@@ -33,7 +36,7 @@ public class StartScreen extends JFrame implements ActionListener {
                                           probeInitialConditions.getVector(1).get(0),       //v1
                                           probeInitialConditions.getVector(1).get(1),       //v2
                                           probeInitialConditions.getVector(1).get(2),       //v3
-                                          1800, 78892315, 500};                                   //step size, end time and time interval
+                                          1800, 78892315, 500};           //step size, end time and time interval
     private final int FRAME_WIDTH = 600;
     private final int FRAME_HEIGHT = 600;
 

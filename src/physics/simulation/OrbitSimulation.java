@@ -118,6 +118,10 @@ public class OrbitSimulation {
     public static void main(String[] args) {
         OrbitSimulation sim = new OrbitSimulation();
         List<List<StateVector>> orb = sim.orbitSimulation();
+
+
+
+        /*
         System.out.println(orb.get(11).size());
         for(int i = 16157; i<16159; i++){
             System.out.print("Probe position: ");
@@ -130,7 +134,7 @@ public class OrbitSimulation {
             System.out.println(orb.get(8).get(i).getVector(0).get(2) + " ");
             System.out.println("distance: " + orb.get(8).get(i).getVector(0).distance(orb.get(11).get(i).getVector(0)));
         }
-
+        */
     }
 
 }

@@ -192,6 +192,7 @@ public class SolarSystemPhysicsSimulation {
 
     // MAIN for Testing
     public static void main(String[] args) {
+        /*
         double [] vector1 = new double[]{1,2,3};
         double [] vector2 = new double[]{4,5,6};
         Vector u = new Vector(vector1);
@@ -213,5 +214,23 @@ public class SolarSystemPhysicsSimulation {
         String [] planets = new String[]{"planet1","planet2"};
 
         SolarSystemPhysicsSimulation mySystem = new SolarSystemPhysicsSimulation(svs,masses,planets);
+
+         */
+
+        // Simulate Celestial Orbits for RunTime Experiment
+
+        // Instance of the Solvers
+        Solver euler = new EulerSolver();
+        Solver rk2 = new RK2Solver();
+        Solver rk3 = new RK3Solver();
+        Solver rk4 = new RK4Solver();
+
+        // Instace of the Solar Systems
+        SolarSystemPhysicsSimulation mySolarSystem_Euler = new SolarSystemPhysicsSimulation(PlanetaryData.getCelestialBodiesStateVector(), PlanetaryData.getCelestialBodiesMasses(), PlanetaryData.getCelestialBodyNames(), euler);
+        SolarSystemPhysicsSimulation mySolarSystem_RK2 = new SolarSystemPhysicsSimulation(PlanetaryData.getCelestialBodiesStateVector(), PlanetaryData.getCelestialBodiesMasses(), PlanetaryData.getCelestialBodyNames(), rk2);
+        SolarSystemPhysicsSimulation mySolarSystem_RK3 = new SolarSystemPhysicsSimulation(PlanetaryData.getCelestialBodiesStateVector(), PlanetaryData.getCelestialBodiesMasses(), PlanetaryData.getCelestialBodyNames(), rk3);
+        SolarSystemPhysicsSimulation mySolarSystem_Rk4 = new SolarSystemPhysicsSimulation(PlanetaryData.getCelestialBodiesStateVector(), PlanetaryData.getCelestialBodiesMasses(), PlanetaryData.getCelestialBodyNames(), rk4);
+
+
     }
 }

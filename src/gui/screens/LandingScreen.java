@@ -1,6 +1,10 @@
 package gui.screens;
 
 import gui.helper_classes.ImageLoader;
+import landing.FeedbackController;
+import landing.LanderState;
+import physics.vectors.StateVector;
+import physics.vectors.Vector;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,6 +13,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import static gui.screens.SimulationScreen.*;
+import static landing.FeedbackController.G;
 
 public class LandingScreen extends JPanel {
 
@@ -19,10 +24,13 @@ public class LandingScreen extends JPanel {
 
     private int pathIndex = 0;
 
+    StateVector s = new StateVector(new Vector[]{new Vector(new double[]{55, 20,0}), new Vector(new double[]{0,0,0})});
+    LanderState l = new LanderState(s, 10*G, 0);
+    FeedbackController controller = new FeedbackController(l);
+
     private ScheduledExecutorService executor;
 
-    private int[][] testPath = {{0, -400}, {0, -350}, {0, -300}, {0, -250}, {0, -200}, {0, -150}, {0, -100}, {0, -50},
-                                {0,0}, {0, 50}, {0, 100}, {0, 150}, {0, 200}, {0, 250}};
+    private double[][] landingPath = controller.getPath();
 
     public LandingScreen() {
         //Assign the probe image to normandy
@@ -47,10 +55,9 @@ public class LandingScreen extends JPanel {
                 showLanding();
             }
             repaint();
-        }, 0, StartScreen.simulationSpeed * 30000, TimeUnit.MICROSECONDS);
+        }, 0, StartScreen.simulationSpeed * 5000, TimeUnit.MICROSECONDS);
     }
 
-    @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
@@ -60,13 +67,13 @@ public class LandingScreen extends JPanel {
         g2d.fillRect(0, YCENTER + 250, SCREEN_WIDTH, SCREEN_HEIGHT);
 
         //Probe
-        g2d.drawImage(normandy, XCENTER + testPath[pathIndex][0] - 20, YCENTER + testPath[pathIndex][1] - 20, 60, 60, null);
+        g2d.drawImage(normandy, (int) (XCENTER + landingPath[pathIndex][0] - 20), (int) (YCENTER + landingPath[pathIndex][1] - 20), 60, 60, null);
     }
 
     public void showLanding() {
         pathIndex++;
 
-        if(pathIndex > testPath.length - 1) {
+        if(pathIndex > landingPath.length - 1) {
             pathIndex = 0;
         }
 

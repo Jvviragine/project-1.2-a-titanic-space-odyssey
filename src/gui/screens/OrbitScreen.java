@@ -102,6 +102,7 @@ public class OrbitScreen extends JPanel implements ActionListener {
 
     @Override
     protected void paintComponent(Graphics g) {
+        panel.updateUI();
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
 

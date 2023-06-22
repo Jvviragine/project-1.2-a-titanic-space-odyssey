@@ -1,5 +1,6 @@
 package gui.screens;
 
+import gui.data.OrbitList;
 import gui.helper_classes.ImageLoader;
 import landing.FeedbackController;
 import landing.LanderState;
@@ -13,24 +14,21 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import static gui.screens.SimulationScreen.*;
-import static landing.FeedbackController.G;
 
 public class LandingScreen extends JPanel {
 
     private JFrame frame;
+
+    private int titanSurfaceY = YCENTER + 250;
 
     private ImageLoader imageLoader = new ImageLoader();
     private Image normandy;
 
     private int pathIndex = 0;
 
-    StateVector s = new StateVector(new Vector[]{new Vector(new double[]{55, 20,0}), new Vector(new double[]{0,0,0})});
-    LanderState l = new LanderState(s, 10*G, 0);
-    FeedbackController controller = new FeedbackController(l);
-
     private ScheduledExecutorService executor;
 
-    private double[][] landingPath = controller.getPath();
+    private int[][] landingPath = OrbitList.getLandingPath();
 
     public LandingScreen() {
         //Assign the probe image to normandy
@@ -54,7 +52,6 @@ public class LandingScreen extends JPanel {
             if (!StartScreen.freezeSimulation) {
                 showLanding();
             }
-            repaint();
         }, 0, StartScreen.simulationSpeed * 5000, TimeUnit.MICROSECONDS);
     }
 
@@ -64,17 +61,22 @@ public class LandingScreen extends JPanel {
 
         //Titan
         g2d.setColor(Color.GRAY);
-        g2d.fillRect(0, YCENTER + 250, SCREEN_WIDTH, SCREEN_HEIGHT);
+        g2d.fillRect(0, titanSurfaceY, SCREEN_WIDTH, SCREEN_HEIGHT);
+
+        //Landing zone
+        g2d.setColor(Color.RED);
+        g2d.fillRect(XCENTER - 25, titanSurfaceY, 50, 20);
+        g2d.drawString("Landing zone", XCENTER - 35, titanSurfaceY + 30);
 
         //Probe
-        g2d.drawImage(normandy, (int) (XCENTER + landingPath[pathIndex][0] - 20), (int) (YCENTER + landingPath[pathIndex][1] - 20), 60, 60, null);
+        g2d.drawImage(normandy, XCENTER + landingPath[pathIndex][0] - 30, titanSurfaceY - landingPath[pathIndex][1] - 35, 60, 60, null);
     }
 
     public void showLanding() {
         pathIndex++;
 
-        if(pathIndex > landingPath.length - 1) {
-            pathIndex = 0;
+        if(pathIndex >= landingPath.length - 1) {
+            executor.shutdown();
         }
 
         repaint();

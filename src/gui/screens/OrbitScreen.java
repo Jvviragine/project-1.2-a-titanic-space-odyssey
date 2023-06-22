@@ -20,8 +20,10 @@ public class OrbitScreen extends JPanel implements ActionListener {
     private JTextField xTextInput, yTextInput;
     private JButton startButton;
 
+    //Need to adjust these to be actual default values
     private double defaultXCoordinate = 500000.0;
     private double defaultYCoordinate = 300000.0;
+
     public static double landingX, landingY;
 
     private boolean allInputsValid;

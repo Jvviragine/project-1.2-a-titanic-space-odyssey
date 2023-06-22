@@ -2,10 +2,6 @@ package gui.screens;
 
 import gui.data.OrbitList;
 import gui.helper_classes.ImageLoader;
-import landing.FeedbackController;
-import landing.LanderState;
-import physics.vectors.StateVector;
-import physics.vectors.Vector;
 
 import javax.swing.*;
 import java.awt.*;

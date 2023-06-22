@@ -30,20 +30,23 @@ public class RK3Solver implements Solver{
         //List of states at each step
         ArrayList<StateVector> stateVectors = new ArrayList<>();
 
-        for(double t = t0; t<tf; t += stepSize) {
+        //get the number of iterations from t0, tf and the stepSize
+        int n = getStepNumber(t0, tf, stepSize);
+
+        for(int i = 0; i < n; i++) {
 
             //derivative, f(t,y) in next calculation step
-            StateVector fty = function.applyFunction(currentState, t);
+            StateVector fty = function.applyFunction(currentState, t0 + i*stepSize);
 
             //k1 = h*f(t,y)
             StateVector k1 = fty.multiply(stepSize);
 
             //k2 = h*f(t + 1/3*h,y + 1/3*k1), getting the derivative than calculating k2
-            StateVector fty2 = function.applyFunction(currentState.add(k1.multiply(0.333333333333334)), t + 0.333333333333333*stepSize);
+            StateVector fty2 = function.applyFunction(currentState.add(k1.multiply(0.333333333333334)), t0 + i*stepSize + 0.333333333333333*stepSize);
             StateVector k2 = fty2.multiply(stepSize);
 
             //k3 = h*f(t + 2/3*h, y + 2/3*k2), getting the derivative than calculating k3
-            StateVector fty3 = function.applyFunction(currentState.add(k2.multiply(0.666666666666667)), t + 0.666666666666667*stepSize);
+            StateVector fty3 = function.applyFunction(currentState.add(k2.multiply(0.666666666666667)), t0 + i*stepSize + 0.666666666666667*stepSize);
             StateVector k3 = fty3.multiply(stepSize);
 
             //yn+1 = y + 1/4*(k1 + 3*k3), calculating new y and updating the current state
@@ -81,25 +84,28 @@ public class RK3Solver implements Solver{
         StateVector currentStates[] = initialConditions;
         StateVector nextStates[] = new StateVector[initialConditions.length];
 
+        //get the number of iterations from t0, tf and the stepSize
+        int n = getStepNumber(t0, tf, stepSize);
+
         //Solve Euler for the time period tf-t0
-        for(double t=t0; t<tf; t+=stepSize){
+        for(int i = 0; i < n; i++){
 
-            for(int i = 0; i < initialConditions.length; i++){
+            for(int j = 0; j < initialConditions.length; j++){
 
-                StateVector currentState = currentStates[i];
+                StateVector currentState = currentStates[j];
 
                 //derivative, f(t,y) in next calculation step
-                StateVector fty = function.applyFunction(currentState, t);
+                StateVector fty = function.applyFunction(currentState, t0 + i*stepSize);
 
                 //k1 = h*f(t,y)
                 StateVector k1 = fty.multiply(stepSize);
 
                 //k2 = h*f(t + 1/3*h,y + 1/3*k1), getting the derivative than calculating k2
-                StateVector fty2 = function.applyFunction(currentState.add(k1.multiply(0.333333333333334)), t + 0.333333333333333*stepSize);
+                StateVector fty2 = function.applyFunction(currentState.add(k1.multiply(0.333333333333334)), t0 + i*stepSize + 0.333333333333333*stepSize);
                 StateVector k2 = fty2.multiply(stepSize);
 
                 //k3 = h*f(t + 2/3*h, y + 2/3*k2), getting the derivative than calculating k3
-                StateVector fty3 = function.applyFunction(currentState.add(k2.multiply(0.666666666666667)), t + 0.666666666666667*stepSize);
+                StateVector fty3 = function.applyFunction(currentState.add(k2.multiply(0.666666666666667)), t0 + i*stepSize + 0.666666666666667*stepSize);
                 StateVector k3 = fty3.multiply(stepSize);
 
                 //yn+1 = y + 1/4*(k1 + 3*k3), calculating new y and updating the current state
@@ -110,10 +116,10 @@ public class RK3Solver implements Solver{
                 stateVectors.add(currentState);
 
                 //Set y1 to y0 for next iteration
-                nextStates[i] = currentState;
+                nextStates[j] = currentState;
 
                 //Add current state to all existing states
-                allPlanetStateVectors.get(i).add(nextStates[i]);
+                allPlanetStateVectors.get(j).add(nextStates[j]);
 
             }
             currentStates = nextStates;
@@ -147,4 +153,52 @@ public class RK3Solver implements Solver{
         return allStates;
     }
 
+    /**
+     * This method computes the number of iterations needed to reach tf
+     * starting from t0 by adding one step size.
+     * It is used to stop the solver at the correct step which sometimes
+     * failed because of the double inaccuracy caused when we used the
+     * actual time interval.
+     * @param t0
+     * @param tf
+     * @param stepSize
+     * @return n = (tf - t0) / stepSize
+     */
+    @Override
+    public int getStepNumber(double t0, double tf, double stepSize) {
+        //initialize the variables for t0, tf and the step size
+        double scaled_t0 = t0;
+        double scaled_tf = tf;
+        double scaledStepSize = stepSize;
+
+        //multiply by 10 the step size along with t0 and tf until the step size has no decimal values
+        while ((int) scaledStepSize != scaledStepSize) {
+            scaled_t0 *= 10;
+            scaled_tf *= 10;
+            scaledStepSize *= 10;
+        }
+
+        //cast the doubles to int because their decimal part is now null
+        int intScaled_t0 = (int) scaled_t0;
+        int intScaled_tf = (int) scaled_tf;
+        int intScaledStepSize = (int) scaledStepSize;
+
+        //check if the t0 is smaller or equal to tf
+        if (intScaled_tf < intScaled_t0) {
+            throw new IllegalArgumentException("tf must be bigger or equal to t0");
+
+        //check if the step size is bigger than 0
+        } else if (intScaledStepSize <= 0) {
+            throw new IllegalArgumentException("Step size must be positive");
+
+        //check if tf is reachable from t0 by only adding hole step sizes
+        } else if ((intScaled_tf - intScaled_t0) % intScaledStepSize != 0) {
+            throw new IllegalArgumentException("The rang from t0 to tf must be dividable by the step size without any remainder");
+
+        } else {
+            //calculate n or the number of iterations needed to reach tf from t0 by adding one step size
+            int n = (intScaled_tf - intScaled_t0)/intScaledStepSize;
+            return n;
+        }
+    }
 }

@@ -28,26 +28,29 @@ public class RK4Solver implements Solver{
         //List of states at each step
         ArrayList<StateVector> stateVectors = new ArrayList<>();
 
+        //get the number of iterations from t0, tf and the stepSize
+        int n = getStepNumber(t0, tf, stepSize);
+
         // Iterate through the Step Sizes until we reach the Final one
-        for(double t=t0; t<tf; t+=stepSize){
+        for(int i = 0; i < n; i++){
 
             // Euler Step - K1
-            StateVector k1 = function.applyFunction(currentState, t).multiply(stepSize);
+            StateVector k1 = function.applyFunction(currentState, t0 + i*stepSize).multiply(stepSize);
 
             // Second Approximation - K2
-            double k2Time = t + (0.5)*stepSize;
+            double k2Time = t0 + i*stepSize + (0.5)*stepSize;
             StateVector k2FunctionStateVector = currentState.add(k1.multiply(0.5));
             StateVector k2 = function.applyFunction(k2FunctionStateVector, k2Time).multiply(stepSize);
             StateVector scalledK2 = k2.multiply(2.0);
 
             // Third Approximation - K3
-            double k3Time = t + (0.5 * stepSize);
+            double k3Time = t0 + i*stepSize + (0.5 * stepSize);
             StateVector k3FunctionStateVector = currentState.add(k2.multiply(0.5));
             StateVector k3 = function.applyFunction(k3FunctionStateVector, k3Time).multiply(stepSize);
             StateVector scaledK3 = k3.multiply(2.0);
 
             // Fourth Approximation - K4
-            double k4Time = t + stepSize;
+            double k4Time = t0 + i*stepSize + stepSize;
             StateVector k4FunctionStateVector = currentState.add(k3);
             StateVector k4 = function.applyFunction(k4FunctionStateVector, k4Time).multiply(stepSize);
 
@@ -93,30 +96,33 @@ public class RK4Solver implements Solver{
         StateVector currentStates[] = initialConditions;
         StateVector nextStates[] = new StateVector[initialConditions.length];
 
+        //get the number of iterations from t0, tf and the stepSize
+        int n = getStepNumber(t0, tf, stepSize);
+
         //Solve Euler for the time period tf-t0
-        for(double t=t0; t<tf; t+=stepSize){
+        for(int i = 0; i < n; i++){
 
-            for(int i = 0; i < initialConditions.length; i++){
+            for(int j = 0; j < initialConditions.length; j++){
 
-                StateVector currentState = currentStates[i];
+                StateVector currentState = currentStates[j];
 
                 // Euler Step - K1
-                StateVector k1 = function.applyFunction(currentState, t).multiply(stepSize);
+                StateVector k1 = function.applyFunction(currentState, t0 + i*stepSize).multiply(stepSize);
 
                 // Second Approximation - K2
-                double k2Time = t + (0.5)*stepSize;
+                double k2Time = t0 + i*stepSize + (0.5)*stepSize;
                 StateVector k2FunctionStateVector = currentState.add(k1.multiply(0.5));
                 StateVector k2 = function.applyFunction(k2FunctionStateVector, k2Time).multiply(stepSize);
                 StateVector scalledK2 = k2.multiply(2.0);
 
                 // Third Approximation - K3
-                double k3Time = t + (0.5 * stepSize);
+                double k3Time = t0 + i*stepSize + (0.5 * stepSize);
                 StateVector k3FunctionStateVector = currentState.add(k2.multiply(0.5));
                 StateVector k3 = function.applyFunction(k3FunctionStateVector, k3Time).multiply(stepSize);
                 StateVector scaledK3 = k3.multiply(2.0);
 
                 // Fourth Approximation - K4
-                double k4Time = t + stepSize;
+                double k4Time = t0 + i*stepSize + stepSize;
                 StateVector k4FunctionStateVector = currentState.add(k3);
                 StateVector k4 = function.applyFunction(k4FunctionStateVector, k4Time).multiply(stepSize);
 
@@ -129,10 +135,10 @@ public class RK4Solver implements Solver{
                 StateVector averagedScaledStateVector = scaledSumOfKs.multiply(0.166666666666667);
 
                 //Set y1 to y0 for next iteration
-                nextStates[i] = currentState.add(averagedScaledStateVector);
+                nextStates[j] = currentState.add(averagedScaledStateVector);
 
                 //Add current state to all existing states
-                allPlanetStateVectors.get(i).add(nextStates[i]);
+                allPlanetStateVectors.get(j).add(nextStates[j]);
 
             }
             currentStates = nextStates;
@@ -166,6 +172,55 @@ public class RK4Solver implements Solver{
      */
     public ArrayList<StateVector> getAllStates(){
         return allStates;
+    }
+
+    /**
+     * This method computes the number of iterations needed to reach tf
+     * starting from t0 by adding one step size.
+     * It is used to stop the solver at the correct step which sometimes
+     * failed because of the double inaccuracy caused when we used the
+     * actual time interval.
+     * @param t0
+     * @param tf
+     * @param stepSize
+     * @return n = (tf - t0) / stepSize
+     */
+    @Override
+    public int getStepNumber(double t0, double tf, double stepSize) {
+        //initialize the variables for t0, tf and the step size
+        double scaled_t0 = t0;
+        double scaled_tf = tf;
+        double scaledStepSize = stepSize;
+
+        //multiply by 10 the step size along with t0 and tf until the step size has no decimal values
+        while ((int) scaledStepSize != scaledStepSize) {
+            scaled_t0 *= 10;
+            scaled_tf *= 10;
+            scaledStepSize *= 10;
+        }
+
+        //cast the doubles to int because their decimal part is now null
+        int intScaled_t0 = (int) scaled_t0;
+        int intScaled_tf = (int) scaled_tf;
+        int intScaledStepSize = (int) scaledStepSize;
+
+        //check if the t0 is smaller or equal to tf
+        if (intScaled_tf < intScaled_t0) {
+            throw new IllegalArgumentException("tf must be bigger or equal to t0");
+
+        //check if the step size is bigger than 0
+        } else if (intScaledStepSize <= 0) {
+            throw new IllegalArgumentException("Step size must be positive");
+
+        //check if tf is reachable from t0 by only adding hole step sizes
+        } else if ((intScaled_tf - intScaled_t0) % intScaledStepSize != 0) {
+            throw new IllegalArgumentException("The rang from t0 to tf must be dividable by the step size without any remainder");
+
+        } else {
+            //calculate n or the number of iterations needed to reach tf from t0 by adding one step size
+            int n = (intScaled_tf - intScaled_t0)/intScaledStepSize;
+            return n;
+        }
     }
 
 }

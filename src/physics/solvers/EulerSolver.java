@@ -36,10 +36,13 @@ public class EulerSolver implements Solver{
 
         StateVector currentState = initialCondition;
 
+        //get the number of iterations from t0, tf and the stepSize
+        int n = getStepNumber(t0, tf, stepSize);
+
         //Solve Euler for the time period tf-t0
-        for(double t=t0; t<tf; t+=stepSize){
+        for(int i = 0; i < n; i++){
             //Get derivative, f(t,y) of the function
-            StateVector derivative = function.applyFunction(currentState,t);
+            StateVector derivative = function.applyFunction(currentState,t0 + i*stepSize);
 
             //h * f(t,y)
             StateVector hfty = derivative.multiply(stepSize);
@@ -88,15 +91,18 @@ public class EulerSolver implements Solver{
         StateVector currentStates[] = initialConditions;
         StateVector nextStates[] = new StateVector[initialConditions.length];
 
+        //get the number of iterations from t0, tf and the stepSize
+        int n = getStepNumber(t0, tf, stepSize);
+
         //Solve Euler for the time period tf-t0
-        for(double t=t0; t<tf; t+=stepSize){
+        for(int i = 0; i < n; i++){
 
-            for(int i = 0; i < initialConditions.length; i++){
+            for(int j = 0; j < initialConditions.length; j++){
 
-                StateVector currentState = currentStates[i];
+                StateVector currentState = currentStates[j];
 
                 //Get derivative, f(t,y) of the function
-                StateVector derivative = function.applyFunction(currentState,t);
+                StateVector derivative = function.applyFunction(currentState,t0 + i*stepSize);
 
                 //h * f(t,y)
                 StateVector hfty = derivative.multiply(stepSize);
@@ -105,10 +111,10 @@ public class EulerSolver implements Solver{
                 StateVector y1 = currentState.add(hfty);
 
                 //Set y1 to y0 for next iteration
-                nextStates[i] = y1;
+                nextStates[j] = y1;
 
                 //Add current state to all existing states
-                allPlanetStateVectors.get(i).add(y1);
+                allPlanetStateVectors.get(j).add(y1);
 
             }
             currentStates = nextStates;
@@ -144,6 +150,54 @@ public class EulerSolver implements Solver{
         return states;
     }
 
+    /**
+     * This method computes the number of iterations needed to reach tf
+     * starting from t0 by adding one step size.
+     * It is used to stop the solver at the correct step which sometimes
+     * failed because of the double inaccuracy caused when we used the
+     * actual time interval.
+     * @param t0
+     * @param tf
+     * @param stepSize
+     * @return n = (tf - t0) / stepSize
+     */
+    @Override
+    public int getStepNumber(double t0, double tf, double stepSize) {
+        //initialize the variables for t0, tf and the step size
+        double scaled_t0 = t0;
+        double scaled_tf = tf;
+        double scaledStepSize = stepSize;
+
+        //multiply by 10 the step size along with t0 and tf until the step size has no decimal values
+        while ((int) scaledStepSize != scaledStepSize) {
+            scaled_t0 *= 10;
+            scaled_tf *= 10;
+            scaledStepSize *= 10;
+        }
+
+        //cast the doubles to int because their decimal part is now null
+        int intScaled_t0 = (int) scaled_t0;
+        int intScaled_tf = (int) scaled_tf;
+        int intScaledStepSize = (int) scaledStepSize;
+
+        //check if the t0 is smaller or equal to tf
+        if (intScaled_tf < intScaled_t0) {
+            throw new IllegalArgumentException("tf must be bigger or equal to t0");
+
+        //check if the step size is bigger than 0
+        } else if (intScaledStepSize <= 0) {
+            throw new IllegalArgumentException("Step size must be positive");
+
+        //check if tf is reachable from t0 by only adding hole step sizes
+        } else if ((intScaled_tf - intScaled_t0) % intScaledStepSize != 0) {
+            throw new IllegalArgumentException("The rang from t0 to tf must be dividable by the step size without any remainder");
+
+        } else {
+            //calculate n or the number of iterations needed to reach tf from t0 by adding one step size
+            int n = (intScaled_tf - intScaled_t0)/intScaledStepSize;
+            return n;
+        }
+    }
 
     // Testing the Euler Solver for y'=y, and y(0)=1, for which we know the exact solution y=eˆt
     public static void main(String[] args) {
@@ -152,12 +206,12 @@ public class EulerSolver implements Solver{
         Function dydt = new TestODEDerivativeFunction();
 
         // Defining the Initial Condition y(0)=1
-        double t0 = 0, tf = 1;
+        double t0 = 0, tf = 6;
         Vector y0 = new Vector(new double[]{1}); // Vector that represents y(o)=1
         StateVector svY0 = new StateVector(new Vector[]{y0}); // Embeds this Vector into a State Vector
 
         // Defines the step Size
-        double h = 0.000001;
+        double h = 0.1;
 
         // Calls the Euler Solver to Numerically solve y'=t with y(0)=1 and h=0.1
         Solver eulerSolver = new EulerSolver();

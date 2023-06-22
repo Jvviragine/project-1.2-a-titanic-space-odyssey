@@ -1,13 +1,18 @@
 package gui.data;
 
 import gui.screens.StartScreen;
+import landing.FeedbackController;
+import landing.LanderState;
 import physics.simulation.SolarSystemPhysicsSimulation;
 import physics.simulation.TripSimulation;
 import physics.vectors.StateVector;
+import physics.vectors.Vector;
 import solar_system_data.InitialConditions;
 import solar_system_data.PlanetaryData;
 
 import java.util.List;
+
+import static landing.FeedbackController.G;
 
 /**
  * Separates, scales and assigns all orbits to the different planets
@@ -17,13 +22,19 @@ import java.util.List;
 public class OrbitList {
     private static final int SCREEN_WIDTH = 1536;
     private static final int SCREEN_HEIGHT = 801;
-    //private static SolarSystemPhysicsSimulation simulation = new SolarSystemPhysicsSimulation(PlanetaryData.getCelestialBodiesStateVector(),PlanetaryData.getCelestialBodiesMasses(),PlanetaryData.getCelestialBodyNames(), StartScreen.finalSolver);
+
     private static TripSimulation sim = new TripSimulation();
-    //private static List<List<StateVector>> planetPaths = simulation.simulateOrbitsWithProbe(InitialConditions.getProbeInitialState(),StartScreen.simulationEndTime,StartScreen.h);
     private static List<List<StateVector>> planetPaths = sim.simulateTrip();
+
+    private static StateVector s = new StateVector(new Vector[]{new Vector(new double[]{55, 20,0}), new Vector(new double[]{0,0,0})});
+    private static LanderState l = new LanderState(s, 10*G, 0);
+    private static FeedbackController controller = new FeedbackController(l);
+
+    private static double[][] initialLandingPath = controller.getPath();
+
     private static double saturnMaxDistance = getDistanceFromSun(1253801723.95465, -760453007.810989);
     final private static double scale = Math.min(SCREEN_WIDTH, SCREEN_HEIGHT) / (1.5 * saturnMaxDistance);
-
+    final private static double landingScale = 6.0;
     /**
      * Gets the path of the planet with
      * @param index: the index of the planet we want the path from
@@ -38,6 +49,17 @@ public class OrbitList {
             path[i][1] = (int) (scale * planetPaths.get(index).get(i).getVector(0).get(1));
         }
         return path;
+    }
+
+    public static int[][] getLandingPath() {
+        int[][] scaledLandingPath = new int[initialLandingPath.length][2];
+
+        for(int i = 0; i < initialLandingPath.length; i++) {
+            scaledLandingPath[i][0] = (int) (landingScale * initialLandingPath[i][0]);
+            scaledLandingPath[i][1] = (int) (landingScale * initialLandingPath[i][1]);
+        }
+
+        return scaledLandingPath;
     }
 
     /**

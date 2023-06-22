@@ -1,5 +1,6 @@
 package gui.screens;
 
+import gui.data.OrbitList;
 import gui.helper_classes.ImageLoader;
 
 import javax.swing.*;
@@ -14,6 +15,8 @@ public class LandingScreen extends JPanel {
 
     private JFrame frame;
 
+    private int titanSurfaceY = YCENTER + 250;
+
     private ImageLoader imageLoader = new ImageLoader();
     private Image normandy;
 
@@ -21,8 +24,7 @@ public class LandingScreen extends JPanel {
 
     private ScheduledExecutorService executor;
 
-    private int[][] testPath = {{0, -400}, {0, -350}, {0, -300}, {0, -250}, {0, -200}, {0, -150}, {0, -100}, {0, -50},
-                                {0,0}, {0, 50}, {0, 100}, {0, 150}, {0, 200}, {0, 250}};
+    private int[][] landingPath = OrbitList.getLandingPath();
 
     public LandingScreen() {
         //Assign the probe image to normandy
@@ -46,28 +48,31 @@ public class LandingScreen extends JPanel {
             if (!StartScreen.freezeSimulation) {
                 showLanding();
             }
-            repaint();
-        }, 0, StartScreen.simulationSpeed * 30000, TimeUnit.MICROSECONDS);
+        }, 0, StartScreen.simulationSpeed * 5000, TimeUnit.MICROSECONDS);
     }
 
-    @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
 
         //Titan
         g2d.setColor(Color.GRAY);
-        g2d.fillRect(0, YCENTER + 250, SCREEN_WIDTH, SCREEN_HEIGHT);
+        g2d.fillRect(0, titanSurfaceY, SCREEN_WIDTH, SCREEN_HEIGHT);
+
+        //Landing zone
+        g2d.setColor(Color.RED);
+        g2d.fillRect(XCENTER - 25, titanSurfaceY, 50, 20);
+        g2d.drawString("Landing zone", XCENTER - 35, titanSurfaceY + 30);
 
         //Probe
-        g2d.drawImage(normandy, XCENTER + testPath[pathIndex][0] - 20, YCENTER + testPath[pathIndex][1] - 20, 60, 60, null);
+        g2d.drawImage(normandy, XCENTER + landingPath[pathIndex][0] - 30, titanSurfaceY - landingPath[pathIndex][1] - 35, 60, 60, null);
     }
 
     public void showLanding() {
         pathIndex++;
 
-        if(pathIndex > testPath.length - 1) {
-            pathIndex = 0;
+        if(pathIndex >= landingPath.length - 1) {
+            executor.shutdown();
         }
 
         repaint();

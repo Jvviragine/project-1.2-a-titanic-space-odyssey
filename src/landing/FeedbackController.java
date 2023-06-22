@@ -10,7 +10,7 @@ public class FeedbackController {
     //Gravitational pull on Titan in m and km. If using km remember to convert at the begging if using meter convert at the end!!!
 
     //private double G = -1.352 * Math.pow(10,-3); // km/s² = N/kg
-    private static final double G = -1.352; // m/s² = N/kg
+    public static final double G = -1.352; // m/s² = N/kg
     private Vector target = new Vector(new double[]{0,0});
     private double h = 0.2;
 

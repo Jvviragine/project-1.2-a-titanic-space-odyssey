@@ -36,7 +36,7 @@ public class StartScreen extends JFrame implements ActionListener {
                                           probeInitialConditions.getVector(1).get(0),       //v1
                                           probeInitialConditions.getVector(1).get(1),       //v2
                                           probeInitialConditions.getVector(1).get(2),       //v3
-                                          1800, 78892315, 500};           //step size, end time and time interval
+                                          1800, 63072000, 500};           //step size, end time and time interval
     private final int FRAME_WIDTH = 600;
     private final int FRAME_HEIGHT = 600;
 

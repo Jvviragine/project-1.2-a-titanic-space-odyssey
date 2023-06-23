@@ -4,24 +4,6 @@ public class FuelUsage {
     //private static final int ISP = 280; //Specific Impulse taken from a rocket with similar mass (Atlas V)
     private static final int MASS = 50000; //Mass of our rocket in kilograms
 
-//    public static double calculateFuel(double startVelocity, double endVelocity, double gravity, double timeframe){
-//        double momentum = MASS * Math.abs(endVelocity - startVelocity);
-//        double thrust = (momentum / timeframe) - (gravity * MASS);
-//        return (thrust / (gravity * ISP)) * timeframe;
-//    }
-//    public static double takeoff(double startVelocity, double endVelocity, double gravity){
-//        double e = 2.718;
-//        double wetMass = MASS * Math.pow (e, Math.abs(startVelocity - endVelocity) / (ISP * gravity));
-//        return wetMass - MASS;
-//    }
-//
-//    public static double landing(double startVelocity, double endVelocity, double gravity, double distance){
-//        double acc = (Math.pow(startVelocity, 2) - Math.pow(endVelocity, 2)) / (2* distance);
-//        //double thrust = MASS * (acc + gravity);
-//        double time = (startVelocity - endVelocity) / acc;
-//        return calculateFuel(startVelocity, endVelocity, gravity, time);
-//    }
-
     /**
      * Calculates the fuel consumption in kg for any change in speed over a time
      * @param startVelocity velocity in km/s when activating thrusters
@@ -61,7 +43,7 @@ public class FuelUsage {
         return MASS * acceleration(startVelocity, endVelocity, timeframe); //F=m*a
     }
     public static double forceTakeoffLanding(double startVelocity, double endVelocity, double timeframe){
-        return MASS * acceleration(startVelocity, endVelocity, timeframe) + 9.81; //F=m*a+g
+        return MASS * acceleration(startVelocity, endVelocity, timeframe) - 9.81; //F=m*a-g
     }
 
     /**
@@ -75,6 +57,7 @@ public class FuelUsage {
         return Math.abs(startVelocity - endVelocity) / timeframe; //Change in speed over a timeframe; assumes a constant acceleration
     }
 
+    // The following methods would give a more accurate estimate of the fuel consumption, however they aren't necessary
     /**
      * Trapezoid method to calculate an integral
      * @param a left endpoint
@@ -113,4 +96,22 @@ public class FuelUsage {
         function = force(startVelocity, endVelocity, timeframe); //Temporary; need a proper function here
         return function * x;
     }
+
+//        public static double calculateFuel(double startVelocity, double endVelocity, double gravity, double timeframe){
+//        double momentum = MASS * Math.abs(endVelocity - startVelocity);
+//        double thrust = (momentum / timeframe) - (gravity * MASS);
+//        return (thrust / (gravity * ISP)) * timeframe;
+//    }
+//    public static double takeoff(double startVelocity, double endVelocity, double gravity){
+//        double e = 2.718;
+//        double wetMass = MASS * Math.pow (e, Math.abs(startVelocity - endVelocity) / (ISP * gravity));
+//        return wetMass - MASS;
+//    }
+//
+//    public static double landing(double startVelocity, double endVelocity, double gravity, double distance){
+//        double acc = (Math.pow(startVelocity, 2) - Math.pow(endVelocity, 2)) / (2* distance);
+//        //double thrust = MASS * (acc + gravity);
+//        double time = (startVelocity - endVelocity) / acc;
+//        return calculateFuel(startVelocity, endVelocity, gravity, time);
+//    }
 }

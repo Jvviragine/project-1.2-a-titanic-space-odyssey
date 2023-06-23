@@ -20,14 +20,6 @@ public class Corrections {
         double vectorChanges = 0;
         Object arr[] = new Object[2];
         double temp = 0;
-//        int year = 31536000;
-//        double timeLeft;
-//        if(timePassed < year){
-//            timeLeft = year - timePassed;
-//        }
-//        else{
-//            timeLeft = 2*year - timePassed;
-//        }
         double timeLeft = eta - timePassed;
 
         for(int i = 0; i < 3; i++){
@@ -57,7 +49,7 @@ public class Corrections {
         double totalV = 0;
         int count = 0;
             do{
-                for(int i = 0; i < 3; i++){
+                for(int i = 0; i < probeVec.getVector(1).getDimension(); i++){
                     probeVec.getVector(1).set(i,(destinationVec.getVector(0).get(i) - probeVec.getVector(0).get(i)) * (1/timeLeft) - count);
                     allV[i] = probeVec.getVector(1).get(i);
                 }

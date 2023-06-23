@@ -28,28 +28,42 @@ public class WindModel {
 
     public Vector getWindSpeed(double heigth) { // Height Must be in Meters
 
+        double randomWind;
+
         // Bellow 7km of Altitude, the Wind of Titan has a Max Speed of 0.3 m/s
         if (heigth <= 7000) {
 
+            randomWind = ((Math.random() * 30)) / 100; // Random wind Value from 0.0 until 0.3 (Max for this altitude)
+            System.out.println(randomWind);
         }
         // From 7km up until 60 Km, the Wind Increases a bit with height (though no Empirical Data was found stating by how much)
         else if (heigth <= 60000) {
+            // Since the Empirical Data is not Consistent here, I will just add a factor to simulate the Altitude Changing
+            randomWind = ((Math.random() * 30)) / 100; // Random wind Value from 0.0 until 0.3 (Max for this altitude)
+            System.out.println(randomWind);
 
+            randomWind += (heigth/Math.pow(10, 6)); // Adds 1% Correction Factor due to Higher Altitude
+            System.out.println(randomWind);
         }
         // Here, Scientists do not have a lot of empirical data, however, with the Landing of the Huygens, it was found that strong winds can come randomly, though not frequent
         else if (heigth <= 120000) {
-
+            // FOR NOW, IT WILL BE 0, but I FIND BETTER DATA, I WILL ADJUST
+            randomWind = 0;
         }
         // Above 120 Km, the Atmosphere of Titan is very Rare (also due to its gravity)
         else {
-            
+            randomWind = 0;
         }
 
+        // The Wind After the X Coordinate
+        return new Vector(new double[]{randomWind, 0});
+    }
 
+    public static void main(String[] args) {
+        WindModel myTestWindModel = new WindModel();
 
+        myTestWindModel.getWindSpeed(5000);
 
-
-        return null;
-
+        myTestWindModel.getWindSpeed(10000);
     }
 }

@@ -34,6 +34,12 @@ public class WindModel {
         if (heigth <= 7000) {
 
             randomWind = ((Math.random() * 30)) / 100; // Random wind Value from 0.0 until 0.3 (Max for this altitude)
+
+            // Simulate the Possibility of Change in Wind Direction of 20%
+            int changeWindDirectionValue = (int) (Math.random() * 101);
+            if (changeWindDirectionValue <= 20) {
+                randomWind = -randomWind; // Inverses the Wind Direction
+            }
             System.out.println(randomWind);
         }
         // From 7km up until 60 Km, the Wind Increases a bit with height (though no Empirical Data was found stating by how much)

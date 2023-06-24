@@ -10,6 +10,7 @@ public class LanderState {
 
     private double u; //acceleration provided by main thruster
     private double v;
+    private double mass = 50000;
 
     public LanderState(StateVector state, double acceleration, double torque){
         this.state = state;
@@ -67,6 +68,9 @@ public class LanderState {
         setState(n);
     }
 
+    public double getMass(){
+        return mass;
+    }
 
     public String getTotalState(){
         return "Position: " + getPos().toString() + "\n" + "Velocity: " + getVel().toString();

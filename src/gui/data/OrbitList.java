@@ -1,14 +1,11 @@
 package gui.data;
 
-import gui.screens.StartScreen;
 import landing.FeedbackController;
 import landing.LanderState;
-import physics.simulation.SolarSystemPhysicsSimulation;
+import physics.controllers.OpenLoopController;
 import physics.simulation.TripSimulation;
 import physics.vectors.StateVector;
 import physics.vectors.Vector;
-import solar_system_data.InitialConditions;
-import solar_system_data.PlanetaryData;
 
 import java.util.List;
 
@@ -29,8 +26,11 @@ public class OrbitList {
     private static StateVector s = new StateVector(new Vector[]{new Vector(new double[]{55, 20,0}), new Vector(new double[]{0,0,0})});
     private static LanderState l = new LanderState(s, 10*G, 0);
     private static FeedbackController controller = new FeedbackController(l);
+    //private static OpenLoopController c = new OpenLoopController(s, new Vector(new double[]{0,0}),0,50, 1);
+
 
     private static double[][] initialLandingPath = controller.getPath();
+    //private static double[][] initialLandingPath = c.getPath();
 
     private static double saturnMaxDistance = getDistanceFromSun(1253801723.95465, -760453007.810989);
     final private static double scale = Math.min(SCREEN_WIDTH, SCREEN_HEIGHT) / (1.5 * saturnMaxDistance);

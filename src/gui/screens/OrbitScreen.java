@@ -99,14 +99,15 @@ public class OrbitScreen extends JPanel implements ActionListener {
                 showOrbit();
             }
             repaint();
-        }, 0, StartScreen.simulationSpeed * 10000, TimeUnit.MICROSECONDS);
+        }, 0, StartScreen.simulationSpeed * 1000, TimeUnit.MICROSECONDS);
     }
 
     @Override
     protected void paintComponent(Graphics g) {
-        panel.updateUI();
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
+
+        panel.updateUI();
 
         //Titan
         g2d.drawImage(titan, XCENTER - 100, YCENTER - 100, 200, 200, null);

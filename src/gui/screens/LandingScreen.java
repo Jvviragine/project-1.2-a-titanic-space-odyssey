@@ -2,6 +2,8 @@ package gui.screens;
 
 import gui.data.OrbitList;
 import gui.helper_classes.ImageLoader;
+import physics.vectors.Vector;
+import stochastic_wind_simulation.WindModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,11 +28,15 @@ public class LandingScreen extends JPanel {
 
     private int[][] landingPath = OrbitList.getLandingPath();
 
+    //Wind initialisation
+    private WindModel windModel = new WindModel();
+    private Vector wind;
+
     public LandingScreen() {
         //Assign the probe image to normandy
         normandy = imageLoader.getAndRotateImage("normandy");
 
-        frame = new JFrame("Orbit Screen");
+        frame = new JFrame("Landing Screen");
 
         this.setLayout(null);
         this.setBackground(Color.BLACK);
@@ -48,12 +54,17 @@ public class LandingScreen extends JPanel {
             if (!StartScreen.freezeSimulation) {
                 showLanding();
             }
-        }, 0, StartScreen.simulationSpeed * 5000, TimeUnit.MICROSECONDS);
+        }, 0, StartScreen.simulationSpeed * 1000, TimeUnit.MICROSECONDS);
     }
 
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
+
+        //Adjust font sizes
+        Font currentFont = g2d.getFont();
+        Font newFont = currentFont.deriveFont(currentFont.getSize() * 1.4F);
+        g2d.setFont(newFont);
 
         //Titan
         g2d.setColor(Color.GRAY);
@@ -62,10 +73,15 @@ public class LandingScreen extends JPanel {
         //Landing zone
         g2d.setColor(Color.RED);
         g2d.fillRect(XCENTER - 25, titanSurfaceY, 50, 20);
-        g2d.drawString("Landing zone", XCENTER - 35, titanSurfaceY + 30);
+        g2d.drawString("Landing zone", XCENTER - 50, titanSurfaceY + 40);
 
         //Probe
         g2d.drawImage(normandy, XCENTER + landingPath[pathIndex][0] - 30, titanSurfaceY - landingPath[pathIndex][1] - 35, 60, 60, null);
+
+        //Wind
+        g2d.drawString("Wind speed", XCENTER - 47, 20);
+        g2d.setColor(Color.WHITE);
+        g2d.drawString(Double.toString(wind.get(0)), XCENTER - 90, 50);
     }
 
     public void showLanding() {
@@ -74,6 +90,8 @@ public class LandingScreen extends JPanel {
         if(pathIndex >= landingPath.length - 1) {
             executor.shutdown();
         }
+
+        wind = windModel.getWindSpeed((landingPath[pathIndex][1]) * 1000);
 
         repaint();
     }

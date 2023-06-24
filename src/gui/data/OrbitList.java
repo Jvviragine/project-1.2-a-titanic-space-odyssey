@@ -35,8 +35,9 @@ public class OrbitList {
     private static double saturnMaxDistance = getDistanceFromSun(1253801723.95465, -760453007.810989);
     final private static double scale = Math.min(SCREEN_WIDTH, SCREEN_HEIGHT) / (1.5 * saturnMaxDistance);
     final private static double landingScale = 6.0;
+
     /**
-     * Gets the path of the planet with
+     * Gets the path of the planet with index "index"
      * @param index: the index of the planet we want the path from
      * @return a 2d integer array, where each index contains scaled x and y coordinates
      */
@@ -51,6 +52,10 @@ public class OrbitList {
         return path;
     }
 
+    /**
+     * Gets the landing path of the probe
+     * @return
+     */
     public static int[][] getLandingPath() {
         int[][] scaledLandingPath = new int[initialLandingPath.length][2];
 

@@ -125,10 +125,10 @@ class StateVectorTest {
     @Test
     //covers getVector for index < stateVector.length
     void testGetVectorWithIndexInBounds() {
-        double expected = -1;
+        double[] expected = {-1, -2, -3};
         Vector output = u.getVector(1);
         for (int i = 0; i < output.getDimension(); i++) {
-            assertEquals(expected, output.get(i));
+            assertEquals(expected[i], output.get(i));
         }
     }
 

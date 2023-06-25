@@ -104,7 +104,7 @@ class InitialConditionsTest {
     void testClosest() {
         StateVector iniState = new StateVector(new Vector[]{position, current});
         SolarSystemPhysicsSimulation system = new SolarSystemPhysicsSimulation(PlanetaryData.getCelestialBodiesStateVector(),PlanetaryData.getCelestialBodiesMasses(),PlanetaryData.getCelestialBodyNames());
-        List<List<StateVector>> paths = system.simulateOrbitsWithProbe(iniState,31536000,23200);
+        List<List<StateVector>> paths = system.simulateOrbitsWithProbe(iniState,23200*10,23200);
         List<StateVector> pathProbe = paths.get(11);
         List<StateVector> pathTitan = paths.get(8);
         double dist = pathProbe.get(0).getVector(0).distance(pathTitan.get(0).getVector(0));

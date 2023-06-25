@@ -93,7 +93,7 @@ class FuelUsageTest {
         double startVelocity = 1;
         double endVelocity = -2;
         double timeframe = 50.5;
-        double expected = 50000 * fuelUsage.acceleration(startVelocity, endVelocity, timeframe) + 9.81;
+        double expected = 50000 * fuelUsage.acceleration(startVelocity, endVelocity, timeframe) - 9.81;
 
         double output = fuelUsage.forceTakeoffLanding(startVelocity, endVelocity, timeframe);
 

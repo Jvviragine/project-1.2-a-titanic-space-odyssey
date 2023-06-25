@@ -253,4 +253,16 @@ class EulerSolverTest {
 
         assertThrows(expected, () -> eulerSolver.getStepNumber(t0, tf, stepSize));
     }
+
+    @Test
+    //covers getStepNumber for (tf - t0) % stepSize != 0
+    void testGetStepNumberWithDifferenceOf_tfAnd_t0IsNotMultipleOfStepSize() {
+        Class expected = IllegalArgumentException.class;
+
+        double t0 = -3;
+        double tf = 5;
+        double stepSize = 3;
+
+        assertThrows(expected, () -> eulerSolver.getStepNumber(t0, tf, stepSize));
+    }
 }

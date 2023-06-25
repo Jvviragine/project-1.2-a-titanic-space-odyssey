@@ -1,8 +1,35 @@
 package physics.optimalization;
 
+import physics.simulation.TripSimulation;
+
 public class FuelUsage {
     //private static final int ISP = 280; //Specific Impulse taken from a rocket with similar mass (Atlas V)
     private static final int MASS = 50000; //Mass of our rocket in kilograms
+
+        //with the following method I went through time-interval sizes iteratively (starting from step sizes of 100) to ultimately get to the following local optima
+        //changes were made in TripSimulator to accommodate this, that were later reverted
+        //interval size of 110 if computation time can be longer (ca. one minute)
+        //interval size of 3403 if not (ca. 3 seconds)
+//    public void bruteForce(){
+//
+//        TripSimulation test = new TripSimulation();
+//        int minValue = 101;
+//        int maxValue = 129; //dips: 3403 ain't bad (4494km/7730kg), 110 (3322km/7578kg)
+//        double lowestValue = 8000;
+//        int optimalVariable = -1;
+//        for (int variable = minValue; variable <= maxValue; variable+=1) {
+//            System.out.println("Iteration: "+variable);
+//            double returnValue = (double)test.simulateTrip(variable)[1];
+//            if (returnValue < lowestValue) {
+//                lowestValue = returnValue;
+//                optimalVariable = variable;
+//            }
+//        }
+//
+//        System.out.println("Optimal Variable: " + optimalVariable);
+//        System.out.println("Lowest Return Value: " + lowestValue);
+//
+//    }
 
     /**
      * Calculates the fuel consumption in kg for any change in speed over a time

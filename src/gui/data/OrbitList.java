@@ -23,7 +23,7 @@ public class OrbitList {
     private static TripSimulation sim = new TripSimulation();
     private static List<List<StateVector>> planetPaths = sim.simulateTrip();
 
-    private static StateVector s = new StateVector(new Vector[]{new Vector(new double[]{55, 20,0}), new Vector(new double[]{0,0,0})});
+    private static StateVector s = new StateVector(new Vector[]{new Vector(new double[]{-100, 50,0}), new Vector(new double[]{0,0,0})});
     private static LanderState l = new LanderState(s, 10*G, 0);
     private static FeedbackController controller = new FeedbackController(l);
     //private static OpenLoopController c = new OpenLoopController(s, new Vector(new double[]{0,0}),0,50, 1);

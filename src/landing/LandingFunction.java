@@ -36,7 +36,7 @@ public class LandingFunction {
     public Vector getAcceleration(LanderState state){
         Vector acc = new Vector(new double[3]);
         double x = state.getU()*Math.sin(state.getThetaPos());
-        double y = state.getU()*Math.cos(state.getThetaPos()) - G;
+        double y = state.getU()*Math.cos(state.getThetaPos()) + G;
         acc.set(0, x);
         acc.set(1, y);
         acc.set(2, state.getTorque());
@@ -56,8 +56,8 @@ public class LandingFunction {
 
     public static void main(String[] args) {
         LandingFunction f = new LandingFunction();
-        StateVector s = new StateVector(new Vector[]{new Vector(new double[]{1,15,0}), new Vector(new double[]{0,0,0})});
-        LanderState l = new LanderState(s,  1.4,1);
+        StateVector s = new StateVector(new Vector[]{new Vector(new double[]{0,1.46,0}), new Vector(new double[]{0,0,0})});
+        LanderState l = new LanderState(s,  0,0);
         for(int i = 0;i<10;i++){
             l = f.LanderStep(l, 1);
             System.out.println(l.getTotalState());

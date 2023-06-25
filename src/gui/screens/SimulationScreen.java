@@ -9,22 +9,31 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * GUI class to show the solar system with relevant planets and the probe
+ * Mercury, Uranus and Neptune have been omitted as they are not relevant to this project
+ * The probe is launched from Earth and follows the simulation according to the user inputted values from the Start Screen
+ */
 public class SimulationScreen extends JPanel {
-
+    //Static values, used in all screens that come after this one
     public static final int SCREEN_WIDTH = 1536;
     public static final int SCREEN_HEIGHT = 801;
     public static final int XCENTER = SCREEN_WIDTH/2;
     public static final int YCENTER = SCREEN_HEIGHT/2;
 
+    //GUI
     private JFrame frame;
 
+    //Images
     private ImageLoader imageLoader = new ImageLoader();
-    private Image normandy;
+    //Assign the probe image to normandy
+    private Image normandy = imageLoader.getImage("normandy");
 
     private ScheduledExecutorService executor;
 
     private int pathIndex = 0;
 
+    //All planet and probe paths are initialised here
     private OrbitList orbitList = new OrbitList();
     private int[][] sunPath = orbitList.getPath(0);
     private int[][] venusPath = orbitList.getPath(2);
@@ -36,10 +45,10 @@ public class SimulationScreen extends JPanel {
     private int[][] titanPath = orbitList.getPath(8);
     private int[][] probePath = orbitList.getPath(11);
 
+    /**
+     * Frame and executor get initialised here
+     */
     public SimulationScreen() {
-        //Assign the probe image to normandy
-        normandy = imageLoader.getImage("normandy");
-
         frame = new JFrame("Simulation Screen");
 
         this.setLayout(null);
@@ -58,9 +67,13 @@ public class SimulationScreen extends JPanel {
             if (!StartScreen.freezeSimulation) {
                 iterateThroughOrbit();
             }
-        }, 0, StartScreen.simulationSpeed, TimeUnit.MICROSECONDS);
+        }, 0, StartScreen.simulationInterval, TimeUnit.MICROSECONDS);
     }
 
+    /**
+     * Paint the planets and probe on the frame
+     * @param g the <code>Graphics</code> object to protect
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -111,6 +124,10 @@ public class SimulationScreen extends JPanel {
         g2d.drawString("Probe", XCENTER + probePath[pathIndex][0] - 22, YCENTER + probePath[pathIndex][1] + 7);
     }
 
+    /**
+     * Loops through the planet's and probe's paths
+     * When the end of the path is reached: the simulation stops, the frame gets closed and the Orbit Screen gets launched
+     */
     public void iterateThroughOrbit() {
         pathIndex++;
 

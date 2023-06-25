@@ -87,7 +87,7 @@ class VectorTest {
 
     @Test
     //covers Vector for initialState.length = 0
-    void testVectorWithNullInitialState() {
+    void testVectorWithEmptyInitialState() {
         double[] initialState = new double[0];
         assertThrows(IllegalArgumentException.class, () -> new Vector(initialState));
     }

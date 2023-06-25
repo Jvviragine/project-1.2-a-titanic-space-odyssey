@@ -34,28 +34,42 @@ public class WindModel {
         if (heigth <= 7000) {
 
             randomWind = ((Math.random() * 30)) / 100; // Random wind Value from 0.0 until 0.3 (Max for this altitude)
+
+            // Simulate the Possibility of Change in Wind Direction of 20%
+            int changeWindDirectionValue = (int) (Math.random() * 101);
+            if (changeWindDirectionValue <= 20) {
+                randomWind = -randomWind; // Inverses the Wind Direction
+            }
             System.out.println(randomWind);
         }
         // From 7km up until 60 Km, the Wind Increases a bit with height (though no Empirical Data was found stating by how much)
         else if (heigth <= 60000) {
             // Since the Empirical Data is not Consistent here, I will just add a factor to simulate the Altitude Changing
-            randomWind = ((Math.random() * 30)) / 100; // Random wind Value from 0.0 until 0.3 (Max for this altitude)
+            randomWind = ((Math.random() * 50)) / 100; // Random wind Value from 0.0 until 0.5 (A little over the Max value for Zone 1)
             System.out.println(randomWind);
 
-            randomWind += (heigth/Math.pow(10, 6)); // Adds 1% Correction Factor due to Higher Altitude
+            randomWind += 5*(heigth/Math.pow(10, 6)); // Adds 5% Correction Factor due to Higher Altitude
             System.out.println(randomWind);
         }
         // Here, Scientists do not have a lot of empirical data, however, with the Landing of the Huygens, it was found that strong winds can come randomly, though not frequent
         else if (heigth <= 120000) {
-            // FOR NOW, IT WILL BE 0, but I FIND BETTER DATA, I WILL ADJUST
-            randomWind = 0;
+            // From 0.8 m/s up until 5m/s - Basic Value (possibility of storm and strong winds comes after)
+            randomWind = (((Math.random() * 50) + 8) / 10);
+
+            // Simulate the Possibility of a Storm (Like the one faced by Huygens) - We assumed a Probability of 10%
+            int probabilityStormInDescent = (int) (Math.random() * 100);
+            if (probabilityStormInDescent <= 10) {
+                // Add a Wind Speed that goes from 20m/s until 120
+                randomWind += ((Math.random() * 121) + 20);
+            }
+
         }
         // Above 120 Km, the Atmosphere of Titan is very Rare (also due to its gravity)
         else {
             randomWind = 0;
         }
 
-        // The Wind After the X Coordinate
+        // The Wind After - X Coordinate
         return new Vector(new double[]{randomWind, 0});
     }
 

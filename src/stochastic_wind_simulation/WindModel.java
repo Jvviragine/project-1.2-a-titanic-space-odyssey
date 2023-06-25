@@ -53,7 +53,7 @@ public class WindModel {
         }
         // Here, Scientists do not have a lot of empirical data, however, with the Landing of the Huygens, it was found that strong winds can come randomly, though not frequent
         else if (heigth <= 120000) {
-            // FOR NOW, IT WILL BE 0, but I FIND BETTER DATA, I WILL ADJUST
+            // From 0.8 m/s up until 5m/s - Basic Value (possibility of storm and strong winds comes after)
             randomWind = 0;
         }
         // Above 120 Km, the Atmosphere of Titan is very Rare (also due to its gravity)

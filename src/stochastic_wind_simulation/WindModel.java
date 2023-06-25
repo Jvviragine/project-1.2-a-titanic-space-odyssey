@@ -54,14 +54,22 @@ public class WindModel {
         // Here, Scientists do not have a lot of empirical data, however, with the Landing of the Huygens, it was found that strong winds can come randomly, though not frequent
         else if (heigth <= 120000) {
             // From 0.8 m/s up until 5m/s - Basic Value (possibility of storm and strong winds comes after)
-            randomWind = 0;
+            randomWind = (((Math.random() * 50) + 8) / 10);
+
+            // Simulate the Possibility of a Storm (Like the one faced by Huygens) - We assumed a Probability of 10%
+            int probabilityStormInDescent = (int) (Math.random() * 100);
+            if (probabilityStormInDescent <= 10) {
+                // Add a Wind Speed that goes from 20m/s until 120
+                randomWind += ((Math.random() * 121) + 20);
+            }
+
         }
         // Above 120 Km, the Atmosphere of Titan is very Rare (also due to its gravity)
         else {
             randomWind = 0;
         }
 
-        // The Wind After the X Coordinate
+        // The Wind After - X Coordinate
         return new Vector(new double[]{randomWind, 0});
     }
 

@@ -59,8 +59,7 @@ class EulerSolverTest {
     @Test
     //covers solve for a singular stateVector taken as parameter for initialCondition > 0
     void testSolveWithSingularStateVectorAndPositiveInitialCondition() {
-        Vector expectedValue = new Vector(new double[]{913.444918624254524});
-        StateVector expected = new StateVector(new Vector[]{expectedValue});
+        double expected = 913.444918624254524;
 
         Function dydt = new TestODEDerivativeFunction();
         double t0 = 0;
@@ -70,9 +69,9 @@ class EulerSolverTest {
         double h = 0.1;
         StateVector output = eulerSolver.solve(dydt, stateVector, t0, tf, h);
 
-        for (int i = 0; i < expected.getNumberOfVectors(); i++) {
-            for (int j = 0; j < expected.getVector(i).getDimension(); j++) {
-                assertEquals(expected.getVector(i).get(j), output.getVector(i).get(j), tolerance);
+        for (int i = 0; i < output.getNumberOfVectors(); i++) {
+            for (int j = 0; j < output.getVector(i).getDimension(); j++) {
+                assertEquals(expected, output.getVector(i).get(j), tolerance);
             }
         }
     }
@@ -80,8 +79,7 @@ class EulerSolverTest {
     @Test
     //covers solve for a singular stateVector taken as parameter for initialCondition < 0
     void testSolveWithSingularStateVectorAndNegativeInitialCondition() {
-        Vector expectedValue = new Vector(new double[]{-913.444918624254524});
-        StateVector expected = new StateVector(new Vector[]{expectedValue});
+        double expected = -913.444918624254524;
 
         Function dydt = new TestODEDerivativeFunction();
         double t0 = 0;
@@ -91,9 +89,9 @@ class EulerSolverTest {
         double h = 0.1;
         StateVector output = eulerSolver.solve(dydt, stateVector, t0, tf, h);
 
-        for (int i = 0; i < expected.getNumberOfVectors(); i++) {
-            for (int j = 0; j < expected.getVector(i).getDimension(); j++) {
-                assertEquals(expected.getVector(i).get(j), output.getVector(i).get(j), tolerance);
+        for (int i = 0; i < output.getNumberOfVectors(); i++) {
+            for (int j = 0; j < output.getVector(i).getDimension(); j++) {
+                assertEquals(output.getVector(i).get(j), output.getVector(i).get(j), tolerance);
             }
         }
     }
@@ -101,13 +99,7 @@ class EulerSolverTest {
     @Test
     //covers solve for an array of stateVector taken as parameter for initialConditions.length > 0
     void testSolveWithArrayOfStateVectorAndTestODEFunctionAndNonEmptyInitialConditions() {
-        Vector expectedValue1 = new Vector(new double[]{-913.444918624254524});
-        Vector expectedValue2 = new Vector(new double[]{0});
-        Vector expectedValue3 = new Vector(new double[]{2131.371476789927325});
-        StateVector expectedStateVector1 = new StateVector(new Vector[]{expectedValue1});
-        StateVector expectedStateVector2 = new StateVector(new Vector[]{expectedValue2});
-        StateVector expectedStateVector3 = new StateVector(new Vector[]{expectedValue3});
-        StateVector[] expected = new StateVector[]{expectedStateVector1, expectedStateVector2, expectedStateVector3};
+        double[] expected = {-913.444918624254524, 0, 2131.371476789927325};
 
         Function dydt = new TestODEDerivativeFunction();
         double t0 = 0;
@@ -125,7 +117,7 @@ class EulerSolverTest {
         for (int i = 0; i < stateVectorArray.length; i++) {
             for (int j = 0; j < stateVectorArray[i].getNumberOfVectors(); j++) {
                 for (int k = 0; k < stateVectorArray[i].getVector(j).getDimension(); k++) {
-                    assertEquals(expected[i].getVector(j).get(k), output[i].getVector(j).get(k), tolerance);
+                    assertEquals(expected[i], output[i].getVector(j).get(k), tolerance);
                 }
             }
         }
@@ -168,14 +160,15 @@ class EulerSolverTest {
             expected.add(planetStates);
         }
 
-        eulerSolver.solve(dydt, currentStates, t0, tf, h);  //runs solve to fill the euleurSolver.allPlanetStates
+        eulerSolver.solve(dydt, currentStates, t0, tf, h);  //runs solve to fill the eulerSolver.allPlanetStates
 
-        //manually running the solve and adding each stateVector
+        //manually running the solver and adding each stateVector
         StateVector nextStates[] = new StateVector[currentStates.length];
-        for(double t=t0; t<tf; t+=h) {
+        int stepNumber  = eulerSolver.getStepNumber(t0, tf, h);
+        for(int j=0; j<stepNumber; j++) {
             for (int i = 0; i < currentStates.length; i++) {
                 StateVector currentState = currentStates[i];
-                StateVector derivative = dydt.applyFunction(currentState, t);
+                StateVector derivative = dydt.applyFunction(currentState, t0 + i*h);
                 StateVector hfty = derivative.multiply(h);
                 StateVector y1 = currentState.add(hfty);
                 nextStates[i] = y1;

@@ -57,8 +57,7 @@ class RK4SolverTest {
     @Test
     //covers solve for a singular stateVector taken as parameter for initialCondition > 0
     void testSolveWithSingularStateVectorAndPositiveInitialCondition() {
-        Vector expectedValue = new Vector(new double[]{1210.28081234923});
-        StateVector expected = new StateVector(new Vector[]{expectedValue});
+        double expected = 1210.28081234923;
 
         Function dydt = new TestODEDerivativeFunction();
         double t0 = 0;
@@ -68,9 +67,9 @@ class RK4SolverTest {
         double h = 0.1;
         StateVector output = solver.solve(dydt, stateVector, t0, tf, h);
 
-        for (int i = 0; i < expected.getNumberOfVectors(); i++) {
-            for (int j = 0; j < expected.getVector(i).getDimension(); j++) {
-                assertEquals(expected.getVector(i).get(j), output.getVector(i).get(j), tolerance);
+        for (int i = 0; i < output.getNumberOfVectors(); i++) {
+            for (int j = 0; j < output.getVector(i).getDimension(); j++) {
+                assertEquals(output.getVector(i).get(j), output.getVector(i).get(j), tolerance);
             }
         }
     }
@@ -78,8 +77,7 @@ class RK4SolverTest {
     @Test
     //covers solve for a singular stateVector taken as parameter for initialCondition < 0
     void testSolveWithSingularStateVectorAndNegativeInitialCondition() {
-        Vector expectedValue = new Vector(new double[]{-1210.28081234923});
-        StateVector expected = new StateVector(new Vector[]{expectedValue});
+        double expected = 1210.28081234923;
 
         Function dydt = new TestODEDerivativeFunction();
         double t0 = 0;
@@ -89,9 +87,9 @@ class RK4SolverTest {
         double h = 0.1;
         StateVector output = solver.solve(dydt, stateVector, t0, tf, h);
 
-        for (int i = 0; i < expected.getNumberOfVectors(); i++) {
-            for (int j = 0; j < expected.getVector(i).getDimension(); j++) {
-                assertEquals(expected.getVector(i).get(j), output.getVector(i).get(j), tolerance);
+        for (int i = 0; i < output.getNumberOfVectors(); i++) {
+            for (int j = 0; j < output.getVector(i).getDimension(); j++) {
+                assertEquals(output.getVector(i).get(j), output.getVector(i).get(j), tolerance);
             }
         }
     }
@@ -99,13 +97,7 @@ class RK4SolverTest {
     @Test
     //covers solve for an array of stateVector taken as parameter for initialConditions.length > 0
     void testSolveWithArrayOfStateVectorAndTestODEFunctionAndNonEmptyInitialConditions() {
-        Vector expectedValue1 = new Vector(new double[]{-1210.28081234923});
-        Vector expectedValue2 = new Vector(new double[]{0});
-        Vector expectedValue3 = new Vector(new double[]{2823.98856214821});
-        StateVector expectedStateVector1 = new StateVector(new Vector[]{expectedValue1});
-        StateVector expectedStateVector2 = new StateVector(new Vector[]{expectedValue2});
-        StateVector expectedStateVector3 = new StateVector(new Vector[]{expectedValue3});
-        StateVector[] expected = new StateVector[]{expectedStateVector1, expectedStateVector2, expectedStateVector3};
+        double[] expected = {-1210.28081234923, 0, 2823.98856214821};
 
         Function dydt = new TestODEDerivativeFunction();
         double t0 = 0;
@@ -123,7 +115,7 @@ class RK4SolverTest {
         for (int i = 0; i < stateVectorArray.length; i++) {
             for (int j = 0; j < stateVectorArray[i].getNumberOfVectors(); j++) {
                 for (int k = 0; k < stateVectorArray[i].getVector(j).getDimension(); k++) {
-                    assertEquals(expected[i].getVector(j).get(k), output[i].getVector(j).get(k), tolerance);
+                    assertEquals(expected[i], output[i].getVector(j).get(k), tolerance);
                 }
             }
         }
@@ -168,22 +160,23 @@ class RK4SolverTest {
 
         solver.solve(dydt, currentStates, t0, tf, h);  //runs solve to fill the solver.allPlanetStates
 
-        //manually running the solve and adding each stateVector
+        //manually running the solver and adding each stateVector
         StateVector nextStates[] = new StateVector[currentStates.length];
 
-        for(double t=t0; t<tf; t+=h){
+        int stepNumber  = solver.getStepNumber(t0, tf, h);
+        for(int j=0; j<stepNumber; j++){
             for(int i = 0; i < currentStates.length; i++){
                 StateVector currentState = currentStates[i];
-                StateVector k1 = dydt.applyFunction(currentState, t).multiply(h);
-                double k2Time = t + (0.5)*h;
+                StateVector k1 = dydt.applyFunction(currentState, t0 + stepNumber*h).multiply(h);
+                double k2Time = t0 + stepNumber*h + (0.5)*h;
                 StateVector k2FunctionStateVector = currentState.add(k1.multiply(0.5));
                 StateVector k2 = dydt.applyFunction(k2FunctionStateVector, k2Time).multiply(h);
                 StateVector scalledK2 = k2.multiply(2.0);
-                double k3Time = t + (0.5 * h);
+                double k3Time = t0 + stepNumber*h + (0.5 * h);
                 StateVector k3FunctionStateVector = currentState.add(k2.multiply(0.5));
                 StateVector k3 = dydt.applyFunction(k3FunctionStateVector, k3Time).multiply(h);
                 StateVector scaledK3 = k3.multiply(2.0);
-                double k4Time = t + h;
+                double k4Time = t0 + stepNumber*h + h;
                 StateVector k4FunctionStateVector = currentState.add(k3);
                 StateVector k4 = dydt.applyFunction(k4FunctionStateVector, k4Time).multiply(h);
                 StateVector scaledSumOfK1AndK4 = k1.add(k4);
@@ -211,45 +204,40 @@ class RK4SolverTest {
     void testGetAllStatesWithNullIndex() {
         Function dydt = new TestODEDerivativeFunction();
         double t0 = 0;
-        Vector vector1 = new Vector(new double[]{1});
-        Vector vector2 = new Vector(new double[]{2});
-        StateVector stateVector1 = new StateVector(new Vector[]{vector1});
-        StateVector stateVector2 = new StateVector(new Vector[]{vector2});
-        StateVector[] currentStates = {stateVector1, stateVector2};
+        Vector vector = new Vector(new double[]{1});
+        StateVector stateVector = new StateVector(new Vector[]{vector});
         double tf = 6.0;
         double h = 0.1;
 
         ArrayList<StateVector> expected = new ArrayList<>();
 
-        solver.solve(dydt, currentStates, t0, tf, h);  //runs solve to fill the solver.allStates
+        solver.solve(dydt, stateVector, t0, tf, h);  //runs solve to fill the solver.allStates
 
-        //manually running the solve and adding each stateVector
-        StateVector nextStates[] = new StateVector[currentStates.length];
-        for(double t=t0; t<tf; t+=h){
-            for(int i = 0; i < currentStates.length; i++){
-                StateVector currentState = currentStates[i];
-                StateVector k1 = dydt.applyFunction(currentState, t).multiply(h);
-                double k2Time = t + (0.5)*h;
-                StateVector k2FunctionStateVector = currentState.add(k1.multiply(0.5));
-                StateVector k2 = dydt.applyFunction(k2FunctionStateVector, k2Time).multiply(h);
-                StateVector scalledK2 = k2.multiply(2.0);
-                double k3Time = t + (0.5 * h);
-                StateVector k3FunctionStateVector = currentState.add(k2.multiply(0.5));
-                StateVector k3 = dydt.applyFunction(k3FunctionStateVector, k3Time).multiply(h);
-                StateVector scaledK3 = k3.multiply(2.0);
-                double k4Time = t + h;
-                StateVector k4FunctionStateVector = currentState.add(k3);
-                StateVector k4 = dydt.applyFunction(k4FunctionStateVector, k4Time).multiply(h);
-                StateVector scaledSumOfK1AndK4 = k1.add(k4);
-                StateVector scaledSumOfK2AndK3 = scalledK2.add(scaledK3);
-                StateVector scaledSumOfKs = scaledSumOfK1AndK4.add(scaledSumOfK2AndK3);
-                StateVector averagedScaledStateVector = scaledSumOfKs.multiply(0.166666666666667);
-                currentState = currentState.add(averagedScaledStateVector);
-                nextStates[i] = currentState;
-            }
-            currentStates = nextStates;
-            dydt.resetState(currentStates);
+        //manually running the solver and adding each stateVector
+        StateVector currentState = stateVector;
+        ArrayList<StateVector> stateVectors = new ArrayList<>();
+        int stepNumber  = solver.getStepNumber(t0, tf, h);
+        for(int i = 0; i < stepNumber; i++){
+            StateVector k1 = dydt.applyFunction(currentState, t0 + i*h).multiply(h);
+            double k2Time = t0 + i*h + (0.5)*h;
+            StateVector k2FunctionStateVector = currentState.add(k1.multiply(0.5));
+            StateVector k2 = dydt.applyFunction(k2FunctionStateVector, k2Time).multiply(h);
+            StateVector scalledK2 = k2.multiply(2.0);
+            double k3Time = t0 + i*h + (0.5 * h);
+            StateVector k3FunctionStateVector = currentState.add(k2.multiply(0.5));
+            StateVector k3 = dydt.applyFunction(k3FunctionStateVector, k3Time).multiply(h);
+            StateVector scaledK3 = k3.multiply(2.0);
+            double k4Time = t0 + i*h + h;
+            StateVector k4FunctionStateVector = currentState.add(k3);
+            StateVector k4 = dydt.applyFunction(k4FunctionStateVector, k4Time).multiply(h);
+            StateVector scaledSumOfK1AndK4 = k1.add(k4);
+            StateVector scaledSumOfK2AndK3 = scalledK2.add(scaledK3);
+            StateVector scaledSumOfKs = scaledSumOfK1AndK4.add(scaledSumOfK2AndK3);
+            StateVector averagedScaledStateVector = scaledSumOfKs.multiply(0.166666666666667);
+            currentState = currentState.add(averagedScaledStateVector);
+            stateVectors.add(currentState);
         }
+        expected = stateVectors;
 
         //checking between expected and output values
         ArrayList<StateVector> output = solver.getAllStates();

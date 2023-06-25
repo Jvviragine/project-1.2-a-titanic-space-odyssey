@@ -29,7 +29,7 @@ public class TripSimulation {
         List<List<StateVector>> finalOrbits = new ArrayList<>();
         int tf = StartScreen.simulationEndTime / 2; //31536000
         double h = StartScreen.h; //1800
-        int tI = 500; //time-interval
+        int tI = 3403; //time-interval: 110 is optimized, 3403 is as well under the consideration of computation time, 500 is a good median value
         int count = 0;
         double dist = 0;
         double leftOverTime = 0;

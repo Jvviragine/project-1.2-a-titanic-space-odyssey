@@ -2,6 +2,7 @@ package landing;
 
 import physics.vectors.StateVector;
 import physics.vectors.Vector;
+import stochastic_wind_simulation.WindModel;
 
 import java.util.ArrayList;
 
@@ -30,36 +31,42 @@ public class FeedbackController {
         double theta = landerState.getThetaPos();
         double u = landerState.getU();
 
+        WindModel wind = new WindModel();
 
-            while (landerState.getPos().get(0) != 0 || landerState.getPos().get(1) != 0) {
+
+            while (Math.abs(landerState.getPos().get(0)) > 0.1 || landerState.getPos().get(1) != 0) {
+
+                Vector windVector = wind.getWindSpeed(landerState.getPos().get(1));
 
                 theta = f.calculateTheta(landerState);
                 u = f.calculateU(landerState, theta);
                 if(Math.abs(u)>Math.abs(10*G)) u=10*G;
                 System.out.println(u);
                 LanderState current = landerState;
-                //check if we are already at zero for one of the coordinates
-                if (landerState.getPos().get(0) == 0) {
-                    current = new LanderState(current.getState(), u, current.getTorque());
-                    current.setVel(new Vector(new double[]{0, current.getVel().get(1), current.getThetaVel()}));
-                }if (landerState.getPos().get(1) == 0) {
-                    current = new LanderState(current.getState(), u, current.getTorque());
-                    current.setVel(new Vector(new double[]{current.getVel().get(0), 0, current.getThetaVel()}));
-                } else {
-                    current = new LanderState(current.getState(), u, current.getTorque());
-                }
-                landerState = current;
+
                 current = f.LanderStep(current, h);
-
-
-                //check if the next state gets us underground or over our desired x
-                if (Math.signum(current.getPos().get(0)) != Math.signum(landerState.getPos().get(0))) {
+                if(Math.signum(current.getPos().get(0)) == -Math.signum(landerState.getPos().get(0))) {
+                    landerState = new LanderState(landerState.getState(), u, landerState.getTorque());
                     landerState.setVel(new Vector(new double[]{-landerState.getPos().get(0)/h, landerState.getVel().get(1), landerState.getThetaVel()}));
                 }
-                if(current.getPos().get(1) < 0){
+                if(current.getPos().get(1) < 0 && current.getPos().get(0) == 0){
+                    landerState = new LanderState(landerState.getState(), u, landerState.getTorque());
                     landerState.setVel(new Vector(new double[]{landerState.getVel().get(0), -landerState.getPos().get(1)/h, landerState.getThetaVel()}));
+                }else if(current.getPos().get(1) < 0){
+                    landerState.setVel(new Vector(new double[]{landerState.getVel().get(0), 0, landerState.getThetaVel()}));
                 }
+                if(landerState.getPos().get(0) == 0){
+                    landerState = new LanderState(landerState.getState(), u, landerState.getTorque());
+                    landerState.setVel(new Vector(new double[]{0, landerState.getVel().get(1), landerState.getThetaVel()}));
+                }
+                if(landerState.getPos().get(1) == 0){
+                    landerState = new LanderState(landerState.getState(), u, landerState.getTorque());
+                    landerState.setVel(new Vector(new double[]{ landerState.getVel().get(0), 0, landerState.getThetaVel()}));
+                }
+
+                landerState.setVel(new Vector(new double[]{landerState.getVel().get(0) - windVector.get(1), landerState.getVel().get(1), landerState.getThetaVel()}));
                 landerState = f.LanderStep(landerState, h);
+                System.out.println(landerState.getStateToString());
 
                 descents.add(landerState);
             }
@@ -83,7 +90,7 @@ public class FeedbackController {
 
 
     public static void main(String[] args) {
-        StateVector s = new StateVector(new Vector[]{new Vector(new double[]{55, 20,0}), new Vector(new double[]{0,0,0})});
+        StateVector s = new StateVector(new Vector[]{new Vector(new double[]{-100, 50,0}), new Vector(new double[]{0,0,0})});
         LanderState l = new LanderState(s, 10*G, 0);
         FeedbackController controller = new FeedbackController(l);
 //        double[][] path = controller.getPath();

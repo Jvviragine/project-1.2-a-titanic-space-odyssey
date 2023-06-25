@@ -12,22 +12,29 @@ import java.awt.event.ActionListener;
 
 import static gui.screens.SimulationScreen.*;
 
+/**
+ * GUI class to show the probe orbiting around Titan
+ * The user can input x and y coordinates for the eventual landing of the probe on Titan
+ * The probe keeps orbiting indefinitely until the user has pressed the "Initiate landing sequence!" button
+ */
 public class OrbitScreen extends JPanel implements ActionListener {
-
+    //GUI
     private JFrame frame;
     private JPanel panel;
     private JLabel topText, xText, yText, errorText;
     private JTextField xTextInput, yTextInput;
     private JButton startButton;
 
+    //Default values
     //Need to adjust these to be actual default values
     private double defaultXCoordinate = 500000.0;
     private double defaultYCoordinate = 300000.0;
 
-    public static double landingX, landingY;
+    public static double landingX, landingY; //static variables, usable in other methods, important
 
-    private boolean allInputsValid;
+    private boolean allInputsValid; //used later on to check if the user input is valid
 
+    //Images
     private ImageLoader imageLoader = new ImageLoader();
     //Assign the probe and titan image to normandy and titan respectively
     private Image normandy = imageLoader.getImage("normandy");
@@ -39,6 +46,10 @@ public class OrbitScreen extends JPanel implements ActionListener {
 
     private int[][] testPath = {{0, -200}, {-200, 0}, {0, 200}, {200, 0}};
 
+    /**
+     * Frame and executor get initialised here
+     * A small panel in the bottom right is added for the user to input the coordinates and to launch the landing sequence
+     */
     public OrbitScreen() {
         frame = new JFrame("Orbit Screen");
 
@@ -79,6 +90,7 @@ public class OrbitScreen extends JPanel implements ActionListener {
         errorText.setHorizontalAlignment(JLabel.CENTER);
         panel.add(errorText);
 
+        //Start button to launch the landing
         startButton = new JButton("Initiate landing sequence!");
         startButton.setBounds(100, 130, 200, 25);
         startButton.addActionListener(this);
@@ -99,15 +111,19 @@ public class OrbitScreen extends JPanel implements ActionListener {
                 showOrbit();
             }
             repaint();
-        }, 0, StartScreen.simulationSpeed * 1000, TimeUnit.MICROSECONDS);
+        }, 0, StartScreen.simulationInterval * 1000, TimeUnit.MICROSECONDS);
     }
 
+    /**
+     * Shows Titan in the middle, with the probe orbiting it
+     * @param g the <code>Graphics</code> object to protect
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
 
-        panel.updateUI();
+        panel.updateUI(); //necessary to keep the panel showing
 
         //Titan
         g2d.drawImage(titan, XCENTER - 100, YCENTER - 100, 200, 200, null);
@@ -116,6 +132,10 @@ public class OrbitScreen extends JPanel implements ActionListener {
         g2d.drawImage(normandy, XCENTER + testPath[pathIndex][0] - 20, YCENTER + testPath[pathIndex][1] - 20, 25, 25, null);
     }
 
+    /**
+     * Loops through the probe's path
+     * When the end of the path is reached, the index resets to 0, and it loops again.
+     */
     public void showOrbit() {
         pathIndex++;
 
@@ -127,7 +147,10 @@ public class OrbitScreen extends JPanel implements ActionListener {
         repaint();
     }
 
-    //What happens when the button is pressed
+    /**
+     * What happens when the button is pressed
+     * @param e the event to be processed
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         //Base case
@@ -139,8 +162,8 @@ public class OrbitScreen extends JPanel implements ActionListener {
 
         /**
          * If all inputs are valid:
-         * assign the landing coordinates to a static variable, usable everywhere;
-         * launch the landing screen and close the orbit screen
+         * Assign the landing coordinates to static variables, usable everywhere;
+         * Launch the landing screen and close the orbit screen.
          */
         if(allInputsValid) {
             errorText.setText("");
@@ -153,6 +176,13 @@ public class OrbitScreen extends JPanel implements ActionListener {
         }
     }
 
+    /**
+     * Checks the validity of the user input for the coordinates
+     * With this, any input from the user that is not in a double format, will be rejected
+     * If the input box is left empty, a default value will be used
+     * @param textInput The user text input to be verified
+     * @param defaultCoordinate The default coordinate it should use when the text box is left empty
+     */
     public void checkInputValidity(JTextField textInput, double defaultCoordinate) {
 
         //Fills in the default landing coordinate if the text box is left empty

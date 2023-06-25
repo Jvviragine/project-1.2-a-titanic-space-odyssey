@@ -23,7 +23,7 @@ public class OrbitList {
     private static TripSimulation sim = new TripSimulation();
     private static List<List<StateVector>> planetPaths = sim.simulateTrip();
 
-    private static StateVector s = new StateVector(new Vector[]{new Vector(new double[]{55, 20,0}), new Vector(new double[]{0,0,0})});
+    private static StateVector s = new StateVector(new Vector[]{new Vector(new double[]{-100, 50,0}), new Vector(new double[]{0,0,0})});
     private static LanderState l = new LanderState(s, 10*G, 0);
     private static FeedbackController controller = new FeedbackController(l);
     //private static OpenLoopController c = new OpenLoopController(s, new Vector(new double[]{0,0}),0,50, 1);
@@ -35,8 +35,9 @@ public class OrbitList {
     private static double saturnMaxDistance = getDistanceFromSun(1253801723.95465, -760453007.810989);
     final private static double scale = Math.min(SCREEN_WIDTH, SCREEN_HEIGHT) / (1.5 * saturnMaxDistance);
     final private static double landingScale = 6.0;
+
     /**
-     * Gets the path of the planet with
+     * Gets the path of the planet with index "index"
      * @param index: the index of the planet we want the path from
      * @return a 2d integer array, where each index contains scaled x and y coordinates
      */
@@ -51,6 +52,10 @@ public class OrbitList {
         return path;
     }
 
+    /**
+     * Gets the landing path of the probe
+     * @return
+     */
     public static int[][] getLandingPath() {
         int[][] scaledLandingPath = new int[initialLandingPath.length][2];
 

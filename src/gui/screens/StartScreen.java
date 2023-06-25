@@ -15,9 +15,16 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.*;
 
-//Opening screen, allowing user input of initial velocities, positions and simulation speed.
-//Also gives the option to freeze the simulation at the inputted time.
+/**
+ * Opening screen GUI, allowing user input of initial velocities and positions
+ * Also allows the user to pick one of four ODE solvers (Euler's, RK2, RK3 and RK4) used to perform calculations
+ * Moreover, the user can pick the step size used in the chosen solvers
+ * A custom ending time for the launch simulation is also allowed
+ * Finally, the GUI screens after this one all use an executor with an interval in microseconds to update the screen
+ * The user is also allowed to alter this time interval
+ */
 public class StartScreen extends JFrame implements ActionListener {
+    //GUI components
     private JFrame frame;
     private JLabel solverText, xText, yText, zText, v1Text, v2Text, v3Text,
                    stepSizeText, simulationEndTimeText, simulationSpeedText1, simulationSpeedText2,
@@ -27,7 +34,10 @@ public class StartScreen extends JFrame implements ActionListener {
     private JComboBox solverChooser;
     private String[] solverOptions = {"Euler", "RK2", "RK3", "RK4"};
     private JButton startButton;
+    private final int FRAME_WIDTH = 600;
+    private final int FRAME_HEIGHT = 600;
 
+    //
     private double x, y, z, v1, v2, v3, simSpeed;
     private StateVector probeInitialConditions = InitialConditions.getProbeInitialState();
     private double[] defaultConditions = {probeInitialConditions.getVector(0).get(0),       //x
@@ -37,17 +47,17 @@ public class StartScreen extends JFrame implements ActionListener {
                                           probeInitialConditions.getVector(1).get(1),       //v2
                                           probeInitialConditions.getVector(1).get(2),       //v3
                                           1800, 63072000, 500};           //step size, end time and time interval
-    private final int FRAME_WIDTH = 600;
-    private final int FRAME_HEIGHT = 600;
 
     //Values to be passed on and used in other functions
     public static boolean freezeSimulation = false;         //boolean that determines if the simulation should go
     public static StateVector initialProbeConditions;       //initial conditions for the probe, inputted by the user
     public static Solver finalSolver;                       //solver chosen by the user
     public static double h;                                 //step size in seconds
-    public static int simulationEndTime, simulationSpeed;   //end time in seconds, simulation interval in microseconds
+    public static int simulationEndTime, simulationInterval;   //end time in seconds, simulation interval in microseconds
 
-    //The start screen, where the user can input custom values
+    /**
+     * Initialisation of the Start Screen GUI
+      */
     public StartScreen() {
         frame = new JFrame("Launch configuration");
 
@@ -88,6 +98,7 @@ public class StartScreen extends JFrame implements ActionListener {
         solverChooser.setBounds(182, 78, 200, 25);
         panel.add(solverChooser);
 
+        //Coordinates texts and input fields
         xText = new JLabel("x: ");
         xText.setBounds(185, 120, 80, 25);
         panel.add(xText);
@@ -112,6 +123,7 @@ public class StartScreen extends JFrame implements ActionListener {
         zInput.setBounds(200, 200, 165, 25);
         panel.add(zInput);
 
+        //Velocities texts and input fields
         v1Text = new JLabel("v1: ");
         v1Text.setBounds(180, 240, 80, 25);
         panel.add(v1Text);
@@ -164,6 +176,7 @@ public class StartScreen extends JFrame implements ActionListener {
         simulationSpeedInput.setBounds(200, 440, 165, 25);
         panel.add(simulationSpeedInput);
 
+        //Simulation launch button
         startButton = new JButton("Launch!");
         startButton.setBounds(200, 480, 165, 25);
         startButton.addActionListener(this);
@@ -214,7 +227,7 @@ public class StartScreen extends JFrame implements ActionListener {
             }
         }
 
-        //Separate check for the step size, end time and simulation speed, as they can only be positive integers
+        //Separate checks for the step size, end time and simulation interval, as they can only be positive integers
         for (int i = 6; i < userInputs.length; i++) {
             if(userInputs[i].getText().isEmpty()) {
                 userInputs[i].setText(String.valueOf((int) defaultConditions[i]));        //uses default values if the box is left empty
@@ -280,14 +293,14 @@ public class StartScreen extends JFrame implements ActionListener {
             //Sets the simulation end time
             simulationEndTime = (int) Math.ceil(Double.parseDouble(userInputs[7].getText()));
 
-            //Sets the simulation speed interval
-            simulationSpeed = (int) Math.ceil(Double.parseDouble(userInputs[8].getText()));
+            //Sets the simulation interval
+            simulationInterval = (int) Math.ceil(Double.parseDouble(userInputs[8].getText()));
 
             //Initialise the physics simulation with the user inputted vectors
             SolarSystemPhysicsSimulation system = new SolarSystemPhysicsSimulation(PlanetaryData.getCelestialBodiesStateVector(),PlanetaryData.getCelestialBodiesMasses(),PlanetaryData.getCelestialBodyNames(),finalSolver);
 
             TripSimulation tripSimulation = new TripSimulation();
-            errorText1.setText("");      //removes error message
+            errorText1.setText("");      //removes error messages
             errorText2.setText("");
             frame.dispose();        //closes the start screen
             SimulationScreen simulationScreen = new SimulationScreen();     //starts the simulation screen

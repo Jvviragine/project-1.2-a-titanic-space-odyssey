@@ -91,7 +91,7 @@ class EulerSolverTest {
 
         for (int i = 0; i < output.getNumberOfVectors(); i++) {
             for (int j = 0; j < output.getVector(i).getDimension(); j++) {
-                assertEquals(output.getVector(i).get(j), output.getVector(i).get(j), tolerance);
+                assertEquals(expected, output.getVector(i).get(j), tolerance);
             }
         }
     }

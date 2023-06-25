@@ -6,12 +6,10 @@ import org.junit.jupiter.api.Test;
 import physics.vectors.StateVector;
 import physics.vectors.Vector;
 
-import javax.swing.plaf.nimbus.State;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 /*
-This class is responsible for testing the TestODEDerivativeFunction class
+This class is responsible for testing the Test2ODEFunction class
 which is a class that represents a basic function.
 It is used to perform tests on the solvers.
 
@@ -22,20 +20,20 @@ applyFunction(StateVector y, double t) :
     - t : t < 0, t == 0, t > 0
  */
 
-class TestODEDerivativeFunctionTest {
+class Test2ODEFunctionTest {
 
-    private Function dydt;
+    private Function ft;
 
     @BeforeEach
-    //initializes the  before each test
+    //initializes the ODEFunction before each test
     void setUp() {
-        dydt = new TestODEDerivativeFunction();
+        ft = new Test2ODEFunction();
     }
 
     @AfterEach
-    //deletes the ODEDerivativeFunction before resetting it
+    //deletes the ODEFunction before resetting it
     void tearDown() {
-        dydt = null;
+        ft = null;
     }
 
     @Test
@@ -43,11 +41,11 @@ class TestODEDerivativeFunctionTest {
     void testApplyFunctionWithNegative_tAndNegativeInitialValue() {
         double t = -6.3;
         double valueAtY = -3;
-        double expected = valueAtY;
+        double expected = -2 + 2*Math.pow(Math.E, (0.5*Math.pow(t, 2) + t -4));
 
         Vector initialValueVector = new Vector(new double[]{valueAtY});
         StateVector initialValue = new StateVector(new Vector[]{initialValueVector});
-        StateVector output = dydt.applyFunction(initialValue, t);
+        StateVector output = ft.applyFunction(initialValue, t);
 
         for (int i = 0; i < output.getNumberOfVectors(); i++) {
             for (int j = 0; j < output.getVector(i).getDimension(); j++) {
@@ -61,11 +59,11 @@ class TestODEDerivativeFunctionTest {
     void testApplyFunctionWithNegative_tAndNullInitialValue() {
         double t = -6.3;
         double valueAtY = 0;
-        double expected = valueAtY;
+        double expected = -2 + 2*Math.pow(Math.E, (0.5*Math.pow(t, 2) + t -4));
 
         Vector initialValueVector = new Vector(new double[]{valueAtY});
         StateVector initialValue = new StateVector(new Vector[]{initialValueVector});
-        StateVector output = dydt.applyFunction(initialValue, t);
+        StateVector output = ft.applyFunction(initialValue, t);
 
         for (int i = 0; i < output.getNumberOfVectors(); i++) {
             for (int j = 0; j < output.getVector(i).getDimension(); j++) {
@@ -79,11 +77,11 @@ class TestODEDerivativeFunctionTest {
     void testApplyFunctionWithNegative_tAndPositiveInitialValue() {
         double t = -6.3;
         double valueAtY = 3.32;
-        double expected = valueAtY;
+        double expected = -2 + 2*Math.pow(Math.E, (0.5*Math.pow(t, 2) + t -4));
 
         Vector initialValueVector = new Vector(new double[]{valueAtY});
         StateVector initialValue = new StateVector(new Vector[]{initialValueVector});
-        StateVector output = dydt.applyFunction(initialValue, t);
+        StateVector output = ft.applyFunction(initialValue, t);
 
         for (int i = 0; i < output.getNumberOfVectors(); i++) {
             for (int j = 0; j < output.getVector(i).getDimension(); j++) {
@@ -97,11 +95,11 @@ class TestODEDerivativeFunctionTest {
     void testApplyFunctionWithNull_tAndNegativeInitialValue() {
         double t = 0;
         double valueAtY = -3;
-        double expected = valueAtY;
+        double expected = -2 + 2*Math.pow(Math.E, (0.5*Math.pow(t, 2) + t -4));
 
         Vector initialValueVector = new Vector(new double[]{valueAtY});
         StateVector initialValue = new StateVector(new Vector[]{initialValueVector});
-        StateVector output = dydt.applyFunction(initialValue, t);
+        StateVector output = ft.applyFunction(initialValue, t);
 
         for (int i = 0; i < output.getNumberOfVectors(); i++) {
             for (int j = 0; j < output.getVector(i).getDimension(); j++) {
@@ -115,11 +113,11 @@ class TestODEDerivativeFunctionTest {
     void testApplyFunctionWithNull_tAndNullInitialValue() {
         double t = 0;
         double valueAtY = 0;
-        double expected = valueAtY;
+        double expected = -2 + 2*Math.pow(Math.E, (0.5*Math.pow(t, 2) + t -4));
 
         Vector initialValueVector = new Vector(new double[]{valueAtY});
         StateVector initialValue = new StateVector(new Vector[]{initialValueVector});
-        StateVector output = dydt.applyFunction(initialValue, t);
+        StateVector output = ft.applyFunction(initialValue, t);
 
         for (int i = 0; i < output.getNumberOfVectors(); i++) {
             for (int j = 0; j < output.getVector(i).getDimension(); j++) {
@@ -133,11 +131,11 @@ class TestODEDerivativeFunctionTest {
     void testApplyFunctionWithNull_tAndPositiveInitialValue() {
         double t = 0;
         double valueAtY = 3.32;
-        double expected = valueAtY;
+        double expected = -2 + 2*Math.pow(Math.E, (0.5*Math.pow(t, 2) + t -4));
 
         Vector initialValueVector = new Vector(new double[]{valueAtY});
         StateVector initialValue = new StateVector(new Vector[]{initialValueVector});
-        StateVector output = dydt.applyFunction(initialValue, t);
+        StateVector output = ft.applyFunction(initialValue, t);
 
         for (int i = 0; i < output.getNumberOfVectors(); i++) {
             for (int j = 0; j < output.getVector(i).getDimension(); j++) {
@@ -151,11 +149,11 @@ class TestODEDerivativeFunctionTest {
     void testApplyFunctionWithPositive_tAndNegativeInitialValue() {
         double t = 14.2;
         double valueAtY = -3;
-        double expected = valueAtY;
+        double expected = -2 + 2*Math.pow(Math.E, (0.5*Math.pow(t, 2) + t -4));
 
         Vector initialValueVector = new Vector(new double[]{valueAtY});
         StateVector initialValue = new StateVector(new Vector[]{initialValueVector});
-        StateVector output = dydt.applyFunction(initialValue, t);
+        StateVector output = ft.applyFunction(initialValue, t);
 
         for (int i = 0; i < output.getNumberOfVectors(); i++) {
             for (int j = 0; j < output.getVector(i).getDimension(); j++) {
@@ -169,11 +167,11 @@ class TestODEDerivativeFunctionTest {
     void testApplyFunctionWithPositive_tAndNullInitialValue() {
         double t = 14.2;
         double valueAtY = 0;
-        double expected = valueAtY;
+        double expected = -2 + 2*Math.pow(Math.E, (0.5*Math.pow(t, 2) + t -4));
 
         Vector initialValueVector = new Vector(new double[]{valueAtY});
         StateVector initialValue = new StateVector(new Vector[]{initialValueVector});
-        StateVector output = dydt.applyFunction(initialValue, t);
+        StateVector output = ft.applyFunction(initialValue, t);
 
         for (int i = 0; i < output.getNumberOfVectors(); i++) {
             for (int j = 0; j < output.getVector(i).getDimension(); j++) {
@@ -187,11 +185,11 @@ class TestODEDerivativeFunctionTest {
     void testApplyFunctionWithPositive_tAndPositiveInitialValue() {
         double t = 14.2;
         double valueAtY = 3.32;
-        double expected = valueAtY;
+        double expected = -2 + 2*Math.pow(Math.E, (0.5*Math.pow(t, 2) + t -4));
 
         Vector initialValueVector = new Vector(new double[]{valueAtY});
         StateVector initialValue = new StateVector(new Vector[]{initialValueVector});
-        StateVector output = dydt.applyFunction(initialValue, t);
+        StateVector output = ft.applyFunction(initialValue, t);
 
         for (int i = 0; i < output.getNumberOfVectors(); i++) {
             for (int j = 0; j < output.getVector(i).getDimension(); j++) {
@@ -204,6 +202,6 @@ class TestODEDerivativeFunctionTest {
     //covers resetState
     void testResetState() {
         //does nothing
-        dydt.resetState(null);
+        ft.resetState(null);
     }
 }

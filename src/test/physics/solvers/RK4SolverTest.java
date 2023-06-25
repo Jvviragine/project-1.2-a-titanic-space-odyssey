@@ -69,7 +69,7 @@ class RK4SolverTest {
 
         for (int i = 0; i < output.getNumberOfVectors(); i++) {
             for (int j = 0; j < output.getVector(i).getDimension(); j++) {
-                assertEquals(output.getVector(i).get(j), output.getVector(i).get(j), tolerance);
+                assertEquals(expected, output.getVector(i).get(j), tolerance);
             }
         }
     }
@@ -77,7 +77,7 @@ class RK4SolverTest {
     @Test
     //covers solve for a singular stateVector taken as parameter for initialCondition < 0
     void testSolveWithSingularStateVectorAndNegativeInitialCondition() {
-        double expected = 1210.28081234923;
+        double expected = -1210.28081234923;
 
         Function dydt = new TestODEDerivativeFunction();
         double t0 = 0;
@@ -89,7 +89,7 @@ class RK4SolverTest {
 
         for (int i = 0; i < output.getNumberOfVectors(); i++) {
             for (int j = 0; j < output.getVector(i).getDimension(); j++) {
-                assertEquals(output.getVector(i).get(j), output.getVector(i).get(j), tolerance);
+                assertEquals(expected, output.getVector(i).get(j), tolerance);
             }
         }
     }

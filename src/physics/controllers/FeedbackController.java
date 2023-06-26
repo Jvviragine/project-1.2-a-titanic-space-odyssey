@@ -118,24 +118,6 @@ public class FeedbackController implements Controller{
     }
 
 
-
-    public static void main(String[] args) {
-        StateVector s = new StateVector(new Vector[]{new Vector(new double[]{550, 30, 0}), new Vector(new double[]{
-                0,0, 0})});
-        LanderState l = new LanderState(s, 10*G, 0);
-        FeedbackController controller = new FeedbackController(l);
-//        double[][] path = controller.getPath();
-//        for(int i = 0; i<path.length;i++){
-//            System.out.println(path[i][0]+" "+ path[i][1]);
-//        }
-        ArrayList<LanderState> descents = controller.getLanding();
-        for(int i = 0; i<descents.size();i++){
-            System.out.println(descents.get(i).getStateToString());
-        }
-
-    }
-
-
     @Override
     public void startControl() {
 

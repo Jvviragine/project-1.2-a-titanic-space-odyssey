@@ -63,7 +63,7 @@ public class LandingScreen extends JPanel {
             if (!StartScreen.freezeSimulation) {
                 showLanding();
             }
-        }, 0, StartScreen.simulationInterval * 1000, TimeUnit.MICROSECONDS);
+        }, 0, StartScreen.simulationInterval * 200, TimeUnit.MICROSECONDS);
     }
 
     /**

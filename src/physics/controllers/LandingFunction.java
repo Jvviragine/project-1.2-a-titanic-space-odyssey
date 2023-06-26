@@ -1,9 +1,7 @@
-package landing;
+package physics.controllers;
 
 import physics.vectors.StateVector;
 import physics.vectors.Vector;
-
-import javax.swing.plaf.nimbus.State;
 
 public class LandingFunction {
 
@@ -17,6 +15,9 @@ public class LandingFunction {
         Vector newPos = calculateNewPos(state, h);
         Vector newVel = calculateNewVel(state, h);
         StateVector newState = new StateVector(new Vector[]{newPos, newVel});
+        double theta = calculateTheta(state);
+        state.setThetaPos(theta);
+        state.setU(calculateU(state, theta));
         return new LanderState(newState, state.getU(),state.getTorque());
     }
 
@@ -29,7 +30,6 @@ public class LandingFunction {
 
     public Vector calculateNewVel(LanderState state, double h){
         Vector acc = getAcceleration(state);
-        //System.out.println(acc.toString());
         return state.getVel().add(acc.multiply(h));
     }
 
@@ -50,18 +50,10 @@ public class LandingFunction {
 
     public double calculateU(LanderState state, double theta){
         double u = -state.getPos().get(0)/Math.sin(theta);
+        if (Math.abs(u) > Math.abs(10 * G)) u = 10 * G;
         return u;
     }
 
-
-    public static void main(String[] args) {
-        LandingFunction f = new LandingFunction();
-        StateVector s = new StateVector(new Vector[]{new Vector(new double[]{0,1.46,0}), new Vector(new double[]{0,0,0})});
-        LanderState l = new LanderState(s,  0,0);
-        for(int i = 0;i<10;i++){
-            l = f.LanderStep(l, 1);
-            System.out.println(l.getTotalState());
-        }
-    }
+    
 
 }

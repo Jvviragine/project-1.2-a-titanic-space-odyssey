@@ -1,15 +1,14 @@
 package gui.data;
 
-import landing.FeedbackController;
-import landing.LanderState;
-import physics.controllers.OpenLoopController;
+import physics.controllers.FeedbackController;
+import physics.controllers.LanderState;
 import physics.simulation.TripSimulation;
 import physics.vectors.StateVector;
 import physics.vectors.Vector;
 
 import java.util.List;
 
-import static landing.FeedbackController.G;
+import static physics.controllers.FeedbackController.G;
 
 /**
  * Separates, scales and assigns all orbits to the different planets

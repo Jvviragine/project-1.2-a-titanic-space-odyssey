@@ -1,7 +1,9 @@
 package physics.controllers;
 
+import physics.landing.OpenLoopLanding;
 import physics.vectors.StateVector;
 import physics.vectors.Vector;
+import stochastic_wind_simulation.WindModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +20,10 @@ public class OpenLoopController implements Controller{
     private double h;
     private List<Vector>thrusts = new ArrayList<>();
     private List<Vector>torques = new ArrayList<>();
-
+    private List<Vector>thrustsWithoutWind = new ArrayList<>();
+    private List<Vector> windThrusts = new ArrayList<>();
+    private List<StateVector> allStates = new ArrayList<>();
+    OpenLoopLanding landing = new OpenLoopLanding(h);
     //Starting point for each controller
     @Override
     public void startControl() {
@@ -47,11 +52,12 @@ public class OpenLoopController implements Controller{
 
     public void simulateLanding(){
         stabiliseLandingModule();
-        stabiliseWind();
         rotateModuleHorizontally();
         approachXCoordinate();
         rotateModuleVertically();
         descendToLandingPoint();
+        stabiliseWind();
+        //simulateWind();
     }
 
     /**
@@ -89,13 +95,16 @@ public class OpenLoopController implements Controller{
         }
     }
 
-    public void stabiliseWind(){
-
-    }
-
     public void rotateModuleHorizontally(){
         //Parallel to the x-axis
         Vector goalOrientation;
+    }
+
+    public void approachXCoordinate(){
+        double landerXCoordinate = initialState.getVector(0).get(0);
+        double landingXCoordinate = landingPosition.get(0);
+        List<Vector> thrusts = OpenLoopLanding.moveAcrossXAxis(landerXCoordinate,landingXCoordinate,this.tf,this.t0,this.h);
+        addThrusts(thrusts);
     }
 
     public void rotateModuleVertically(){
@@ -104,78 +113,25 @@ public class OpenLoopController implements Controller{
     }
 
     /**
-     * Simulates probe moving parallel to the surface of titan to hover above the landing point
+     * Simulates probe descent in the y-direction given initial y conditions and landing y position
      */
-    public void approachXCoordinate(){
-        double landerXCoordinate = initialState.getVector(0).get(0);
-
-        double landingXCoordinate = landingPosition.get(0);
-
-        double displacement = landingXCoordinate - landerXCoordinate;
-
-        //Assume initial velocity to be zero after stabilising
-        double initialVelocity = 0;
-
-        int numberOfSteps = (int)((tf-t0)/h);
-        System.out.println("Number of steps: "+numberOfSteps);
-        double displacementPerStep = displacement/numberOfSteps;
-        System.out.println("Displacement per step: "+displacementPerStep);
-        System.out.println("Displacement: "+displacement);
-        double displacementCovered = 0;
-
-        for(int i =0; i < numberOfSteps; i++){
-            double acceleration = getUniformAcceleration(displacementPerStep,initialVelocity,1);
-            System.out.println("Acceleration: "+acceleration);
-            Vector thrust = new Vector(new double[]{acceleration,0,0});
-            thrusts.add(thrust);
-            initialVelocity = (acceleration * 1) + initialVelocity; //reorganise a = (v-u)/t -> v = at + u
-            System.out.println("Initial velocity: "+initialVelocity);
-            displacementCovered += initialVelocity * 1;
-            System.out.println("Distance covered: "+displacementCovered);
-            stabiliseWind();
-        }
+    public void descendToLandingPoint(){
+        double landerYCoordinate = initialState.getVector(0).get(1);
+        double landingYCoordinate = landingPosition.get(1);
+        List<Vector> thrusts = OpenLoopLanding.moveAcrossYAxis(landerYCoordinate,landingYCoordinate,this.tf,this.t0,this.h);
+        addThrusts(thrusts);
     }
 
     /**
-     * Simulates probe descent in the y-direction given initial y conditions and landing y position
+     * Adds all individual thrusts from a list of thrusts to the list of thrusts in the controller
+     * @param thrusts list of thrusts to be added
      */
-    public void descendToLandingPoint(){ //works with large step sizes (small tf)
-        double landerYCoordinate = initialState.getVector(0).get(1);
-
-        double landingYCoordinate = landingPosition.get(1);
-
-        double displacement = landingYCoordinate - landerYCoordinate;
-
-        //Assume initial velocity to be zero after stabilising
-        double initialVelocity = 0;
-
-        int numberOfSteps = (int)((tf-t0)/h);
-        System.out.println("Number of steps: "+numberOfSteps);
-        double displacementPerStep = displacement/numberOfSteps;
-        System.out.println("Displacement per step: "+displacementPerStep);
-        System.out.println("Displacement: "+displacement);
-        double displacementCovered = 0;
-
-        for(int i = 0; i <  numberOfSteps; i++){
-            System.out.println("HI");
-            double uniformAcceleration = -getUniformAcceleration(displacementPerStep,initialVelocity,1);
-            System.out.println("Uniform acceleration: "+uniformAcceleration);
-            double acceleration = getAcceleration(uniformAcceleration,initialVelocity,Math.PI).get(1);
-            if(Math.abs(acceleration) > umax){
-                double sign = Math.signum(acceleration);
-                acceleration = sign * umax;
-            }
-            System.out.println("Acceleration: " + acceleration);
-            Vector thrust = new Vector(new double[]{0,acceleration,0});
-            thrusts.add(thrust);
-            initialVelocity = (acceleration * 1) + initialVelocity; //reorganise a = (v-u)/t -> v = at + u
-            System.out.println("Initial velocity: "+initialVelocity);
-            displacementCovered += initialVelocity * 1;
-            System.out.println("Distance covered: "+displacementCovered);
-            stabiliseWind();
+    public void addThrusts(List<Vector> thrusts){
+        for(int i =0; i < thrusts.size(); i++){
+            this.thrusts.add(thrusts.get(i));
         }
-
     }
+
 
     /**
      * Applies all thrusts for the period to an initial state vector
@@ -187,7 +143,7 @@ public class OpenLoopController implements Controller{
         Vector initialVelocity = initialState.getVector(1);
         List <StateVector> allStates = new ArrayList<>();
 
-        for(int i =0; i < thrusts.size(); i++){
+        for(int i = 0; i < thrusts.size(); i++){
             initialPosition = initialPosition.add(initialVelocity.multiply(h));
             initialVelocity = initialVelocity.add(thrusts.get(i).multiply(h));
             allStates.add(new StateVector(new Vector[]{initialPosition,initialVelocity}));
@@ -195,56 +151,221 @@ public class OpenLoopController implements Controller{
         return allStates;
     }
 
-    /**
-     * Calculates the acceleration over a specified distance for a specified period of time
-     *      s = ut + 1/2at^2
-     *      ->  2(s - ut) = at^2
-     *      ->  a = 2(s-ut)/t^2
-     * @param displacement the distance over which acceleration is to be calculated
-     * @param initialVelocity the velocity at the beginning of the period
-     * @param time the length of the period
-     * @return the acceleration for the period
-     */
-    public double getUniformAcceleration(double displacement,double initialVelocity,double time){
-        double acceleration  = 2 * (displacement - (initialVelocity * time) ) / Math.pow(time,2);
-        return acceleration;
+    //public List <StateVector>
+
+//    public List <StateVector> applyThrust(StateVector initialState,List<Vector> wind){
+//        System.out.println("APPLIED");
+//        Vector initialPosition = initialState.getVector(0);
+//        Vector initialVelocity = initialState.getVector(1);
+//        List <StateVector> allStates = new ArrayList<>();
+//        System.out.println("Initial vel:" +initialVelocity.toString());
+//
+//        for(int i = 0; i < windThrusts.size(); i++){
+//            Vector currentThrust = this.windThrusts.get(i);
+//            System.out.println("Velocity 1:" +currentThrust.toString());
+//            Vector newThrust = currentThrust.add(wind.get(i));
+//            System.out.println("Velocity 2:" +newThrust.toString());
+//            Vector resultantThrust = currentThrust.add(newThrust);
+//            System.out.println("Velocity 3:" +resultantThrust.toString());
+//            windThrusts.set(i,resultantThrust);
+//        }
+//        this.thrusts = correctForWind(windThrusts);
+//        this.allStates = applyThrust(initialState);
+//
+//        return allStates;
+//    }
+
+    public List <StateVector> applyThrust(StateVector initialState,List<Vector> wind){
+        System.out.println("APPLIED");
+        Vector initialPosition = initialState.getVector(0);
+        Vector initialVelocity = initialState.getVector(1);
+        List <StateVector> allStates = new ArrayList<>();
+        System.out.println("Initial vel:" +initialVelocity.toString());
+        Vector previousInitialVelocity = initialVelocity;
+
+        for(int i =0; i < thrusts.size()-1; i++){
+            initialPosition = initialPosition.add(initialVelocity.add(wind.get(i)));
+            initialVelocity = initialVelocity.add((thrusts.get(i).multiply(h)).add(wind.get(i)));
+            allStates.add(new StateVector(new Vector[]{initialPosition,initialVelocity}));
+            initialVelocity = previousInitialVelocity;
+        }
+
+        return allStates;
+    }
+
+    public void stabiliseWind(){
+        //calculate acceleration and add it to thrusts
+        double maxHeight = initialState.getVector(0).get(1);
+
+        if(maxHeight <= 7000){
+            double estimatedWindSpeed = (0.5) * (0.3 - 0.0);
+            double acceleration = -(estimatedWindSpeed)/h;
+            System.out.println("Wind acceleration:"+ acceleration);
+            List<Vector> windThrusts = new ArrayList<>();
+            Vector wind = new Vector(new double[]{acceleration,0,0});
+            windThrusts.add(wind);
+            for(int i = 1; i < thrusts.size(); i++){
+                windThrusts.add(new Vector(new double[]{0,0,0}));
+            }
+            //this.windThrusts = windThrusts;
+            this.thrusts = correctForWind(windThrusts);
+            this.allStates = applyThrust(initialState);
+            //thrustsWithoutWind = correctForWind(windThrusts);
+
+        }
+        else if(maxHeight <= 60000){
+            double estimatedWindSpeed = (0.5) * (0.5 - 0.0);
+            double acceleration = -(estimatedWindSpeed)/h;
+            System.out.println("Wind acceleration:"+ acceleration);
+            List<Vector> windThrusts = new ArrayList<>();
+            Vector wind = new Vector(new double[]{acceleration,0,0});
+            windThrusts.add(wind);
+            for(int i = 1; i < thrusts.size(); i++){
+                windThrusts.add(new Vector(new double[]{0,0,0}));
+            }
+            //this.windThrusts = windThrusts;
+            this.thrusts = correctForWind(windThrusts);
+            this.allStates = applyThrust(initialState);
+            //thrustsWithoutWind = correctForWind(windThrusts);
+        }
+        else if(maxHeight <= 120000){
+            double estimatedWindSpeed = (0.5) * (5.0 - 0.8);
+            double acceleration = -(estimatedWindSpeed)/h;
+            System.out.println("Wind acceleration:"+ acceleration);
+            List<Vector> windThrusts = new ArrayList<>();
+            Vector wind = new Vector(new double[]{acceleration,0,0});
+            windThrusts.add(wind);
+            for(int i = 1; i < thrusts.size(); i++){
+                windThrusts.add(new Vector(new double[]{0,0,0}));
+            }
+            //this.windThrusts = windThrusts;
+            this.thrusts = correctForWind(windThrusts);
+            this.allStates = applyThrust(initialState);
+            //thrustsWithoutWind = correctForWind(windThrusts);
+        }
+    }
+
+
+    //need to remove previous velocity and then reset to this new velocity
+    public void simulateWind(){
+        WindModel windModel = new WindModel();
+        List<StateVector> allStates = applyThrust(this.initialState);
+        List<Vector> windThrusts = new ArrayList<>();
+        double height = allStates.get(0).getVector(0).get(1);
+        double velocity = windModel.getWindSpeed(height).get(0)/h;
+        Vector wind = new Vector(new double[]{velocity,0,0});
+        wind = windThrusts.get(0).add(wind);
+        windThrusts.add(wind);
+        System.out.println("All States size:"+allStates.size());
+
+
+        for(int i = 1; i < allStates.size(); i++){
+            System.out.println("Yep");
+            height = allStates.get(i).getVector(0).get(1);
+            //double currentVelocity = allStates.get(i).getVector(1).get(0);
+            velocity = windModel.getWindSpeed(height).get(0)/h;
+            System.out.println("Velocity of wind:" + velocity);
+            //double difference = velocity - currentVelocity;
+//            if(velocity > currentVelocity){
+            //velocity = -difference;
+            wind = new Vector(new double[]{velocity,0,0});
+            wind = windThrusts.get(i).add(wind);
+            windThrusts.add(wind);
+//            }
+//            else{
+//                velocity = difference;
+//                wind = new Vector(new double[]{velocity,0,0});
+//                windThrusts.add(wind);
+//            }
+        }
+        //this.thrusts = correctForWind(windThrusts);
+        this.allStates = applyThrust(initialState,windThrusts);
+    }
+
+//    public List<StateVector> simulateWind(){
+//        List<StateVector> allWind = new ArrayList<>();
+//        WindModel wind = new WindModel();
+//        List<StateVector> allStates = applyThrust(this.initialState);
+//        for(int i = 0; i < allStates.size(); i++){
+//            StateVector currentState = allStates.get(i);
+//            double height = currentState.getVector(0).get(1);
+//            Vector windAtHeight = wind.getWindSpeed(height);
+//            double windVelocityX = windAtHeight.get(0) + currentState.getVector(1).get(0);
+//            double windPositionX = windAtHeight.get(1) + currentState.getVector(0).get(0);
+//            Vector newPosition = new Vector(new double[]{windPositionX,currentState.getVector(0).get(1),currentState.getVector(0).get(2)});
+//            Vector newVelocity = new Vector(new double[]{windVelocityX,currentState.getVector(1).get(1),currentState.getVector(1).get(2)});
+//            StateVector newState = new StateVector(new Vector[]{newPosition,newVelocity});
+//            allStates.set(i,newState);
+//            //StateVector newState = new StateVector(new Vector[]{newPostion,newVelocity});
+//            //allStates.set(i,newState);
+//        }
+////        Vector initialPosition = allStates.get(0).getVector(0);
+////        Vector initialVelocity = allStates.get(1).getVector(1);
+////        for(int i = 0; i < allStates.size(); i++){
+////            initialPosition = initialPosition.add(initialVelocity.multiply(h));
+////            initialVelocity = initialVelocity.add(thrusts.get(i).multiply(h));
+////            allStates.add(new StateVector(new Vector[]{initialPosition,initialVelocity}));
+////        }
+////        WindModel wind = new WindModel();
+////        List<StateVector> allStates = applyThrust(this.initialState);
+////        for(int i = 0; i < thrusts.size(); i++){
+////            double height = allStates.get(i).getVector(0).get(1);
+////            double windX = wind.getWindSpeed(height).get(0);
+////            System.out.println("WInd:" + windX);
+////            Vector thrustFromWind = new Vector(new double[]{windX,0,0});
+////            Vector currentThrust = this.thrusts.get(i);
+////            this.thrusts.set(i, currentThrust.add(thrustFromWind));
+////        }
+////        allStates = applyThrust(this.initialState);
+////        List <Vector> windAtStep = new ArrayList<>();
+////
+////        Vector initialPosition = allStates.get(0).getVector(0);
+////        Vector initialVelocity = allStates.get(0).getVector(1);
+////
+////        for(int i = 1; i < thrusts.size(); i++){
+////            StateVector currentState = allStates.get(i);
+////            //Vector initialPosition = currentState.getVector(0);
+////            //Vector initialVelocity = currentState.getVector(1);
+////            double height = initialPosition.get(1);
+////            double windX = wind.getWindSpeed(height).get(0);
+////            System.out.println("WInd:" + windX);
+////
+////            Vector thrustFromWind = new Vector(new double[]{windX,0,0});
+////            Vector newPosition = currentState.getVector(0).add(allStates.get(i-1).getVector(1));
+////            Vector newVelocity = currentState.getVector(1).add(thrustFromWind);
+////            currentState = new StateVector(new Vector[]{newPosition,newVelocity});
+////            allStates.set(i,currentState);
+////        }
+//        this.allStates = allStates;
+//        return allStates;
+//    }
+
+
+
+    public List<Vector> correctForWind(List<Vector>windThrusts){
+        List<Vector> preWind = this.thrusts;
+        List<Vector> postWind = new ArrayList<>();
+        for(int i = 0; i < windThrusts.size(); i++){
+            Vector applyWind = preWind.get(i).add(windThrusts.get(i));
+            postWind.add(applyWind);
+        }
+        return postWind;
+    }
+
+    public List<Vector> getThrusts(){
+        return thrusts;
     }
 
     /**
-     * Applies differential equations to get the acceleration
-     * @param u the acceleration from the main thruster
-     * @param v the torque from the side thrusters
-     * @param theta the angle of rotation of the landing module
-     * @return acceleration according to differential equations of motion
+     * Gets the path of the landing module from its initial position to the landing position
+     * @return double array containing the path of the landing module
+     *         [0] = x coordinate
+     *         [1] = y coordinate
      */
-    public Vector getAcceleration(double u, double v, double theta){
-        double accelerationX =  u * Math.sin(theta);
-        double accelerationY = u * Math.cos(theta) - g;
-        double accelerationTheta = v;
-        Vector acceleration = new Vector(new double[]{accelerationX,accelerationY,accelerationTheta});
-        return acceleration;
-    }
-
-    public double angleBetweenVectors(Vector u, Vector v){
-        double uX = u.get(0);
-        double uY = u.get(1);
-        double vX = v.get(0);
-        double vY = v.get(1);
-
-        u = new Vector(new double[]{uX,uY});
-        v = new Vector(new double[]{vX,vY});
-
-        double dotProduct = u.dotProduct(v);
-        double magnitudeU = u.getMagnitude();
-        double magnitudeV = v.getMagnitude();
-
-        //Answer in radians - check if radians or degrees
-        return Math.acos(dotProduct/(magnitudeU * magnitudeV));
-    }
-
     public double [][] getPath(){
         simulateLanding();
-        List<StateVector> list = applyThrust(this.initialState);
+        //List<StateVector> list = applyThrust(this.initialState);
+        List<StateVector> list = allStates;
         double[][] path = new double[list.size()][2];
         for(int i = 0; i < list.size(); i ++){
             path[i][0] = list.get(i).getVector(0).get(0);
@@ -253,16 +374,27 @@ public class OpenLoopController implements Controller{
         return path;
     }
 
+    public List<StateVector> getAllStates() {
+        return allStates;
+    }
+
     public static void main(String[] args) {
-        StateVector s = new StateVector(new Vector[]{new Vector(new double[]{55, 20,0}), new Vector(new double[]{0,0,0})});
+        StateVector s = new StateVector(new Vector[]{new Vector(new double[]{6000, 999,0}), new Vector(new double[]{0,0,0})});
         Vector landingCoordinates = new Vector(new double[]{0,0});
-        OpenLoopController controller = new OpenLoopController(s, landingCoordinates,0,10,1);
+        OpenLoopController controller = new OpenLoopController(s, landingCoordinates,0,100,1);
         controller.simulateLanding();
-        List <StateVector> states = controller.applyThrust(s);
+        //List <StateVector> states = controller.applyThrust(s);
+        //controller.simulateLanding();
+        List <StateVector> states = controller.getAllStates();
         for(int i = 0; i < states.size(); i++){
             System.out.println(states.get(i).toString());
 
         }
+//        List<Vector> thrusts = controller.getThrusts();
+//        for(int i = 0; i < thrusts.size(); i++){
+//            System.out.println(thrusts.get(i));
+//
+//        }
     }
 
 }

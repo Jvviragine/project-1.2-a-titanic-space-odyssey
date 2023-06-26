@@ -1,4 +1,4 @@
-# Project 1.2 - Group 3 - Manned flight mission to Titan with Landing! 🚀
+# Project 1.2 - Group 3 - Manned flight mission to Titan with landing! 🚀
 
 <!-- TABLE OF CONTENTS -->
 <h2 id="table-of-contents"> 📖 Table of Contents</h2>

@@ -3,6 +3,7 @@ package landing;
 import physics.vectors.StateVector;
 import physics.vectors.Vector;
 
+import javax.imageio.ImageTranscoder;
 import javax.swing.plaf.nimbus.State;
 
 public class LandingFunction {
@@ -17,6 +18,9 @@ public class LandingFunction {
         Vector newPos = calculateNewPos(state, h);
         Vector newVel = calculateNewVel(state, h);
         StateVector newState = new StateVector(new Vector[]{newPos, newVel});
+        double theta = calculateTheta(state);
+        state.setThetaPos(theta);
+        state.setU(calculateU(state, theta));
         return new LanderState(newState, state.getU(),state.getTorque());
     }
 
@@ -29,7 +33,6 @@ public class LandingFunction {
 
     public Vector calculateNewVel(LanderState state, double h){
         Vector acc = getAcceleration(state);
-        //System.out.println(acc.toString());
         return state.getVel().add(acc.multiply(h));
     }
 
@@ -50,8 +53,10 @@ public class LandingFunction {
 
     public double calculateU(LanderState state, double theta){
         double u = -state.getPos().get(0)/Math.sin(theta);
+        if (Math.abs(u) > Math.abs(10 * G)) u = 10 * G;
         return u;
     }
+
 
 
     public static void main(String[] args) {

@@ -65,7 +65,7 @@ class CorrectionsTest {
         }
         StateVector expected = stateVector1;
 
-        StateVector outputProbeVector = (StateVector) corrections.adjust(stateVector1, stateVector2, timePassed,eta)[0];
+        StateVector outputProbeVector = (StateVector) corrections.adjust(stateVector1, v1, timePassed,eta)[0];
 
         for (int i = 0; i < expected.getNumberOfVectors(); i++) {
             for (int j = 0; j < expected.getVector(i).getDimension(); j++) {
@@ -107,11 +107,11 @@ class CorrectionsTest {
         while (totalV > goalVelocity);
         StateVector expected = stateVector1;
 
-        StateVector output = corrections.orbitEntry(stateVector1, stateVector2, timePassed, eta, goalVelocity);
-
+        Object[] output = corrections.orbitEntry(stateVector1, v1, goalVelocity);
+        StateVector out = (StateVector)output[0];
         for (int i = 0; i < expected.getNumberOfVectors(); i++) {
             for (int j = 0; j < expected.getVector(i).getDimension(); j++) {
-                assertEquals(expected.getVector(i).get(j), output.getVector(i).get(j));
+                assertEquals(expected.getVector(i).get(j), out.getVector(i).get(j));
             }
         }
     }

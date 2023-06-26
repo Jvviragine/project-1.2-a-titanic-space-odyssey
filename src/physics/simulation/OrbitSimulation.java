@@ -28,7 +28,7 @@ public class OrbitSimulation {
         Solver solver = new RK4Solver();
 
         Corrections correctVel = new Corrections();
-        Object arr[] = correctVel.adjust(InitialConditions.getProbeInitialState(), titanAfterYear, sec, h*2);
+        Object arr[] = correctVel.adjust(InitialConditions.getProbeInitialState(), titanAfterYear.getVector(0), sec, h*2);
         StateVector newProbeState = (StateVector)arr[0];
         InitialConditions.setProbeInitialVelocity(newProbeState.getVector(1));
         InitialConditions.setProbeInitialPosition(newProbeState.getVector(0));

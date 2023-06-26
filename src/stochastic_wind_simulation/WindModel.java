@@ -40,16 +40,16 @@ public class WindModel {
             if (changeWindDirectionValue <= 20) {
                 randomWind = -randomWind; // Inverses the Wind Direction
             }
-            System.out.println(randomWind);
+//            System.out.println(randomWind);
         }
         // From 7km up until 60 Km, the Wind Increases a bit with height (though no Empirical Data was found stating by how much)
         else if (heigth <= 60000) {
             // Since the Empirical Data is not Consistent here, I will just add a factor to simulate the Altitude Changing
             randomWind = ((Math.random() * 50)) / 100; // Random wind Value from 0.0 until 0.5 (A little over the Max value for Zone 1)
-            System.out.println(randomWind);
+//            System.out.println(randomWind);
 
             randomWind += 5*(heigth/Math.pow(10, 6)); // Adds 5% Correction Factor due to Higher Altitude
-            System.out.println(randomWind);
+//            System.out.println(randomWind);
         }
         // Here, Scientists do not have a lot of empirical data, however, with the Landing of the Huygens, it was found that strong winds can come randomly, though not frequent
         else if (heigth <= 120000) {

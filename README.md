@@ -23,7 +23,7 @@
   To use our Physics Engine from Phase 3 and Simulate your journey to Titan, following these steps:
 <p align="justify"> 
    <ol>
-    <li> ➤ Open the folder <strong>phase_3</strong> or change your directory if opening on terminal
+    <li> ➤ Open the folder <strong>src</strong> or change your directory if opening on terminal
     <li> ➤ Compile and Run the Main
     <li> ➤ On the start screen either enter your custom starting conditions, or simply click enter to simulate with a set of standard values
     <li> ➤ Enjoy your journey!

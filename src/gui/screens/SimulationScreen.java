@@ -126,13 +126,13 @@ public class SimulationScreen extends JPanel {
 
     /**
      * Loops through the planet's and probe's paths
-     * When the end of the path is reached: the simulation stops, the frame gets closed and the Orbit Screen gets launched
+     * When the end of the path is reached: the simulation stops, the frame gets closed and the Landing Screen gets launched
      */
     public void iterateThroughOrbit() {
         pathIndex++;
 
         if (pathIndex >= (earthPath.length - 1)) {
-            OrbitScreen orbitScreen = new OrbitScreen();
+            LandingScreen landingScreen = new LandingScreen();
             frame.dispose();
             executor.shutdown();        //keep this as last, stops the simulationScreen from doing anything
         }

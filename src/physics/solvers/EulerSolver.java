@@ -187,12 +187,14 @@ public class EulerSolver implements Solver{
         //check if the step size is bigger than 0
         } else if (intScaledStepSize <= 0) {
             throw new IllegalArgumentException("Step size must be positive");
-
+        }
         //check if tf is reachable from t0 by only adding hole step sizes
-        } else if ((intScaled_tf - intScaled_t0) % intScaledStepSize != 0) {
-            throw new IllegalArgumentException("The range from t0 to tf must be dividable by the step size without any remainder");
-
-        } else {
+//        } else if ((intScaled_tf - intScaled_t0) % intScaledStepSize != 0) {
+//            System.out.println((intScaled_tf - intScaled_t0) % intScaledStepSize);
+//            throw new IllegalArgumentException("The range from t0 to tf must be dividable by the step size without any remainder");
+//
+//        }
+        else {
             //calculate n or the number of iterations needed to reach tf from t0 by adding one step size
             int n = (intScaled_tf - intScaled_t0)/intScaledStepSize;
             return n;

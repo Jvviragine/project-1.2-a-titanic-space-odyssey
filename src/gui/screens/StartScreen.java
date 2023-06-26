@@ -34,7 +34,7 @@ public class StartScreen extends JFrame implements ActionListener {
     private JComboBox solverChooser;
     private String[] solverOptions = {"Euler", "RK2", "RK3", "RK4"};
     private JButton startButton;
-    private final int FRAME_WIDTH = 600;
+    private final int FRAME_WIDTH = 580;
     private final int FRAME_HEIGHT = 600;
 
     //
@@ -218,12 +218,14 @@ public class StartScreen extends JFrame implements ActionListener {
             else {
                 try {
                     Double.parseDouble(userInputs[i].getText());
-                    errorText1.setText("");
                 } catch (NumberFormatException exception) {
                     errorText1.setText("Please only use numbers, \".\" and \"-\" as inputs for coordinates and velocities.");
                     userInputs[i].setText("");
                     allInputsValid = false;
                 }
+            }
+            if(allInputsValid) {
+                errorText1.setText("");
             }
         }
 
@@ -232,19 +234,30 @@ public class StartScreen extends JFrame implements ActionListener {
             if(userInputs[i].getText().isEmpty()) {
                 userInputs[i].setText(String.valueOf((int) defaultConditions[i]));        //uses default values if the box is left empty
             }
-            try {
-                Integer.parseInt(userInputs[i].getText());
-                if(Integer.parseInt(userInputs[i].getText()) <= 0) {
-                    throw new NumberFormatException();
+
+            else {
+                try {
+                    Integer.parseInt(userInputs[i].getText());
+                    if (Integer.parseInt(userInputs[i].getText()) <= 0) {
+                        throw new NumberFormatException();
+                    }
+
+                    if((i == 7) && (Integer.parseInt(userInputs[7].getText()) % Integer.parseInt(userInputs[6].getText()) != 0)) {
+                        errorText2.setText("Please choose an end time such that it is divisible by the step size.");
+                        userInputs[7].setText("");
+                        allInputsValid = false;
+                    }
+
+                } catch (NumberFormatException exception) {
+                    errorText2.setText("Please only use positive integers for the step size, end time and simulation speed.");
+                    userInputs[i].setText("");
+                    allInputsValid = false;
                 }
+            }
+            if(allInputsValid) {
                 errorText2.setText("");
-            } catch(NumberFormatException exception) {
-                errorText2.setText("Please only use positive integers for the step size, end time and simulation speed.");
-                userInputs[i].setText("");
-                allInputsValid = false;
             }
         }
-
 
         /**
          * If all input values are valid:

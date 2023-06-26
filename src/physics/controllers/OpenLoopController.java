@@ -73,6 +73,7 @@ public class OpenLoopController{
                 Vector stableUnitVector = stabilisingVelocity.multiply(1/stabilisingVelocityMagnitude);
                 for(int i = 0; i < roundStabilisingTime; i++){
                     Vector thrust = stableUnitVector.multiply(umax);
+                    thrust = OpenLoopLanding.stopMoving(initialState.getVector(1));
                     thrusts.add(thrust);
                 }
             }
@@ -81,6 +82,7 @@ public class OpenLoopController{
                 roundStabilisingTime = (int)Math.floor(timeToStabilise);
                 for(int i = 0; i < roundStabilisingTime; i++){
                     Vector thrust = stableUnitVector.multiply(umax);
+                    thrust = OpenLoopLanding.stopMoving(initialState.getVector(1));
                     thrusts.add(thrust);
                 }
                 double partialThrust = residual*umax;
@@ -90,36 +92,11 @@ public class OpenLoopController{
         }
     }
 
-    /**
-     * Rotates the landing module so that there is only movement in the x-direction
-     *  theta = 90º
-     */
-    public void rotateModuleHorizontally(){
-        //Parallel to the x-axis
-        //velocity in the y direction should be zero
-        double goalTheta = 0.5 * Math.PI;
-        double currentOrientation = initialState.getVector(0).get(2);
-
-        //theta = 2pi
-        Vector goalOrientation;
-    }
-
     public void approachXCoordinate(){
         double landerXCoordinate = initialState.getVector(0).get(0);
         double landingXCoordinate = landingPosition.get(0);
         List<Vector> thrusts = OpenLoopLanding.moveAcrossXAxis(landerXCoordinate,landingXCoordinate,this.tf,this.t0,this.h);
         addThrusts(thrusts);
-    }
-
-    /**
-     * Rotates the landing module so that there is only movement in the y-direction (downward)
-     */
-    public void rotateModuleVertically(){
-        ///velocity in the y direction should be equal to zero
-        //Perpendicular to the x-axis
-        //From earlier rotation horizontally, it can be assumed that yVelocity = 0
-        double goalTheta = Math.PI;
-        Vector goalOrientation;
     }
 
     /**
@@ -200,7 +177,7 @@ public class OpenLoopController{
             double position = allStates.get(i).getVector(0).get(0);
             double velocity = allStates.get(i).getVector(1).get(0);
             position += previousWind;
-            previousWind = windModel.getWindSpeed(allStates.get(i).getVector(0).get(1)).get(0);
+            previousWind = 0.5 * windModel.getWindSpeed(allStates.get(i).getVector(0).get(1)).get(0);
             velocity+= previousWind;
             allStates.get(i).getVector(0).set(0,position);
             allStates.get(i).getVector(1).set(0,velocity);
@@ -251,6 +228,29 @@ public class OpenLoopController{
     }
 
     /**
+     * Rotates the landing module so that there is only movement in the x-direction
+     *  theta = 90º
+     */
+    public void rotateModuleHorizontally(){
+        //Parallel to the x-axis
+        //velocity in the y direction should be zero
+        double goalTheta = 0.5 * Math.PI;
+        double currentOrientation = initialState.getVector(0).get(2);
+        Vector goalOrientation = new Vector(new double[]{0,0,goalTheta});
+    }
+
+    /**
+     * Rotates the landing module so that there is only movement in the y-direction (downward)
+     */
+    public void rotateModuleVertically(){
+        ///velocity in the y direction should be equal to zero
+        //Perpendicular to the x-axis
+        //From earlier rotation horizontally, it can be assumed that yVelocity = 0
+        double goalTheta = Math.PI;
+        Vector goalOrientation = new Vector(new double[]{0,0,goalTheta});
+    }
+
+    /**
      * Gets the path of the landing module from its initial position to the landing position
      * @return double array containing the path of the landing module
      *         [0] = x coordinate
@@ -277,13 +277,55 @@ public class OpenLoopController{
     }
 
     public static void main(String[] args) {
-        StateVector s = new StateVector(new Vector[]{new Vector(new double[]{9999, 444,0}), new Vector(new double[]{0,0,0})});
+        StateVector a = new StateVector(new Vector[]{new Vector(new double[]{1000, 5000,0}), new Vector(new double[]{0,0,0})});
+        StateVector b = new StateVector(new Vector[]{new Vector(new double[]{-8000, 80,0}), new Vector(new double[]{0,0,0})});
+        StateVector c = new StateVector(new Vector[]{new Vector(new double[]{-350, 100,0}), new Vector(new double[]{0,0,0})});
+        StateVector d = new StateVector(new Vector[]{new Vector(new double[]{55, 20,0}), new Vector(new double[]{0,0,0})});
+        StateVector e = new StateVector(new Vector[]{new Vector(new double[]{500, 200,0}), new Vector(new double[]{0,0,0})});
+        StateVector f = new StateVector(new Vector[]{new Vector(new double[]{1800, 3000,0}), new Vector(new double[]{0,0,0})});
+        StateVector g = new StateVector(new Vector[]{new Vector(new double[]{600, 80,0}), new Vector(new double[]{0,0,0})});
+        StateVector h = new StateVector(new Vector[]{new Vector(new double[]{-55, 5,0}), new Vector(new double[]{0,0,0})});
+        StateVector i = new StateVector(new Vector[]{new Vector(new double[]{12000, 500,0}), new Vector(new double[]{0,0,0})});
+        StateVector j = new StateVector(new Vector[]{new Vector(new double[]{90000, 2000,0}), new Vector(new double[]{0,0,0})});
+
         Vector landingCoordinates = new Vector(new double[]{0,0});
-        OpenLoopController controller = new OpenLoopController(s, landingCoordinates,0,100,1);
-        controller.simulateLanding();
-        List <StateVector> states = controller.getAllStates();
-        for(int i = 0; i < states.size(); i++){
-            System.out.println(states.get(i).toString());
-        }
+
+        OpenLoopController controllerA = new OpenLoopController(a, landingCoordinates,0,10,1);
+        OpenLoopController controllerB = new OpenLoopController(b, landingCoordinates,0,10,1);
+        OpenLoopController controllerC = new OpenLoopController(c, landingCoordinates,0,10,1);
+        OpenLoopController controllerD = new OpenLoopController(d, landingCoordinates,0,10,1);
+        OpenLoopController controllerE = new OpenLoopController(e, landingCoordinates,0,10,1);
+        OpenLoopController controllerF = new OpenLoopController(f, landingCoordinates,0,10,1);
+        OpenLoopController controllerG = new OpenLoopController(g, landingCoordinates,0,10,1);
+        OpenLoopController controllerH = new OpenLoopController(h, landingCoordinates,0,10,1);
+        OpenLoopController controllerI = new OpenLoopController(i, landingCoordinates,0,10,1);
+        OpenLoopController controllerJ = new OpenLoopController(j, landingCoordinates,0,10,1);
+
+        controllerA.simulateLanding();
+        controllerB.simulateLanding();
+        controllerC.simulateLanding();
+        controllerD.simulateLanding();
+        controllerE.simulateLanding();
+        controllerF.simulateLanding();
+        controllerG.simulateLanding();
+        controllerH.simulateLanding();
+        controllerI.simulateLanding();
+        controllerJ.simulateLanding();
+
+
+        System.out.println("A:\n" + controllerA.getAllStates().get(controllerA.getAllStates().size() -1));
+        System.out.println("B:\n" + controllerB.getAllStates().get(controllerB.getAllStates().size() -1));
+        System.out.println("C:\n" + controllerC.getAllStates().get(controllerC.getAllStates().size() -1));
+        System.out.println("D:\n" + controllerD.getAllStates().get(controllerD.getAllStates().size() -1));
+        System.out.println("E:\n" + controllerE.getAllStates().get(controllerE.getAllStates().size() -1));
+        System.out.println("F:\n" + controllerF.getAllStates().get(controllerF.getAllStates().size() -1));
+        System.out.println("G:\n" + controllerG.getAllStates().get(controllerG.getAllStates().size() -1));
+        System.out.println("H:\n" + controllerH.getAllStates().get(controllerH.getAllStates().size() -1));
+        System.out.println("I:\n" + controllerI.getAllStates().get(controllerI.getAllStates().size() -1));
+        System.out.println("J:\n" + controllerJ.getAllStates().get(controllerJ.getAllStates().size() -1));
+//        //List <StateVector> states = controller.applyThrust(s);
+//        for(int i = 0; i < states.size(); i++){
+//            System.out.println(states.get(i).toString());
+//        }
     }
 }

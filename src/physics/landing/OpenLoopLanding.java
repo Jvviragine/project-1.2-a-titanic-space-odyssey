@@ -161,6 +161,10 @@ public class OpenLoopLanding {
         return thrusts;
     }
 
+    public static Vector stopMoving(Vector velocity){
+        return velocity.multiply(-1);
+    }
+
     /**
      * Splits up a given time step into multiple substeps to ensure acceleration does not exceed umax
      * @param displacementForStep the current displacement for the step

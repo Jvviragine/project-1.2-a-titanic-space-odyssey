@@ -10,6 +10,20 @@ import javax.swing.plaf.nimbus.State;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/*
+This class is used to test the features of the Corrections class.
+To do so, there is a local Corrections variable that stores a corrections
+instance to runs the test on.
+
+Each method will be called from this local corrections instance which is
+deleted and reconstructed after each test. This is done with the help of
+the setUp method which reinitialize the local corrections and the tearDown
+method which erases the used corrections instance. The setUp method is called
+before each test whereas the tearUp method is called after each test is done
+so that if any test changes the local corrections those changes will be undone.
+This assures the fact that each test will be run on the same conditions.
+ */
+
 class CorrectionsTest {
 
     private Corrections corrections;

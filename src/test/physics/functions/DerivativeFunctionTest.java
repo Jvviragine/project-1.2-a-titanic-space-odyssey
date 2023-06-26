@@ -10,6 +10,25 @@ import solar_system_data.InitialConditions;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/*
+This class is responsible for testing the DerivativeFunction class
+which is a class that represents a basic function.
+It is used to perform tests on the solvers.
+
+Find the input partitioning below :
+
+applyFunction(StateVector y, double t) :
+    - this.system == null
+    - this.system != null
+
+getAcceleration(int index) :
+- index < system.stateVectors.length
+- index = system.totalBodies() - 1
+- index >= system.stateVectors.length
+
+
+ */
+
 class DerivativeFunctionTest {
 
     private SolarSystemPhysicsSimulation system;
@@ -32,7 +51,7 @@ class DerivativeFunctionTest {
 
         String [] planets = new String[]{"planet1","planet2"};
 
-         system = new SolarSystemPhysicsSimulation(stateVectors,masses,planets);
+        system = new SolarSystemPhysicsSimulation(stateVectors,masses,planets);
 
         derivativeFunction = new DerivativeFunction(system);
     }

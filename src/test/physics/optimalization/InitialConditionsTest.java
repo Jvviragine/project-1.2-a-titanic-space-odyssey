@@ -11,6 +11,20 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/*
+This class is used to test the features of the InitialConditions class.
+To do so, there is a local InitialConditions variable that stores a initialConditions
+instance to runs the test on.
+
+Each method will be called from this local initialConditions instance which is
+deleted and reconstructed after each test. This is done with the help of
+the setUp method which reinitialize the local initialConditions and the tearDown
+method which erases the used initialConditions instance. The setUp method is called
+before each test whereas the tearUp method is called after each test is done
+so that if any test changes the local initialConditions those changes will be undone.
+This assures the fact that each test will be run on the same conditions.
+ */
+
 class InitialConditionsTest {
 
     private static Vector position;

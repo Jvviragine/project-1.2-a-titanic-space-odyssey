@@ -7,6 +7,20 @@ import physics.vectors.Vector;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/*
+This class is used to test the features of the FuelUsage class.
+To do so, there is a local FuelUsage variable that stores a fuelUsage
+instance to runs the test on.
+
+Each method will be called from this local fuelUsage instance which is
+deleted and reconstructed after each test. This is done with the help of
+the setUp method which reinitialize the local fuelUsage and the tearDown
+method which erases the used fuelUsage instance. The setUp method is called
+before each test whereas the tearUp method is called after each test is done
+so that if any test changes the local fuelUsage those changes will be undone.
+This assures the fact that each test will be run on the same conditions.
+ */
+
 class FuelUsageTest {
 
     private FuelUsage fuelUsage;

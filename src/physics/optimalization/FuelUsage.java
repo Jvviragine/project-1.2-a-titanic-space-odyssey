@@ -15,21 +15,19 @@ public class FuelUsage {
      */
     public void hillClimbing(){
 
-        TripSimulation test = new TripSimulation();
         int minValue = 100;
-        int maxValue = 17000; //dips: 3403 ain't bad (4494km/7730kg), 110 (3322km/7578kg)
-        double estimate = 8000;
+        int maxValue = 9000;
+        double estimate = 13000;
         double returnValue = 0;
         int optimalVariable = -1;
-        for (int variable = minValue; variable <= maxValue; variable+=100) {
-            System.out.println("Iteration: "+variable);
+        for (int i = minValue; i <= maxValue; i+=100) {
+            System.out.println("Iteration: " + i);
             //returnValue = (double)test.simulateTrip(variable)[1]; This assignment specifically does not work since simulateTrip does not return the fuel usage value anymore
             if (returnValue < estimate) {
                 estimate = returnValue;
-                optimalVariable = variable;
+                optimalVariable = i;
             }
         }
-
         System.out.println("Optimal Variable: " + optimalVariable);
         System.out.println("Lowest Return Value: " + estimate);
 

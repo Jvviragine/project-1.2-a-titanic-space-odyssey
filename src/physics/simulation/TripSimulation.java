@@ -33,7 +33,7 @@ public class TripSimulation {
         List<List<StateVector>> finalOrbits = new ArrayList<>();
         int tf = StartScreen.simulationEndTime / 2; //31536000
         double h = StartScreen.h; //1800
-        int tI = 500; //time-interval: 110 is optimized, 3403 is as well under the consideration of computation time, 500 is a good median value
+        int tI = 314; //time-interval: value is optimized for fuel consumption
         int count = 0;
         double dist = 0;
         double leftOverTime = 0;
@@ -105,7 +105,7 @@ public class TripSimulation {
                     newStateVectors[j] = orbits.get(j).get(i);
                 }
 
-                //Adjust new coordinates, dependant on how far we are in the journey
+                //Adjust new coordinates, dependent on how far we are in the journey
                 if (i == 0)
                     arr = correct.adjust(orbits.get(11).get(i), orbits.get(8).get(i).getVector(0), i * h, tf*0.9);
                 else if (i < orbits.get(11).size() / 2) //adjusts towards Titan's current position for the first half-year; avoids larger effects of Sun's gravitational pull

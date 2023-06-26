@@ -6,6 +6,7 @@ import physics.vectors.Vector;
 import java.util.Arrays;
 
 public class Corrections {
+
     /**
      * Using the coordinates of the probe, our destination and the trajectory of the probe,
      * we calculate the vector that would connect the two and adjust the probe's velocity vector accordingly
@@ -15,7 +16,6 @@ public class Corrections {
      * @param eta Estimated time of arrival
      * @return StateVector of the probe with updated velocity values that aim it towards Titan
      */
-
     public Object[] adjust(StateVector probeVec, Vector destinationVec, double timePassed, double eta){
         double vectorChanges = 0;
         Object arr[] = new Object[2];

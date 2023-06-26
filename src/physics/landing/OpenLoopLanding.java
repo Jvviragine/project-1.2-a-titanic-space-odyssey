@@ -13,6 +13,18 @@ public class OpenLoopLanding {
         this.h = h;
     }
 
+    /**
+     * Simulates movement across the x-axis.
+     *      x" = u * sin(theta)
+     *      theta = pi/2 radians
+     *      therefore x" = u
+     * @param initialCoordinates the initial x coordinates of the landing module
+     * @param landingCoordinates the x coordinates of the landing point
+     * @param tf the final time
+     * @param t0 the start time
+     * @param h the step size
+     * @return list of all steps taken across the x-axis
+     */
     public static List<Vector> moveAcrossXAxis(double initialCoordinates, double landingCoordinates, double tf, double t0, double h){
         List<Vector> thrusts = new ArrayList<>();
         double landerXCoordinate = initialCoordinates;
@@ -26,21 +38,15 @@ public class OpenLoopLanding {
 
         //Calculate number of steps, and displacement covered by each step
         int numberOfSteps = (int)(((tf-t0)/h));
-        System.out.println("Number of steps: "+numberOfSteps);
         double displacementPerStep = displacement/numberOfSteps;
-        System.out.println("Displacement per step: "+displacementPerStep);
-        System.out.println("Displacement: "+displacement);
         double displacementCovered = 0;
 
         for(int i = 0; i < numberOfSteps;i++) {
 
             double displacementPerSubStep = calculateDisplacementPerStepXDirection(displacementPerStep, initialVelocity);
-            System.out.println("Displacement per step: " + displacementPerStep);
-            System.out.println("Displacement per substep: " + displacementPerSubStep);
 
             double steps = Math.ceil(displacementPerStep / displacementPerSubStep);
             int numberOfSubsteps = (int) steps;
-            System.out.println("Calculated number of substeps: " + numberOfSubsteps);
 
             for (int j = 0; j < numberOfSubsteps; j++) {
                 double acceleration = getUniformAcceleration(displacementPerSubStep, initialVelocity, h);
@@ -52,45 +58,45 @@ public class OpenLoopLanding {
                 } else if (j == 0 && i == 0) {
                     acceleration /= (acceleration / displacementPerSubStep);
                     Vector thrust = new Vector(new double[]{acceleration, 0, 0});
-                    System.out.println("Acceleration: " + acceleration);
                     thrusts.add(thrust);
                     initialVelocity = (acceleration * h) + initialVelocity; //reorganise a = (v-u)/t -> v = at + u
                     displacementCovered += initialVelocity * h;
-                    System.out.println("Distance covered: " + displacementCovered);
                 } else if (j == 0) {
                     if (initialVelocity < displacementPerSubStep) {
                         double difference = initialVelocity - displacementPerSubStep;
                         acceleration = Math.abs(difference);
-                        System.out.println("New Acceleration: " + acceleration);
                     } else {
                         double difference = initialVelocity - displacementPerSubStep;
                         acceleration = -Math.abs(difference);
-                        System.out.println("New Acceleration: " + acceleration);
                     }
 
                     Vector thrust = new Vector(new double[]{acceleration, 0, 0});
-                    System.out.println("Acceleration: " + acceleration);
                     thrusts.add(thrust);
                     initialVelocity = (acceleration * h) + initialVelocity; //reorganise a = (v-u)/t -> v = at + u
-                    System.out.println("New velocity: " + initialVelocity);
                     displacementCovered += initialVelocity * h;
-                    System.out.println("Distance covered: " + displacementCovered);
                 } else {
                     acceleration = 0;
                     Vector thrust = new Vector(new double[]{acceleration, 0, 0});
-                    System.out.println("Acceleration: " + acceleration);
                     thrusts.add(thrust);
-                    System.out.println("Initial velocity: " + initialVelocity);
                     displacementCovered += initialVelocity * h;
-                    System.out.println("Distance covered: " + displacementCovered);
                 }
-
-//                stabiliseWind();
             }
         }
         return thrusts;
     }
 
+    /**
+     * Simulates movement across the y-axis.
+     *      y" = u * cos(theta) - g
+     *      theta = pi radians
+     *      therefore y" = (-1 * u) - g
+     * @param initialCoordinates the initial y coordinates of the landing module
+     * @param landingCoordinates the y coordinates of the landing point
+     * @param tf the final time
+     * @param t0 the start time
+     * @param h the step size
+     * @return list of all steps taken across the y-axis
+     */
     public static List<Vector> moveAcrossYAxis(double initialCoordinates, double landingCoordinates, double tf, double t0, double h){
         List<Vector> thrusts = new ArrayList<>();
         double landerYCoordinate = initialCoordinates;
@@ -102,29 +108,20 @@ public class OpenLoopLanding {
         //Assume initial velocity to be zero after stabilising
         double initialVelocity = 0;
 
-        //Calculate number of steps, and displacement covered by each step
         int numberOfSteps = (int)(((tf-t0)/h));
-        //System.out.println("Number of steps: "+numberOfSteps);
         double displacementPerStep = displacement/numberOfSteps;
-        //System.out.println("Displacement per step: "+displacementPerStep);
-        //System.out.println("Displacement: "+displacement);
         double displacementCovered = 0;
 
         for(int i = 0; i < numberOfSteps;i++){
 
-            double displacementPerSubStep = OpenLoopLanding.calculateDisplacementPerStepYDirection(displacementPerStep,initialVelocity);
-            //System.out.println("Displacement per step: "+displacementPerStep);
-            //System.out.println("Displacement per substep: "+displacementPerSubStep);
+            double displacementPerSubStep = OpenLoopLanding.calculateDisplacementPerStepYDirection(displacementPerStep);
 
             double steps = Math.ceil(displacementPerStep/displacementPerSubStep);
             int numberOfSubsteps = (int)steps;
-            //System.out.println("Calculated number of substeps: "+numberOfSubsteps);
 
             for(int j = 0; j < numberOfSubsteps; j++){
                 double acceleration = getUniformAcceleration(displacementPerSubStep,initialVelocity,h);
-                //System.out.println("First Acceleration: "+acceleration);
                 acceleration = getAcceleration(acceleration,0,Math.PI).get(1);
-                //System.out.println("Altered Acceleration: "+acceleration);
                 if (j == (numberOfSubsteps-1) && i == (numberOfSteps-1) && (numberOfSubsteps != 1 && numberOfSteps != 1)){
                     thrusts.add(new Vector(new double[]{0,0,0}));
                     acceleration = -1 * initialVelocity;
@@ -134,57 +131,38 @@ public class OpenLoopLanding {
                 else if(j == 0 && i == 0) {
                     acceleration /= (acceleration/displacementPerSubStep);
                     Vector thrust = new Vector(new double[]{0,acceleration,0});
-                    //System.out.println("Acceleration: "+acceleration);
                     thrusts.add(thrust);
                     initialVelocity = (acceleration * h) + initialVelocity; //reorganise a = (v-u)/t -> v = at + u
                     displacementCovered += initialVelocity * h;
-                    //System.out.println("Distance covered: "+displacementCovered);
                 }
                 else if(j == 0){
                     if(initialVelocity < displacementPerSubStep){
                         double difference = initialVelocity-displacementPerSubStep;
                         acceleration = Math.abs(difference);
-                        //System.out.println("New Acceleration: "+acceleration);
                     }
                     else{
                         double difference = initialVelocity-displacementPerSubStep;
                         acceleration = -Math.abs(difference);
-                        //System.out.println("New Acceleration: "+acceleration);
                     }
 
                     Vector thrust = new Vector(new double[]{0,acceleration,0});
-                    //System.out.println("Acceleration: "+acceleration);
                     thrusts.add(thrust);
                     initialVelocity = (acceleration * h) + initialVelocity; //reorganise a = (v-u)/t -> v = at + u
-                    //System.out.println("New velocity: "+initialVelocity);
                     displacementCovered += initialVelocity * h;
-                    //System.out.println("Distance covered: "+displacementCovered);
                 }
                 else{
                     acceleration = 0;
                     Vector thrust = new Vector(new double[]{0,acceleration,0});
-                    //System.out.println("Acceleration: "+acceleration);
                     thrusts.add(thrust);
-                    //System.out.println("Initial velocity: "+initialVelocity);
                     displacementCovered += initialVelocity * h;
-                    //System.out.println("Distance covered: "+displacementCovered);
                 }
-
-//                stabiliseWind();
             }
         }
         return thrusts;
     }
 
-//    public static int calculateAccelerationSteps(double currentAcceleration, double desiredAcceleration){
-//
-//    }
-
-
-
     /**
      * Splits up a given time step into multiple substeps to ensure acceleration does not exceed umax
-     *
      * @param displacementForStep the current displacement for the step
      * @return displacement for each substep
      */
@@ -194,22 +172,15 @@ public class OpenLoopLanding {
         int currentNumberOfSteps;
         double originalDisplacement = displacementForStep;
         initialVelocity = 0;
-        System.out.println("Original displacement: "+originalDisplacement);
         double newDisplacement = originalDisplacement;
         int n = 1;
 
         while(!validAcceleration){
             double acceleration = getUniformAcceleration(newDisplacement, initialVelocity,1);
-            System.out.println("Acceleration: " + acceleration);
-            //System.out.println("Validating acceleration...");
             if(!validateAcceleration(acceleration)){
                 currentNumberOfSteps = originalSteps * (n+1);
-                //System.out.println(currentNumberOfSteps);
                 n++;
                 newDisplacement = originalDisplacement/currentNumberOfSteps;
-                //System.out.println("New displacement: "+newDisplacement);
-                //System.out.println("Displacement per step: "+displacementForStep);
-                //System.out.println("Number of adjusted steps:"+ currentNumberOfSteps);
             }
             else{
                 return newDisplacement;
@@ -218,32 +189,29 @@ public class OpenLoopLanding {
         return newDisplacement;
     }
 
-    public static double calculateDisplacementPerStepYDirection(double displacementForStep, double initialVelocity){
+    /**
+     * Splits up a given time step into multiple substeps to ensure acceleration does not exceed umax
+     * @param displacementForStep the current displacement for the step
+     * @return displacement for each substep
+     */
+    public static double calculateDisplacementPerStepYDirection(double displacementForStep){
         boolean validAcceleration = false;
         int originalSteps = 1;
         int currentNumberOfSteps;
         double originalDisplacement = displacementForStep;
-        initialVelocity = 0;
-        //System.out.println("Original displacement: "+originalDisplacement);
+        double initialVelocity = 0;
         double newDisplacement = originalDisplacement;
         int n = 1;
 
         while(!validAcceleration){
             double acceleration = getUniformAcceleration(newDisplacement,initialVelocity,1);
-            //System.out.println("Acceleration before: " + acceleration);
             acceleration = getAcceleration(acceleration,0,Math.PI).get(1);
-            //System.out.println("Acceleration after: " + acceleration);
             if(!validateAcceleration(acceleration)){
                 currentNumberOfSteps = originalSteps * (n+1);
-                //System.out.println(currentNumberOfSteps);
                 n++;
                 newDisplacement = originalDisplacement/currentNumberOfSteps;
-                //System.out.println("New displacement: "+newDisplacement);
-                //System.out.println("Displacement per step: "+displacementForStep);
-                //System.out.println("Number of adjusted steps:"+ currentNumberOfSteps);
             }
             else{
-                double velocity = (acceleration * h) + initialVelocity;
                 return newDisplacement;
             }
         }

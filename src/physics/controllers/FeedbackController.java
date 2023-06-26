@@ -1,5 +1,7 @@
 package physics.controllers;
 
+import physics.landing.LanderState;
+import physics.landing.LandingFunction;
 import physics.vectors.StateVector;
 import physics.vectors.Vector;
 import stochastic_wind_simulation.WindModel;

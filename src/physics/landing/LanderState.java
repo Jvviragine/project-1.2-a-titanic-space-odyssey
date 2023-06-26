@@ -1,4 +1,4 @@
-package physics.controllers;
+package physics.landing;
 
 import physics.vectors.StateVector;
 import physics.vectors.Vector;

@@ -8,7 +8,7 @@ import stochastic_wind_simulation.WindModel;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OpenLoopController implements Controller{
+public class OpenLoopController{
 
     private StateVector initialState;
     private Vector landingPosition;
@@ -24,11 +24,6 @@ public class OpenLoopController implements Controller{
     private List<Vector> windThrusts = new ArrayList<>();
     private List<StateVector> allStates = new ArrayList<>();
     OpenLoopLanding landing = new OpenLoopLanding(h);
-    //Starting point for each controller
-    @Override
-    public void startControl() {
-
-    }
     public OpenLoopController(StateVector initialState, Vector landingPosition, double t0, double tf, double h){
         this.initialState = initialState;
         this.landingPosition = landingPosition;
@@ -57,7 +52,7 @@ public class OpenLoopController implements Controller{
         rotateModuleVertically();
         descendToLandingPoint();
         stabiliseWind();
-        //simulateWind();
+        simulateWind();
     }
 
     /**
@@ -95,8 +90,17 @@ public class OpenLoopController implements Controller{
         }
     }
 
+    /**
+     * Rotates the landing module so that there is only movement in the x-direction
+     *  theta = 90º
+     */
     public void rotateModuleHorizontally(){
         //Parallel to the x-axis
+        //velocity in the y direction should be zero
+        double goalTheta = 0.5 * Math.PI;
+        double currentOrientation = initialState.getVector(0).get(2);
+
+        //theta = 2pi
         Vector goalOrientation;
     }
 
@@ -107,8 +111,14 @@ public class OpenLoopController implements Controller{
         addThrusts(thrusts);
     }
 
+    /**
+     * Rotates the landing module so that there is only movement in the y-direction (downward)
+     */
     public void rotateModuleVertically(){
+        ///velocity in the y direction should be equal to zero
         //Perpendicular to the x-axis
+        //From earlier rotation horizontally, it can be assumed that yVelocity = 0
+        double goalTheta = Math.PI;
         Vector goalOrientation;
     }
 
@@ -123,6 +133,81 @@ public class OpenLoopController implements Controller{
     }
 
     /**
+     * Provides a counter-acceleration to counter the velocity from any wind
+     */
+    public void stabiliseWind(){
+        //calculate acceleration and add it to thrusts
+        double maxHeight = initialState.getVector(0).get(1);
+
+        if(maxHeight <= 7000){
+            double estimatedWindSpeed = (0.0001) * (0.3 - 0.0);
+            double acceleration = -(estimatedWindSpeed)/h;
+            List<Vector> windThrusts = new ArrayList<>();
+            Vector wind = new Vector(new double[]{acceleration,0,0});
+            windThrusts.add(wind);
+            for(int i = 1; i < thrusts.size(); i++){
+                windThrusts.add(new Vector(new double[]{0,0,0}));
+            }
+            this.thrusts = correctForWind(windThrusts);
+            this.allStates = applyThrust(initialState);
+
+        }
+        else if(maxHeight <= 60000){
+            double estimatedWindSpeed = (0.0001) * (0.5 - 0.0);
+            double acceleration = -(estimatedWindSpeed)/h;
+            List<Vector> windThrusts = new ArrayList<>();
+            Vector wind = new Vector(new double[]{acceleration,0,0});
+            windThrusts.add(wind);
+            for(int i = 1; i < thrusts.size(); i++){
+                windThrusts.add(new Vector(new double[]{0,0,0}));
+            }
+            this.thrusts = correctForWind(windThrusts);
+            this.allStates = applyThrust(initialState);
+        }
+        else if(maxHeight <= 120000){
+            double estimatedWindSpeed = (0.0001) * (5.0 - 0.8);
+            double acceleration = -(estimatedWindSpeed)/h;
+            List<Vector> windThrusts = new ArrayList<>();
+            Vector wind = new Vector(new double[]{acceleration,0,0});
+            windThrusts.add(wind);
+            for(int i = 1; i < thrusts.size(); i++){
+                windThrusts.add(new Vector(new double[]{0,0,0}));
+            }
+            this.thrusts = correctForWind(windThrusts);
+            this.allStates = applyThrust(initialState);
+        }
+        else{
+            double estimatedWindSpeed = 0;
+            double acceleration = estimatedWindSpeed;
+            List<Vector> windThrusts = new ArrayList<>();
+            Vector wind = new Vector(new double[]{acceleration,0,0});
+            windThrusts.add(wind);
+            for(int i = 1; i < thrusts.size(); i++){
+                windThrusts.add(new Vector(new double[]{0,0,0}));
+            }
+            this.thrusts = correctForWind(windThrusts);
+            this.allStates = applyThrust(initialState);
+        }
+    }
+
+    /**
+     * Simulates the effect of wind on the landing module
+     */
+    public void simulateWind(){
+        WindModel windModel = new WindModel();
+        double previousWind = 0;
+        for(int i = 0; i < allStates.size(); i++){
+            double position = allStates.get(i).getVector(0).get(0);
+            double velocity = allStates.get(i).getVector(1).get(0);
+            position += previousWind;
+            previousWind = windModel.getWindSpeed(allStates.get(i).getVector(0).get(1)).get(0);
+            velocity+= previousWind;
+            allStates.get(i).getVector(0).set(0,position);
+            allStates.get(i).getVector(1).set(0,velocity);
+        }
+    }
+
+    /**
      * Adds all individual thrusts from a list of thrusts to the list of thrusts in the controller
      * @param thrusts list of thrusts to be added
      */
@@ -131,7 +216,6 @@ public class OpenLoopController implements Controller{
             this.thrusts.add(thrusts.get(i));
         }
     }
-
 
     /**
      * Applies all thrusts for the period to an initial state vector
@@ -151,197 +235,11 @@ public class OpenLoopController implements Controller{
         return allStates;
     }
 
-    //public List <StateVector>
-
-//    public List <StateVector> applyThrust(StateVector initialState,List<Vector> wind){
-//        System.out.println("APPLIED");
-//        Vector initialPosition = initialState.getVector(0);
-//        Vector initialVelocity = initialState.getVector(1);
-//        List <StateVector> allStates = new ArrayList<>();
-//        System.out.println("Initial vel:" +initialVelocity.toString());
-//
-//        for(int i = 0; i < windThrusts.size(); i++){
-//            Vector currentThrust = this.windThrusts.get(i);
-//            System.out.println("Velocity 1:" +currentThrust.toString());
-//            Vector newThrust = currentThrust.add(wind.get(i));
-//            System.out.println("Velocity 2:" +newThrust.toString());
-//            Vector resultantThrust = currentThrust.add(newThrust);
-//            System.out.println("Velocity 3:" +resultantThrust.toString());
-//            windThrusts.set(i,resultantThrust);
-//        }
-//        this.thrusts = correctForWind(windThrusts);
-//        this.allStates = applyThrust(initialState);
-//
-//        return allStates;
-//    }
-
-    public List <StateVector> applyThrust(StateVector initialState,List<Vector> wind){
-        System.out.println("APPLIED");
-        Vector initialPosition = initialState.getVector(0);
-        Vector initialVelocity = initialState.getVector(1);
-        List <StateVector> allStates = new ArrayList<>();
-        System.out.println("Initial vel:" +initialVelocity.toString());
-        Vector previousInitialVelocity = initialVelocity;
-
-        for(int i =0; i < thrusts.size()-1; i++){
-            initialPosition = initialPosition.add(initialVelocity.add(wind.get(i)));
-            initialVelocity = initialVelocity.add((thrusts.get(i).multiply(h)).add(wind.get(i)));
-            allStates.add(new StateVector(new Vector[]{initialPosition,initialVelocity}));
-            initialVelocity = previousInitialVelocity;
-        }
-
-        return allStates;
-    }
-
-    public void stabiliseWind(){
-        //calculate acceleration and add it to thrusts
-        double maxHeight = initialState.getVector(0).get(1);
-
-        if(maxHeight <= 7000){
-            double estimatedWindSpeed = (0.5) * (0.3 - 0.0);
-            double acceleration = -(estimatedWindSpeed)/h;
-            System.out.println("Wind acceleration:"+ acceleration);
-            List<Vector> windThrusts = new ArrayList<>();
-            Vector wind = new Vector(new double[]{acceleration,0,0});
-            windThrusts.add(wind);
-            for(int i = 1; i < thrusts.size(); i++){
-                windThrusts.add(new Vector(new double[]{0,0,0}));
-            }
-            //this.windThrusts = windThrusts;
-            this.thrusts = correctForWind(windThrusts);
-            this.allStates = applyThrust(initialState);
-            //thrustsWithoutWind = correctForWind(windThrusts);
-
-        }
-        else if(maxHeight <= 60000){
-            double estimatedWindSpeed = (0.5) * (0.5 - 0.0);
-            double acceleration = -(estimatedWindSpeed)/h;
-            System.out.println("Wind acceleration:"+ acceleration);
-            List<Vector> windThrusts = new ArrayList<>();
-            Vector wind = new Vector(new double[]{acceleration,0,0});
-            windThrusts.add(wind);
-            for(int i = 1; i < thrusts.size(); i++){
-                windThrusts.add(new Vector(new double[]{0,0,0}));
-            }
-            //this.windThrusts = windThrusts;
-            this.thrusts = correctForWind(windThrusts);
-            this.allStates = applyThrust(initialState);
-            //thrustsWithoutWind = correctForWind(windThrusts);
-        }
-        else if(maxHeight <= 120000){
-            double estimatedWindSpeed = (0.5) * (5.0 - 0.8);
-            double acceleration = -(estimatedWindSpeed)/h;
-            System.out.println("Wind acceleration:"+ acceleration);
-            List<Vector> windThrusts = new ArrayList<>();
-            Vector wind = new Vector(new double[]{acceleration,0,0});
-            windThrusts.add(wind);
-            for(int i = 1; i < thrusts.size(); i++){
-                windThrusts.add(new Vector(new double[]{0,0,0}));
-            }
-            //this.windThrusts = windThrusts;
-            this.thrusts = correctForWind(windThrusts);
-            this.allStates = applyThrust(initialState);
-            //thrustsWithoutWind = correctForWind(windThrusts);
-        }
-    }
-
-
-    //need to remove previous velocity and then reset to this new velocity
-    public void simulateWind(){
-        WindModel windModel = new WindModel();
-        List<StateVector> allStates = applyThrust(this.initialState);
-        List<Vector> windThrusts = new ArrayList<>();
-        double height = allStates.get(0).getVector(0).get(1);
-        double velocity = windModel.getWindSpeed(height).get(0)/h;
-        Vector wind = new Vector(new double[]{velocity,0,0});
-        wind = windThrusts.get(0).add(wind);
-        windThrusts.add(wind);
-        System.out.println("All States size:"+allStates.size());
-
-
-        for(int i = 1; i < allStates.size(); i++){
-            System.out.println("Yep");
-            height = allStates.get(i).getVector(0).get(1);
-            //double currentVelocity = allStates.get(i).getVector(1).get(0);
-            velocity = windModel.getWindSpeed(height).get(0)/h;
-            System.out.println("Velocity of wind:" + velocity);
-            //double difference = velocity - currentVelocity;
-//            if(velocity > currentVelocity){
-            //velocity = -difference;
-            wind = new Vector(new double[]{velocity,0,0});
-            wind = windThrusts.get(i).add(wind);
-            windThrusts.add(wind);
-//            }
-//            else{
-//                velocity = difference;
-//                wind = new Vector(new double[]{velocity,0,0});
-//                windThrusts.add(wind);
-//            }
-        }
-        //this.thrusts = correctForWind(windThrusts);
-        this.allStates = applyThrust(initialState,windThrusts);
-    }
-
-//    public List<StateVector> simulateWind(){
-//        List<StateVector> allWind = new ArrayList<>();
-//        WindModel wind = new WindModel();
-//        List<StateVector> allStates = applyThrust(this.initialState);
-//        for(int i = 0; i < allStates.size(); i++){
-//            StateVector currentState = allStates.get(i);
-//            double height = currentState.getVector(0).get(1);
-//            Vector windAtHeight = wind.getWindSpeed(height);
-//            double windVelocityX = windAtHeight.get(0) + currentState.getVector(1).get(0);
-//            double windPositionX = windAtHeight.get(1) + currentState.getVector(0).get(0);
-//            Vector newPosition = new Vector(new double[]{windPositionX,currentState.getVector(0).get(1),currentState.getVector(0).get(2)});
-//            Vector newVelocity = new Vector(new double[]{windVelocityX,currentState.getVector(1).get(1),currentState.getVector(1).get(2)});
-//            StateVector newState = new StateVector(new Vector[]{newPosition,newVelocity});
-//            allStates.set(i,newState);
-//            //StateVector newState = new StateVector(new Vector[]{newPostion,newVelocity});
-//            //allStates.set(i,newState);
-//        }
-////        Vector initialPosition = allStates.get(0).getVector(0);
-////        Vector initialVelocity = allStates.get(1).getVector(1);
-////        for(int i = 0; i < allStates.size(); i++){
-////            initialPosition = initialPosition.add(initialVelocity.multiply(h));
-////            initialVelocity = initialVelocity.add(thrusts.get(i).multiply(h));
-////            allStates.add(new StateVector(new Vector[]{initialPosition,initialVelocity}));
-////        }
-////        WindModel wind = new WindModel();
-////        List<StateVector> allStates = applyThrust(this.initialState);
-////        for(int i = 0; i < thrusts.size(); i++){
-////            double height = allStates.get(i).getVector(0).get(1);
-////            double windX = wind.getWindSpeed(height).get(0);
-////            System.out.println("WInd:" + windX);
-////            Vector thrustFromWind = new Vector(new double[]{windX,0,0});
-////            Vector currentThrust = this.thrusts.get(i);
-////            this.thrusts.set(i, currentThrust.add(thrustFromWind));
-////        }
-////        allStates = applyThrust(this.initialState);
-////        List <Vector> windAtStep = new ArrayList<>();
-////
-////        Vector initialPosition = allStates.get(0).getVector(0);
-////        Vector initialVelocity = allStates.get(0).getVector(1);
-////
-////        for(int i = 1; i < thrusts.size(); i++){
-////            StateVector currentState = allStates.get(i);
-////            //Vector initialPosition = currentState.getVector(0);
-////            //Vector initialVelocity = currentState.getVector(1);
-////            double height = initialPosition.get(1);
-////            double windX = wind.getWindSpeed(height).get(0);
-////            System.out.println("WInd:" + windX);
-////
-////            Vector thrustFromWind = new Vector(new double[]{windX,0,0});
-////            Vector newPosition = currentState.getVector(0).add(allStates.get(i-1).getVector(1));
-////            Vector newVelocity = currentState.getVector(1).add(thrustFromWind);
-////            currentState = new StateVector(new Vector[]{newPosition,newVelocity});
-////            allStates.set(i,currentState);
-////        }
-//        this.allStates = allStates;
-//        return allStates;
-//    }
-
-
-
+    /**
+     * Adjusts the thrusts to account for wind
+     * @param windThrusts list containing all thrusts corresponding to wind (or the thrust against wind)
+     * @return list containing the updated thrust values that include wind
+     */
     public List<Vector> correctForWind(List<Vector>windThrusts){
         List<Vector> preWind = this.thrusts;
         List<Vector> postWind = new ArrayList<>();
@@ -350,10 +248,6 @@ public class OpenLoopController implements Controller{
             postWind.add(applyWind);
         }
         return postWind;
-    }
-
-    public List<Vector> getThrusts(){
-        return thrusts;
     }
 
     /**
@@ -374,27 +268,22 @@ public class OpenLoopController implements Controller{
         return path;
     }
 
+    /**
+     * Gets all states of the probe over the course of the trip
+     * @return all states as a list
+     */
     public List<StateVector> getAllStates() {
         return allStates;
     }
 
     public static void main(String[] args) {
-        StateVector s = new StateVector(new Vector[]{new Vector(new double[]{6000, 999,0}), new Vector(new double[]{0,0,0})});
+        StateVector s = new StateVector(new Vector[]{new Vector(new double[]{9999, 444,0}), new Vector(new double[]{0,0,0})});
         Vector landingCoordinates = new Vector(new double[]{0,0});
         OpenLoopController controller = new OpenLoopController(s, landingCoordinates,0,100,1);
         controller.simulateLanding();
-        //List <StateVector> states = controller.applyThrust(s);
-        //controller.simulateLanding();
         List <StateVector> states = controller.getAllStates();
         for(int i = 0; i < states.size(); i++){
             System.out.println(states.get(i).toString());
-
         }
-//        List<Vector> thrusts = controller.getThrusts();
-//        for(int i = 0; i < thrusts.size(); i++){
-//            System.out.println(thrusts.get(i));
-//
-//        }
     }
-
 }

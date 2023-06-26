@@ -3,7 +3,7 @@ package physics.controllers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import physics.controllers.LanderState;
+import physics.landing.LanderState;
 import physics.vectors.StateVector;
 import physics.vectors.Vector;
 

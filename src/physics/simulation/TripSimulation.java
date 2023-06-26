@@ -43,7 +43,7 @@ public class TripSimulation {
         orbitCoord[0] = 1365410325.77402;
         orbitCoord[1] = -487853739.0631;
         orbitCoord[2] = -4.501235837440703E7;
-        Vector orbit = new Vector(orbitCoord);  //determined coordinates through finding perpendicular points to the vector from the spaceship to Titan
+        Vector orbit = new Vector(orbitCoord);  //determined coordinates for entering Titan's orbit through finding perpendicular points to the vector from the spaceship to Titan
                                                 //the z-coordinate was assumed to stay the same so that there would only be two resulting points, one of which I chose
         double[] orbitVel = new double[3];
         orbitVel[0] = 1.743907161704536 + 5.30970899548503;
@@ -148,12 +148,11 @@ public class TripSimulation {
             }
         }
 
-        System.out.println("Probe coordinates: " + finalOrbits.get(11).get(finalOrbits.get(11).size()-1));
-        System.out.println("Titan coordinates: " + finalOrbits.get(8).get(finalOrbits.get(11).size()-1));
         System.out.println("Proximity to Titan: " + dist + "km");
         System.out.println("Total fuel consumed is: " + usedFuel + "kg");
 
         //visualizes the continued journey from afar. Through this one can see that the probe does stay near Titan
+        //commented out for a nicer transition to the next screen
 //        Vector velP = new Vector(new double[]{orbitCoord[0], orbitCoord[1], orbitCoord[2]});
 //        Vector velV = new Vector(new double[]{orbitVel[0], orbitVel[1], orbitVel[2]});
 //

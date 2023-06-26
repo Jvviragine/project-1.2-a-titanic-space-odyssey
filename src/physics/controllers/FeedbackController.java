@@ -1,4 +1,4 @@
-package landing;
+package physics.controllers;
 
 import physics.vectors.StateVector;
 import physics.vectors.Vector;
@@ -6,7 +6,7 @@ import stochastic_wind_simulation.WindModel;
 
 import java.util.ArrayList;
 
-public class FeedbackController {
+public class FeedbackController implements Controller{
 
     //Gravitational pull on Titan in m and km. If using km remember to convert at the begging if using meter convert at the end!!!
 
@@ -134,4 +134,8 @@ public class FeedbackController {
     }
 
 
+    @Override
+    public void startControl() {
+
+    }
 }

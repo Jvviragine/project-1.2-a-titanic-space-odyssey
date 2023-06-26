@@ -1,10 +1,7 @@
-package landing;
+package physics.controllers;
 
 import physics.vectors.StateVector;
 import physics.vectors.Vector;
-
-import javax.imageio.ImageTranscoder;
-import javax.swing.plaf.nimbus.State;
 
 public class LandingFunction {
 
@@ -57,16 +54,6 @@ public class LandingFunction {
         return u;
     }
 
-
-
-    public static void main(String[] args) {
-        LandingFunction f = new LandingFunction();
-        StateVector s = new StateVector(new Vector[]{new Vector(new double[]{0,1.46,0}), new Vector(new double[]{0,0,0})});
-        LanderState l = new LanderState(s,  0,0);
-        for(int i = 0;i<10;i++){
-            l = f.LanderStep(l, 1);
-            System.out.println(l.getTotalState());
-        }
-    }
+    
 
 }
